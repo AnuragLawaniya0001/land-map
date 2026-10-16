@@ -1,0 +1,3245 @@
+{
+ "ok": true,
+ "fields": {
+  "layout_version": "imported",
+  "import_source": {
+   "filename": "layout_latlng.dxf",
+   "mode": "latlng",
+   "warnings": [],
+   "imported_at": "2026-01-01T00:00:00.000Z",
+   "plots": 64,
+   "greens": 3,
+   "roads": 0
+  },
+  "maps_link": null,
+  "map_center": {
+   "lat": 22.2196003,
+   "lng": 73.1051403
+  },
+  "boundary": {
+   "type": "Polygon",
+   "coordinates": [
+    [
+     [
+      73.1059248,
+      22.2203958
+     ],
+     [
+      73.1060704,
+      22.2192383
+     ],
+     [
+      73.105197,
+      22.2186504
+     ],
+     [
+      73.1041781,
+      22.2191478
+     ],
+     [
+      73.1043722,
+      22.2203054
+     ],
+     [
+      73.1059248,
+      22.2203958
+     ]
+    ]
+   ]
+  },
+  "greens": [
+   {
+    "name": "Green Belt",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        73.1042267,
+        22.2192487
+       ],
+       [
+        73.1042267,
+        22.2191547
+       ],
+       [
+        73.1042121,
+        22.2191618
+       ],
+       [
+        73.1042267,
+        22.2192487
+       ]
+      ]
+     ]
+    }
+   },
+   {
+    "name": "Kids Corner",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        73.1047595,
+        22.2188946
+       ],
+       [
+        73.1048234,
+        22.2188946
+       ],
+       [
+        73.1049399,
+        22.2188946
+       ],
+       [
+        73.1050563,
+        22.2188946
+       ],
+       [
+        73.1050563,
+        22.2187497
+       ],
+       [
+        73.1047595,
+        22.2188946
+       ]
+      ]
+     ]
+    }
+   },
+   {
+    "name": "Central Park",
+    "geometry": {
+     "type": "Polygon",
+     "coordinates": [
+      [
+       [
+        73.1048283,
+        22.219799
+       ],
+       [
+        73.1053717,
+        22.219799
+       ],
+       [
+        73.1053717,
+        22.2193649
+       ],
+       [
+        73.1048283,
+        22.2193649
+       ],
+       [
+        73.1048283,
+        22.219799
+       ]
+      ]
+     ]
+    }
+   }
+  ],
+  "roads": [],
+  "entry_road": null,
+  "entrance": null,
+  "entry_centerline": null,
+  "total_area_sqm": 18352
+ },
+ "zones": [
+  {
+   "id": "zone-testcolony-a",
+   "colony_id": "testcolony",
+   "code": "A",
+   "name": "Zone A",
+   "color": "#35c7b4",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1045906,
+       22.2195819
+      ],
+      [
+       73.1042856,
+       22.2196
+      ],
+      [
+       73.1043045,
+       22.219713
+      ],
+      [
+       73.1043325,
+       22.2198804
+      ],
+      [
+       73.1043994,
+       22.2202789
+      ],
+      [
+       73.1047167,
+       22.2202974
+      ],
+      [
+       73.1050563,
+       22.2203172
+      ],
+      [
+       73.1050563,
+       22.2198804
+      ],
+      [
+       73.1047555,
+       22.2195819
+      ],
+      [
+       73.1045906,
+       22.2195819
+      ]
+     ]
+    ]
+   },
+   "sort_order": 0,
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "zone-testcolony-b",
+   "colony_id": "testcolony",
+   "code": "B",
+   "name": "Zone B",
+   "color": "#f06b5f",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1054445,
+       22.2195819
+      ],
+      [
+       73.1051437,
+       22.2198804
+      ],
+      [
+       73.1051437,
+       22.2203222
+      ],
+      [
+       73.1052698,
+       22.2203296
+      ],
+      [
+       73.105396,
+       22.220337
+      ],
+      [
+       73.1057065,
+       22.2203551
+      ],
+      [
+       73.1058976,
+       22.2203662
+      ],
+      [
+       73.1059298,
+       22.220111
+      ],
+      [
+       73.105969,
+       22.219799
+      ],
+      [
+       73.105994,
+       22.2196
+      ],
+      [
+       73.1056337,
+       22.2195819
+      ],
+      [
+       73.1054445,
+       22.2195819
+      ]
+     ]
+    ]
+   },
+   "sort_order": 1,
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "zone-testcolony-c",
+   "colony_id": "testcolony",
+   "code": "C",
+   "name": "Zone C",
+   "color": "#f2b84b",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1047595,
+       22.2188946
+      ],
+      [
+       73.104707,
+       22.2189202
+      ],
+      [
+       73.1042407,
+       22.2191478
+      ],
+      [
+       73.1042267,
+       22.2191547
+      ],
+      [
+       73.1042267,
+       22.2192487
+      ],
+      [
+       73.1042287,
+       22.2192609
+      ],
+      [
+       73.1042476,
+       22.2193739
+      ],
+      [
+       73.1042666,
+       22.219487
+      ],
+      [
+       73.1042856,
+       22.2196
+      ],
+      [
+       73.1045178,
+       22.2196
+      ],
+      [
+       73.1047555,
+       22.2195819
+      ],
+      [
+       73.1050563,
+       22.219297
+      ],
+      [
+       73.1050563,
+       22.2188946
+      ],
+      [
+       73.1047595,
+       22.2188946
+      ]
+     ]
+    ]
+   },
+   "sort_order": 2,
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "zone-testcolony-d",
+   "colony_id": "testcolony",
+   "code": "D",
+   "name": "Zone D",
+   "color": "#55a8ff",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1051437,
+       22.2187228
+      ],
+      [
+       73.1051437,
+       22.219297
+      ],
+      [
+       73.1054445,
+       22.2195819
+      ],
+      [
+       73.1057065,
+       22.2196
+      ],
+      [
+       73.105994,
+       22.2196
+      ],
+      [
+       73.1060082,
+       22.219487
+      ],
+      [
+       73.1060366,
+       22.2192609
+      ],
+      [
+       73.1058876,
+       22.2191478
+      ],
+      [
+       73.1056094,
+       22.2189605
+      ],
+      [
+       73.1054261,
+       22.2188372
+      ],
+      [
+       73.1053523,
+       22.2187951
+      ],
+      [
+       73.1051437,
+       22.2187228
+      ]
+     ]
+    ]
+   },
+   "sort_order": 3,
+   "created_at": "2026-01-01T00:00:00.000Z"
+  }
+ ],
+ "plots": [
+  {
+   "id": "plot-testcolony-37",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-c",
+   "number": "37",
+   "area_sqm": 354.4,
+   "area_sqft": 3814.7,
+   "area_sqyd": 423.9,
+   "width_m": 1.63,
+   "depth_m": 30.03,
+   "shape": "polygon",
+   "sides": 5,
+   "dimensions": "28.6m \u00d7 1.6m \u00d7 10.4m \u00d7 30.0m \u00d7 12.5m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1045178,
+       22.2191478
+      ],
+      [
+       73.1042407,
+       22.2191478
+      ],
+      [
+       73.1042267,
+       22.2191547
+      ],
+      [
+       73.1042267,
+       22.2192487
+      ],
+      [
+       73.1045178,
+       22.2192609
+      ],
+      [
+       73.1045178,
+       22.2191478
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-38",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-c",
+   "number": "38",
+   "area_sqm": 360.1,
+   "area_sqft": 3876.1,
+   "area_sqyd": 430.7,
+   "width_m": 12.49,
+   "depth_m": 29.79,
+   "shape": "diagonal",
+   "sides": 4,
+   "dimensions": "27.8m \u00d7 12.5m \u00d7 29.8m \u00d7 12.6m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1042476,
+       22.2193739
+      ],
+      [
+       73.1045178,
+       22.2193739
+      ],
+      [
+       73.1045178,
+       22.2192609
+      ],
+      [
+       73.1042287,
+       22.2192609
+      ],
+      [
+       73.1042476,
+       22.2193739
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-39",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-c",
+   "number": "39",
+   "area_sqm": 336.0,
+   "area_sqft": 3616.7,
+   "area_sqyd": 401.9,
+   "width_m": 12.51,
+   "depth_m": 27.85,
+   "shape": "diagonal",
+   "sides": 4,
+   "dimensions": "27.8m \u00d7 12.7m \u00d7 25.9m \u00d7 12.5m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1045178,
+       22.2193739
+      ],
+      [
+       73.1042476,
+       22.2193739
+      ],
+      [
+       73.1042666,
+       22.219487
+      ],
+      [
+       73.1045178,
+       22.219487
+      ],
+      [
+       73.1045178,
+       22.2193739
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-1",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-a",
+   "number": "1",
+   "area_sqm": 174.1,
+   "area_sqft": 1874.0,
+   "area_sqyd": 208.2,
+   "width_m": 8.26,
+   "depth_m": 18.21,
+   "shape": "diagonal",
+   "sides": 4,
+   "dimensions": "8.3m \u00d7 18.0m \u00d7 11.1m \u00d7 18.2m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1043599,
+       22.2200431
+      ],
+      [
+       73.1044401,
+       22.2200431
+      ],
+      [
+       73.1044401,
+       22.2198804
+      ],
+      [
+       73.1043325,
+       22.2198804
+      ],
+      [
+       73.1043599,
+       22.2200431
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-40",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-c",
+   "number": "40",
+   "area_sqm": 311.2,
+   "area_sqft": 3349.7,
+   "area_sqyd": 372.2,
+   "width_m": 12.49,
+   "depth_m": 25.89,
+   "shape": "diagonal",
+   "sides": 4,
+   "dimensions": "25.9m \u00d7 12.6m \u00d7 23.9m \u00d7 12.5m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1045178,
+       22.219487
+      ],
+      [
+       73.1042666,
+       22.219487
+      ],
+      [
+       73.1042856,
+       22.2196
+      ],
+      [
+       73.1045178,
+       22.2196
+      ],
+      [
+       73.1045178,
+       22.219487
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-41",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-a",
+   "number": "41",
+   "area_sqm": 286.8,
+   "area_sqft": 3087.1,
+   "area_sqyd": 343.0,
+   "width_m": 12.49,
+   "depth_m": 23.93,
+   "shape": "diagonal",
+   "sides": 4,
+   "dimensions": "23.9m \u00d7 12.6m \u00d7 22.0m \u00d7 12.5m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1045178,
+       22.2196
+      ],
+      [
+       73.1042856,
+       22.2196
+      ],
+      [
+       73.1043045,
+       22.219713
+      ],
+      [
+       73.1045178,
+       22.219713
+      ],
+      [
+       73.1045178,
+       22.2196
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-42",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-a",
+   "number": "42",
+   "area_sqm": 202.0,
+   "area_sqft": 2174.3,
+   "area_sqyd": 241.6,
+   "width_m": 9.51,
+   "depth_m": 21.98,
+   "shape": "diagonal",
+   "sides": 4,
+   "dimensions": "22.0m \u00d7 9.6m \u00d7 20.5m \u00d7 9.5m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1045178,
+       22.219713
+      ],
+      [
+       73.1043045,
+       22.219713
+      ],
+      [
+       73.1043189,
+       22.219799
+      ],
+      [
+       73.1045178,
+       22.219799
+      ],
+      [
+       73.1045178,
+       22.219713
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-13",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-a",
+   "number": "13",
+   "area_sqm": 124.3,
+   "area_sqft": 1338.0,
+   "area_sqyd": 148.7,
+   "width_m": 5.21,
+   "depth_m": 18.89,
+   "shape": "diagonal",
+   "sides": 4,
+   "dimensions": "5.2m \u00d7 18.9m \u00d7 8.1m \u00d7 18.8m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1043994,
+       22.2202789
+      ],
+      [
+       73.1044499,
+       22.2202818
+      ],
+      [
+       73.1044499,
+       22.220111
+      ],
+      [
+       73.1043713,
+       22.220111
+      ],
+      [
+       73.1043994,
+       22.2202789
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-36",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-c",
+   "number": "36",
+   "area_sqm": 207.6,
+   "area_sqft": 2234.6,
+   "area_sqyd": 248.3,
+   "width_m": 4.68,
+   "depth_m": 28.56,
+   "shape": "diagonal",
+   "sides": 4,
+   "dimensions": "28.6m \u00d7 12.5m \u00d7 4.7m \u00d7 26.9m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1042407,
+       22.2191478
+      ],
+      [
+       73.1045178,
+       22.2191478
+      ],
+      [
+       73.1045178,
+       22.2190348
+      ],
+      [
+       73.1044724,
+       22.2190348
+      ],
+      [
+       73.1042407,
+       22.2191478
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-2",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-a",
+   "number": "2",
+   "area_sqm": 144.1,
+   "area_sqft": 1551.1,
+   "area_sqyd": 172.3,
+   "width_m": 8.01,
+   "depth_m": 17.99,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "18.0m \u00d7 8.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1044401,
+       22.2198804
+      ],
+      [
+       73.1044401,
+       22.2200431
+      ],
+      [
+       73.1045178,
+       22.2200431
+      ],
+      [
+       73.1045178,
+       22.2198804
+      ],
+      [
+       73.1044401,
+       22.2198804
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-14",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-a",
+   "number": "14",
+   "area_sqm": 133.7,
+   "area_sqft": 1439.1,
+   "area_sqyd": 159.9,
+   "width_m": 7.0,
+   "depth_m": 19.33,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "18.9m \u00d7 7.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1044499,
+       22.220111
+      ],
+      [
+       73.1044499,
+       22.2202818
+      ],
+      [
+       73.1045178,
+       22.2202858
+      ],
+      [
+       73.1045178,
+       22.220111
+      ],
+      [
+       73.1044499,
+       22.220111
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-47",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-c",
+   "number": "47",
+   "area_sqm": 215.9,
+   "area_sqft": 2323.9,
+   "area_sqyd": 258.2,
+   "width_m": 12.0,
+   "depth_m": 18.0,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "12.0m \u00d7 18.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1045906,
+       22.219297
+      ],
+      [
+       73.104707,
+       22.219297
+      ],
+      [
+       73.104707,
+       22.2191342
+      ],
+      [
+       73.1045906,
+       22.2191342
+      ],
+      [
+       73.1045906,
+       22.219297
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-3",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-a",
+   "number": "3",
+   "area_sqm": 215.8,
+   "area_sqft": 2322.8,
+   "area_sqyd": 258.1,
+   "width_m": 12.0,
+   "depth_m": 17.99,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "12.0m \u00d7 18.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1045906,
+       22.2200431
+      ],
+      [
+       73.104707,
+       22.2200431
+      ],
+      [
+       73.104707,
+       22.2198804
+      ],
+      [
+       73.1045906,
+       22.2198804
+      ],
+      [
+       73.1045906,
+       22.2200431
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-55",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-c",
+   "number": "55",
+   "area_sqm": 156.2,
+   "area_sqft": 1681.3,
+   "area_sqyd": 186.8,
+   "width_m": 9.87,
+   "depth_m": 16.17,
+   "shape": "diagonal",
+   "sides": 4,
+   "dimensions": "9.9m \u00d7 12.0m \u00d7 16.2m \u00d7 13.5m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1045906,
+       22.2189771
+      ],
+      [
+       73.1045906,
+       22.2190664
+      ],
+      [
+       73.104707,
+       22.2190664
+      ],
+      [
+       73.104707,
+       22.2189202
+      ],
+      [
+       73.1045906,
+       22.2189771
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-15",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-a",
+   "number": "15",
+   "area_sqm": 262.5,
+   "area_sqft": 2825.5,
+   "area_sqyd": 313.9,
+   "width_m": 13.0,
+   "depth_m": 20.61,
+   "shape": "diagonal",
+   "sides": 4,
+   "dimensions": "13.0m \u00d7 20.6m \u00d7 13.0m \u00d7 19.8m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1045906,
+       22.22029
+      ],
+      [
+       73.1047167,
+       22.2202974
+      ],
+      [
+       73.1047167,
+       22.220111
+      ],
+      [
+       73.1045906,
+       22.220111
+      ],
+      [
+       73.1045906,
+       22.22029
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-44",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-c",
+   "number": "44",
+   "area_sqm": 203.9,
+   "area_sqft": 2194.8,
+   "area_sqyd": 243.9,
+   "width_m": 12.0,
+   "depth_m": 16.99,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "17.0m \u00d7 12.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1047555,
+       22.2194734
+      ],
+      [
+       73.1045906,
+       22.2194734
+      ],
+      [
+       73.1045906,
+       22.2195819
+      ],
+      [
+       73.1047555,
+       22.2195819
+      ],
+      [
+       73.1047555,
+       22.2194734
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-43",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-c",
+   "number": "43",
+   "area_sqm": 203.9,
+   "area_sqft": 2194.8,
+   "area_sqyd": 243.9,
+   "width_m": 12.0,
+   "depth_m": 16.99,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "17.0m \u00d7 12.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1045906,
+       22.2194734
+      ],
+      [
+       73.1047555,
+       22.2194734
+      ],
+      [
+       73.1047555,
+       22.2193649
+      ],
+      [
+       73.1045906,
+       22.2193649
+      ],
+      [
+       73.1045906,
+       22.2194734
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-45",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-a",
+   "number": "45",
+   "area_sqm": 203.9,
+   "area_sqft": 2194.8,
+   "area_sqyd": 243.9,
+   "width_m": 12.0,
+   "depth_m": 16.99,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "17.0m \u00d7 12.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1047555,
+       22.2195819
+      ],
+      [
+       73.1045906,
+       22.2195819
+      ],
+      [
+       73.1045906,
+       22.2196904
+      ],
+      [
+       73.1047555,
+       22.2196904
+      ],
+      [
+       73.1047555,
+       22.2195819
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-46",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-a",
+   "number": "46",
+   "area_sqm": 204.1,
+   "area_sqft": 2196.9,
+   "area_sqyd": 244.1,
+   "width_m": 12.01,
+   "depth_m": 16.99,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "17.0m \u00d7 12.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1047555,
+       22.2196904
+      ],
+      [
+       73.1045906,
+       22.2196904
+      ],
+      [
+       73.1045906,
+       22.219799
+      ],
+      [
+       73.1047555,
+       22.219799
+      ],
+      [
+       73.1047555,
+       22.2196904
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-4",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-a",
+   "number": "4",
+   "area_sqm": 215.8,
+   "area_sqft": 2322.8,
+   "area_sqyd": 258.1,
+   "width_m": 12.0,
+   "depth_m": 17.99,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "18.0m \u00d7 12.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.104707,
+       22.2198804
+      ],
+      [
+       73.104707,
+       22.2200431
+      ],
+      [
+       73.1048234,
+       22.2200431
+      ],
+      [
+       73.1048234,
+       22.2198804
+      ],
+      [
+       73.104707,
+       22.2198804
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-48",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-c",
+   "number": "48",
+   "area_sqm": 215.9,
+   "area_sqft": 2323.9,
+   "area_sqyd": 258.2,
+   "width_m": 12.0,
+   "depth_m": 18.0,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "18.0m \u00d7 12.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.104707,
+       22.2191342
+      ],
+      [
+       73.104707,
+       22.219297
+      ],
+      [
+       73.1048234,
+       22.219297
+      ],
+      [
+       73.1048234,
+       22.2191342
+      ],
+      [
+       73.104707,
+       22.2191342
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-56",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-c",
+   "number": "56",
+   "area_sqm": 220.2,
+   "area_sqft": 2370.2,
+   "area_sqyd": 263.4,
+   "width_m": 6.11,
+   "depth_m": 19.0,
+   "shape": "polygon",
+   "sides": 5,
+   "dimensions": "16.2m \u00d7 12.0m \u00d7 19.0m \u00d7 6.6m \u00d7 6.1m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.104707,
+       22.2189202
+      ],
+      [
+       73.104707,
+       22.2190664
+      ],
+      [
+       73.1048234,
+       22.2190664
+      ],
+      [
+       73.1048234,
+       22.2188946
+      ],
+      [
+       73.1047595,
+       22.2188946
+      ],
+      [
+       73.104707,
+       22.2189202
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-16",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-a",
+   "number": "16",
+   "area_sqm": 273.3,
+   "area_sqft": 2941.8,
+   "area_sqyd": 326.9,
+   "width_m": 13.01,
+   "depth_m": 21.42,
+   "shape": "diagonal",
+   "sides": 4,
+   "dimensions": "20.6m \u00d7 13.0m \u00d7 21.4m \u00d7 13.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1047167,
+       22.220111
+      ],
+      [
+       73.1047167,
+       22.2202974
+      ],
+      [
+       73.1048429,
+       22.2203047
+      ],
+      [
+       73.1048429,
+       22.220111
+      ],
+      [
+       73.1047167,
+       22.220111
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-57",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-c",
+   "number": "57",
+   "area_sqm": 228.1,
+   "area_sqft": 2455.2,
+   "area_sqyd": 272.8,
+   "width_m": 12.01,
+   "depth_m": 19.0,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "19.0m \u00d7 12.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1048234,
+       22.2188946
+      ],
+      [
+       73.1048234,
+       22.2190664
+      ],
+      [
+       73.1049399,
+       22.2190664
+      ],
+      [
+       73.1049399,
+       22.2188946
+      ],
+      [
+       73.1048234,
+       22.2188946
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-5",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-a",
+   "number": "5",
+   "area_sqm": 216.0,
+   "area_sqft": 2325.0,
+   "area_sqyd": 258.3,
+   "width_m": 12.01,
+   "depth_m": 17.99,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "18.0m \u00d7 12.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1048234,
+       22.2198804
+      ],
+      [
+       73.1048234,
+       22.2200431
+      ],
+      [
+       73.1049399,
+       22.2200431
+      ],
+      [
+       73.1049399,
+       22.2198804
+      ],
+      [
+       73.1048234,
+       22.2198804
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-49",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-c",
+   "number": "49",
+   "area_sqm": 216.1,
+   "area_sqft": 2326.1,
+   "area_sqyd": 258.5,
+   "width_m": 12.01,
+   "depth_m": 18.0,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "18.0m \u00d7 12.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1048234,
+       22.2191342
+      ],
+      [
+       73.1048234,
+       22.219297
+      ],
+      [
+       73.1049399,
+       22.219297
+      ],
+      [
+       73.1049399,
+       22.2191342
+      ],
+      [
+       73.1048234,
+       22.2191342
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-17",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-a",
+   "number": "17",
+   "area_sqm": 283.6,
+   "area_sqft": 3052.6,
+   "area_sqyd": 339.2,
+   "width_m": 13.0,
+   "depth_m": 22.24,
+   "shape": "diagonal",
+   "sides": 4,
+   "dimensions": "21.4m \u00d7 13.0m \u00d7 22.2m \u00d7 13.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1048429,
+       22.220111
+      ],
+      [
+       73.1048429,
+       22.2203047
+      ],
+      [
+       73.104969,
+       22.2203121
+      ],
+      [
+       73.104969,
+       22.220111
+      ],
+      [
+       73.1048429,
+       22.220111
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-6",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-a",
+   "number": "6",
+   "area_sqm": 215.8,
+   "area_sqft": 2322.8,
+   "area_sqyd": 258.1,
+   "width_m": 12.0,
+   "depth_m": 17.99,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "18.0m \u00d7 12.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1049399,
+       22.2198804
+      ],
+      [
+       73.1049399,
+       22.2200431
+      ],
+      [
+       73.1050563,
+       22.2200431
+      ],
+      [
+       73.1050563,
+       22.2198804
+      ],
+      [
+       73.1049399,
+       22.2198804
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-50",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-c",
+   "number": "50",
+   "area_sqm": 215.9,
+   "area_sqft": 2323.9,
+   "area_sqyd": 258.2,
+   "width_m": 12.0,
+   "depth_m": 18.0,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "18.0m \u00d7 12.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1049399,
+       22.2191342
+      ],
+      [
+       73.1049399,
+       22.219297
+      ],
+      [
+       73.1050563,
+       22.219297
+      ],
+      [
+       73.1050563,
+       22.2191342
+      ],
+      [
+       73.1049399,
+       22.2191342
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-58",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-c",
+   "number": "58",
+   "area_sqm": 227.9,
+   "area_sqft": 2453.1,
+   "area_sqyd": 272.6,
+   "width_m": 12.0,
+   "depth_m": 19.0,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "19.0m \u00d7 12.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1049399,
+       22.2188946
+      ],
+      [
+       73.1049399,
+       22.2190664
+      ],
+      [
+       73.1050563,
+       22.2190664
+      ],
+      [
+       73.1050563,
+       22.2188946
+      ],
+      [
+       73.1049399,
+       22.2188946
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-18",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-a",
+   "number": "18",
+   "area_sqm": 202.6,
+   "area_sqft": 2180.8,
+   "area_sqyd": 242.3,
+   "width_m": 9.0,
+   "depth_m": 22.8,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "22.2m \u00d7 9.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.104969,
+       22.220111
+      ],
+      [
+       73.104969,
+       22.2203121
+      ],
+      [
+       73.1050563,
+       22.2203172
+      ],
+      [
+       73.1050563,
+       22.220111
+      ],
+      [
+       73.104969,
+       22.220111
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-7",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-b",
+   "number": "7",
+   "area_sqm": 215.8,
+   "area_sqft": 2322.8,
+   "area_sqyd": 258.1,
+   "width_m": 12.0,
+   "depth_m": 17.99,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "12.0m \u00d7 18.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1051437,
+       22.2200431
+      ],
+      [
+       73.1052601,
+       22.2200431
+      ],
+      [
+       73.1052601,
+       22.2198804
+      ],
+      [
+       73.1051437,
+       22.2198804
+      ],
+      [
+       73.1051437,
+       22.2200431
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-51",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-d",
+   "number": "51",
+   "area_sqm": 215.9,
+   "area_sqft": 2323.9,
+   "area_sqyd": 258.2,
+   "width_m": 12.0,
+   "depth_m": 18.0,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "12.0m \u00d7 18.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1051437,
+       22.219297
+      ],
+      [
+       73.1052601,
+       22.219297
+      ],
+      [
+       73.1052601,
+       22.2191342
+      ],
+      [
+       73.1051437,
+       22.2191342
+      ],
+      [
+       73.1051437,
+       22.219297
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-59",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-d",
+   "number": "59",
+   "area_sqm": 227.9,
+   "area_sqft": 2453.1,
+   "area_sqyd": 272.6,
+   "width_m": 12.0,
+   "depth_m": 19.0,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "12.0m \u00d7 19.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1051437,
+       22.2190664
+      ],
+      [
+       73.1052601,
+       22.2190664
+      ],
+      [
+       73.1052601,
+       22.2188946
+      ],
+      [
+       73.1051437,
+       22.2188946
+      ],
+      [
+       73.1051437,
+       22.2190664
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-19",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-b",
+   "number": "19",
+   "area_sqm": 308.8,
+   "area_sqft": 3323.9,
+   "area_sqyd": 369.3,
+   "width_m": 13.0,
+   "depth_m": 24.17,
+   "shape": "diagonal",
+   "sides": 4,
+   "dimensions": "13.0m \u00d7 24.2m \u00d7 13.0m \u00d7 23.4m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1051437,
+       22.2203222
+      ],
+      [
+       73.1052698,
+       22.2203296
+      ],
+      [
+       73.1052698,
+       22.220111
+      ],
+      [
+       73.1051437,
+       22.220111
+      ],
+      [
+       73.1051437,
+       22.2203222
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-63",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-d",
+   "number": "63",
+   "area_sqm": 204.2,
+   "area_sqft": 2198.0,
+   "area_sqyd": 244.2,
+   "width_m": 9.5,
+   "depth_m": 28.69,
+   "shape": "diagonal",
+   "sides": 4,
+   "dimensions": "12.0m \u00d7 9.5m \u00d7 28.7m \u00d7 19.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1051437,
+       22.2188946
+      ],
+      [
+       73.1052601,
+       22.2188946
+      ],
+      [
+       73.1053523,
+       22.2188946
+      ],
+      [
+       73.1051437,
+       22.2187228
+      ],
+      [
+       73.1051437,
+       22.2188946
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-8",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-b",
+   "number": "8",
+   "area_sqm": 216.0,
+   "area_sqft": 2325.0,
+   "area_sqyd": 258.3,
+   "width_m": 12.01,
+   "depth_m": 17.99,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "18.0m \u00d7 12.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1052601,
+       22.2198804
+      ],
+      [
+       73.1052601,
+       22.2200431
+      ],
+      [
+       73.1053766,
+       22.2200431
+      ],
+      [
+       73.1053766,
+       22.2198804
+      ],
+      [
+       73.1052601,
+       22.2198804
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-52",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-d",
+   "number": "52",
+   "area_sqm": 216.1,
+   "area_sqft": 2326.1,
+   "area_sqyd": 258.5,
+   "width_m": 12.01,
+   "depth_m": 18.0,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "18.0m \u00d7 12.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1052601,
+       22.2191342
+      ],
+      [
+       73.1052601,
+       22.219297
+      ],
+      [
+       73.1053766,
+       22.219297
+      ],
+      [
+       73.1053766,
+       22.2191342
+      ],
+      [
+       73.1052601,
+       22.2191342
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-60",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-d",
+   "number": "60",
+   "area_sqm": 228.1,
+   "area_sqft": 2455.2,
+   "area_sqyd": 272.8,
+   "width_m": 2.5,
+   "depth_m": 19.0,
+   "shape": "polygon",
+   "sides": 5,
+   "dimensions": "19.0m \u00d7 12.0m \u00d7 19.0m \u00d7 2.5m \u00d7 9.5m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1052601,
+       22.2188946
+      ],
+      [
+       73.1052601,
+       22.2190664
+      ],
+      [
+       73.1053766,
+       22.2190664
+      ],
+      [
+       73.1053766,
+       22.2188946
+      ],
+      [
+       73.1053523,
+       22.2188946
+      ],
+      [
+       73.1052601,
+       22.2188946
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-20",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-b",
+   "number": "20",
+   "area_sqm": 319.7,
+   "area_sqft": 3441.2,
+   "area_sqyd": 382.4,
+   "width_m": 13.01,
+   "depth_m": 24.99,
+   "shape": "diagonal",
+   "sides": 4,
+   "dimensions": "24.2m \u00d7 13.0m \u00d7 25.0m \u00d7 13.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1052698,
+       22.220111
+      ],
+      [
+       73.1052698,
+       22.2203296
+      ],
+      [
+       73.105396,
+       22.220337
+      ],
+      [
+       73.105396,
+       22.220111
+      ],
+      [
+       73.1052698,
+       22.220111
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-64",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-d",
+   "number": "64",
+   "area_sqm": 93.9,
+   "area_sqft": 1010.7,
+   "area_sqyd": 112.3,
+   "width_m": 1.9,
+   "depth_m": 12.0,
+   "shape": "polygon",
+   "sides": 6,
+   "dimensions": "2.5m \u00d7 12.0m \u00d7 1.9m \u00d7 10.8m \u00d7 8.9m \u00d7 11.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1053523,
+       22.2188946
+      ],
+      [
+       73.1053766,
+       22.2188946
+      ],
+      [
+       73.105493,
+       22.2188946
+      ],
+      [
+       73.1055114,
+       22.2188946
+      ],
+      [
+       73.1054261,
+       22.2188372
+      ],
+      [
+       73.1053523,
+       22.2187951
+      ],
+      [
+       73.1053523,
+       22.2188946
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-9",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-b",
+   "number": "9",
+   "area_sqm": 215.8,
+   "area_sqft": 2322.8,
+   "area_sqyd": 258.1,
+   "width_m": 12.0,
+   "depth_m": 17.99,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "18.0m \u00d7 12.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1053766,
+       22.2198804
+      ],
+      [
+       73.1053766,
+       22.2200431
+      ],
+      [
+       73.105493,
+       22.2200431
+      ],
+      [
+       73.105493,
+       22.2198804
+      ],
+      [
+       73.1053766,
+       22.2198804
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-53",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-d",
+   "number": "53",
+   "area_sqm": 215.9,
+   "area_sqft": 2323.9,
+   "area_sqyd": 258.2,
+   "width_m": 12.0,
+   "depth_m": 18.0,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "18.0m \u00d7 12.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1053766,
+       22.2191342
+      ],
+      [
+       73.1053766,
+       22.219297
+      ],
+      [
+       73.105493,
+       22.219297
+      ],
+      [
+       73.105493,
+       22.2191342
+      ],
+      [
+       73.1053766,
+       22.2191342
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-61",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-d",
+   "number": "61",
+   "area_sqm": 227.9,
+   "area_sqft": 2453.1,
+   "area_sqyd": 272.6,
+   "width_m": 12.0,
+   "depth_m": 19.0,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "19.0m \u00d7 12.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1053766,
+       22.2188946
+      ],
+      [
+       73.1053766,
+       22.2190664
+      ],
+      [
+       73.105493,
+       22.2190664
+      ],
+      [
+       73.105493,
+       22.2188946
+      ],
+      [
+       73.1053766,
+       22.2188946
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-21",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-b",
+   "number": "21",
+   "area_sqm": 330.0,
+   "area_sqft": 3552.1,
+   "area_sqyd": 394.7,
+   "width_m": 13.0,
+   "depth_m": 25.8,
+   "shape": "diagonal",
+   "sides": 4,
+   "dimensions": "25.0m \u00d7 13.0m \u00d7 25.8m \u00d7 13.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.105396,
+       22.220111
+      ],
+      [
+       73.105396,
+       22.220337
+      ],
+      [
+       73.1055221,
+       22.2203443
+      ],
+      [
+       73.1055221,
+       22.220111
+      ],
+      [
+       73.105396,
+       22.220111
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-32",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-d",
+   "number": "32",
+   "area_sqm": 233.9,
+   "area_sqft": 2517.7,
+   "area_sqyd": 279.7,
+   "width_m": 12.0,
+   "depth_m": 19.5,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "19.5m \u00d7 12.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1054445,
+       22.2194734
+      ],
+      [
+       73.1056337,
+       22.2194734
+      ],
+      [
+       73.1056337,
+       22.2193649
+      ],
+      [
+       73.1054445,
+       22.2193649
+      ],
+      [
+       73.1054445,
+       22.2194734
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-33",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-d",
+   "number": "33",
+   "area_sqm": 233.9,
+   "area_sqft": 2517.7,
+   "area_sqyd": 279.7,
+   "width_m": 12.0,
+   "depth_m": 19.5,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "19.5m \u00d7 12.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1056337,
+       22.2194734
+      ],
+      [
+       73.1054445,
+       22.2194734
+      ],
+      [
+       73.1054445,
+       22.2195819
+      ],
+      [
+       73.1056337,
+       22.2195819
+      ],
+      [
+       73.1056337,
+       22.2194734
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-34",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-b",
+   "number": "34",
+   "area_sqm": 233.9,
+   "area_sqft": 2517.7,
+   "area_sqyd": 279.7,
+   "width_m": 12.0,
+   "depth_m": 19.5,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "19.5m \u00d7 12.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1056337,
+       22.2195819
+      ],
+      [
+       73.1054445,
+       22.2195819
+      ],
+      [
+       73.1054445,
+       22.2196904
+      ],
+      [
+       73.1056337,
+       22.2196904
+      ],
+      [
+       73.1056337,
+       22.2195819
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-35",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-b",
+   "number": "35",
+   "area_sqm": 234.1,
+   "area_sqft": 2519.8,
+   "area_sqyd": 280.0,
+   "width_m": 12.01,
+   "depth_m": 19.5,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "19.5m \u00d7 12.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1056337,
+       22.2196904
+      ],
+      [
+       73.1054445,
+       22.2196904
+      ],
+      [
+       73.1054445,
+       22.219799
+      ],
+      [
+       73.1056337,
+       22.219799
+      ],
+      [
+       73.1056337,
+       22.2196904
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-62",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-d",
+   "number": "62",
+   "area_sqm": 191.1,
+   "area_sqft": 2057.0,
+   "area_sqyd": 228.6,
+   "width_m": 1.9,
+   "depth_m": 19.0,
+   "shape": "polygon",
+   "sides": 5,
+   "dimensions": "19.0m \u00d7 12.0m \u00d7 11.7m \u00d7 12.5m \u00d7 1.9m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.105493,
+       22.2188946
+      ],
+      [
+       73.105493,
+       22.2190664
+      ],
+      [
+       73.1056094,
+       22.2190664
+      ],
+      [
+       73.1056094,
+       22.2189605
+      ],
+      [
+       73.1055114,
+       22.2188946
+      ],
+      [
+       73.105493,
+       22.2188946
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-10",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-b",
+   "number": "10",
+   "area_sqm": 215.8,
+   "area_sqft": 2322.8,
+   "area_sqyd": 258.1,
+   "width_m": 12.0,
+   "depth_m": 17.99,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "18.0m \u00d7 12.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.105493,
+       22.2198804
+      ],
+      [
+       73.105493,
+       22.2200431
+      ],
+      [
+       73.1056094,
+       22.2200431
+      ],
+      [
+       73.1056094,
+       22.2198804
+      ],
+      [
+       73.105493,
+       22.2198804
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-54",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-d",
+   "number": "54",
+   "area_sqm": 215.9,
+   "area_sqft": 2323.9,
+   "area_sqyd": 258.2,
+   "width_m": 12.0,
+   "depth_m": 18.0,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "18.0m \u00d7 12.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.105493,
+       22.2191342
+      ],
+      [
+       73.105493,
+       22.219297
+      ],
+      [
+       73.1056094,
+       22.219297
+      ],
+      [
+       73.1056094,
+       22.2191342
+      ],
+      [
+       73.105493,
+       22.2191342
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-22",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-b",
+   "number": "22",
+   "area_sqm": 300.8,
+   "area_sqft": 3237.8,
+   "area_sqyd": 359.8,
+   "width_m": 11.5,
+   "depth_m": 26.52,
+   "shape": "diagonal",
+   "sides": 4,
+   "dimensions": "25.8m \u00d7 11.5m \u00d7 26.5m \u00d7 11.5m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1055221,
+       22.220111
+      ],
+      [
+       73.1055221,
+       22.2203443
+      ],
+      [
+       73.1056337,
+       22.2203508
+      ],
+      [
+       73.1056337,
+       22.220111
+      ],
+      [
+       73.1055221,
+       22.220111
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-11",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-b",
+   "number": "11",
+   "area_sqm": 215.8,
+   "area_sqft": 2322.8,
+   "area_sqyd": 258.1,
+   "width_m": 12.0,
+   "depth_m": 17.99,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "12.0m \u00d7 18.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1057065,
+       22.2200431
+      ],
+      [
+       73.1058229,
+       22.2200431
+      ],
+      [
+       73.1058229,
+       22.2198804
+      ],
+      [
+       73.1057065,
+       22.2198804
+      ],
+      [
+       73.1057065,
+       22.2200431
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-23",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-b",
+   "number": "23",
+   "area_sqm": 356.0,
+   "area_sqft": 3831.9,
+   "area_sqyd": 425.8,
+   "width_m": 13.0,
+   "depth_m": 27.8,
+   "shape": "diagonal",
+   "sides": 4,
+   "dimensions": "13.0m \u00d7 27.8m \u00d7 13.0m \u00d7 27.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1057065,
+       22.2203551
+      ],
+      [
+       73.1058326,
+       22.2203624
+      ],
+      [
+       73.1058326,
+       22.220111
+      ],
+      [
+       73.1057065,
+       22.220111
+      ],
+      [
+       73.1057065,
+       22.2203551
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-25",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-d",
+   "number": "25",
+   "area_sqm": 116.6,
+   "area_sqft": 1255.1,
+   "area_sqyd": 139.5,
+   "width_m": 12.57,
+   "depth_m": 21.34,
+   "shape": "triangular",
+   "sides": 3,
+   "dimensions": "18.7m \u00d7 21.3m \u00d7 12.6m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1057065,
+       22.2191478
+      ],
+      [
+       73.1058876,
+       22.2191478
+      ],
+      [
+       73.1057197,
+       22.2190348
+      ],
+      [
+       73.1057065,
+       22.2191478
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-26",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-d",
+   "number": "26",
+   "area_sqm": 329.4,
+   "area_sqft": 3545.6,
+   "area_sqyd": 394.0,
+   "width_m": 12.51,
+   "depth_m": 34.02,
+   "shape": "diagonal",
+   "sides": 4,
+   "dimensions": "18.7m \u00d7 12.5m \u00d7 34.0m \u00d7 19.8m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1058876,
+       22.2191478
+      ],
+      [
+       73.1057065,
+       22.2191478
+      ],
+      [
+       73.1057065,
+       22.2192609
+      ],
+      [
+       73.1060366,
+       22.2192609
+      ],
+      [
+       73.1058876,
+       22.2191478
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-31",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-b",
+   "number": "31",
+   "area_sqm": 262.5,
+   "area_sqft": 2825.5,
+   "area_sqyd": 313.9,
+   "width_m": 9.51,
+   "depth_m": 28.15,
+   "shape": "diagonal",
+   "sides": 4,
+   "dimensions": "28.2m \u00d7 9.5m \u00d7 27.1m \u00d7 9.6m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1059797,
+       22.219713
+      ],
+      [
+       73.1057065,
+       22.219713
+      ],
+      [
+       73.1057065,
+       22.219799
+      ],
+      [
+       73.105969,
+       22.219799
+      ],
+      [
+       73.1059797,
+       22.219713
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-30",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-b",
+   "number": "30",
+   "area_sqm": 361.0,
+   "area_sqft": 3885.8,
+   "area_sqyd": 431.8,
+   "width_m": 12.49,
+   "depth_m": 29.63,
+   "shape": "diagonal",
+   "sides": 4,
+   "dimensions": "29.6m \u00d7 12.5m \u00d7 28.2m \u00d7 12.6m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.105994,
+       22.2196
+      ],
+      [
+       73.1057065,
+       22.2196
+      ],
+      [
+       73.1057065,
+       22.219713
+      ],
+      [
+       73.1059797,
+       22.219713
+      ],
+      [
+       73.105994,
+       22.2196
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-29",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-d",
+   "number": "29",
+   "area_sqm": 379.3,
+   "area_sqft": 4082.7,
+   "area_sqyd": 453.6,
+   "width_m": 12.49,
+   "depth_m": 31.09,
+   "shape": "diagonal",
+   "sides": 4,
+   "dimensions": "31.1m \u00d7 12.5m \u00d7 29.6m \u00d7 12.6m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1060082,
+       22.219487
+      ],
+      [
+       73.1057065,
+       22.219487
+      ],
+      [
+       73.1057065,
+       22.2196
+      ],
+      [
+       73.105994,
+       22.2196
+      ],
+      [
+       73.1060082,
+       22.219487
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-28",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-d",
+   "number": "28",
+   "area_sqm": 398.0,
+   "area_sqft": 4284.0,
+   "area_sqyd": 476.0,
+   "width_m": 12.51,
+   "depth_m": 32.55,
+   "shape": "diagonal",
+   "sides": 4,
+   "dimensions": "32.6m \u00d7 12.5m \u00d7 31.1m \u00d7 12.6m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1060224,
+       22.2193739
+      ],
+      [
+       73.1057065,
+       22.2193739
+      ],
+      [
+       73.1057065,
+       22.219487
+      ],
+      [
+       73.1060082,
+       22.219487
+      ],
+      [
+       73.1060224,
+       22.2193739
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-27",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-d",
+   "number": "27",
+   "area_sqm": 415.9,
+   "area_sqft": 4476.7,
+   "area_sqyd": 497.4,
+   "width_m": 12.49,
+   "depth_m": 34.02,
+   "shape": "diagonal",
+   "sides": 4,
+   "dimensions": "34.0m \u00d7 12.5m \u00d7 32.6m \u00d7 12.6m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1060366,
+       22.2192609
+      ],
+      [
+       73.1057065,
+       22.2192609
+      ],
+      [
+       73.1057065,
+       22.2193739
+      ],
+      [
+       73.1060224,
+       22.2193739
+      ],
+      [
+       73.1060366,
+       22.2192609
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-24",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-b",
+   "number": "24",
+   "area_sqm": 234.4,
+   "area_sqft": 2523.1,
+   "area_sqyd": 280.3,
+   "width_m": 6.71,
+   "depth_m": 28.41,
+   "shape": "diagonal",
+   "sides": 4,
+   "dimensions": "27.8m \u00d7 6.7m \u00d7 28.4m \u00d7 10.0m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1058326,
+       22.220111
+      ],
+      [
+       73.1058326,
+       22.2203624
+      ],
+      [
+       73.1058976,
+       22.2203662
+      ],
+      [
+       73.1059298,
+       22.220111
+      ],
+      [
+       73.1058326,
+       22.220111
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  },
+  {
+   "id": "plot-testcolony-12",
+   "colony_id": "testcolony",
+   "zone_id": "zone-testcolony-b",
+   "number": "12",
+   "area_sqm": 215.0,
+   "area_sqft": 2314.2,
+   "area_sqyd": 257.1,
+   "width_m": 11.89,
+   "depth_m": 17.99,
+   "shape": "rectangular",
+   "sides": 4,
+   "dimensions": "18.0m \u00d7 11.9m",
+   "status_id": "available",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       73.1058229,
+       22.2198804
+      ],
+      [
+       73.1058229,
+       22.2200431
+      ],
+      [
+       73.1059383,
+       22.2200431
+      ],
+      [
+       73.1059394,
+       22.2198804
+      ],
+      [
+       73.1058229,
+       22.2198804
+      ]
+     ]
+    ]
+   },
+   "notes": "",
+   "created_at": "2026-01-01T00:00:00.000Z"
+  }
+ ],
+ "warnings": []
+}

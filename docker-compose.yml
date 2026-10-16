@@ -1,0 +1,56 @@
+services:
+  # MongoDB Local Database
+  mongodb:
+    image: mongo:7.0
+    container_name: livemap-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: livemap
+      MONGO_INITDB_ROOT_PASSWORD: livemap_password
+      MONGO_INITDB_DATABASE: spacer_land
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    networks:
+      - livemap-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # React Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: livemap-frontend
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_BASE_URL: /api
+      VITE_BACKEND_URL: http://localhost:8001
+      BACKEND_PROXY_URL: http://host.docker.internal:8001
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - livemap-network
+    command: npm run dev -- --host 0.0.0.0
+
+volumes:
+  mongodb_data:
+    driver: local
+  mongodb_config:
+    driver: local
+
+networks:
+  livemap-network:
+    driver: bridge

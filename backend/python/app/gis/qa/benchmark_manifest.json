@@ -1,0 +1,57 @@
+{
+  "benchmark_corpus_version": "1.0",
+  "generated_at": "2026-10-10T16:50:00Z",
+  "documents": [
+    {
+      "document_id": "durga_enclave_vector",
+      "filename": "Durga_Enclave_Final_Clean.pdf",
+      "sha256": "3e423cdfc0ace41bfad23187148600d121453edec2131c3de185a043c7499976",
+      "file_size_bytes": 162821,
+      "pdf_type": "vector",
+      "page_count": 1,
+      "units": "ft",
+      "ground_truth": {
+        "min_plots": 30,
+        "max_plots": 80,
+        "has_road_corridors": true,
+        "crs_status": "LOCAL_2D",
+        "has_dimensions": true
+      },
+      "evaluation_split": "development"
+    },
+    {
+      "document_id": "shri_ram_vector",
+      "filename": "Shri_Ram_Vector_Clean.pdf",
+      "sha256": "8abb436353bf6810761b4413fe41fa7165732a98bf9ec407709a722efde156b6",
+      "file_size_bytes": 59733,
+      "pdf_type": "vector",
+      "page_count": 1,
+      "units": "ft",
+      "ground_truth": {
+        "min_plots": 20,
+        "max_plots": 60,
+        "has_road_corridors": true,
+        "crs_status": "LOCAL_2D",
+        "has_dimensions": true
+      },
+      "evaluation_split": "held_out"
+    },
+    {
+      "document_id": "fixture_layout_geo",
+      "filename": "backend/python/tests/fixtures/layout_geo.pdf",
+      "sha256": "b5a6f9cc84776b9c83eccc691f456d7bf9d8c4c095d5cb1410c757040222f9cb",
+      "file_size_bytes": 24827,
+      "pdf_type": "vector",
+      "page_count": 1,
+      "units": "m",
+      "ground_truth": {
+        "min_plots": 1,
+        "max_plots": 15,
+        "has_road_corridors": true,
+        "crs_status": "EPSG:3857",
+        "has_dimensions": false
+      },
+      "evaluation_split": "regression_gate"
+    }
+  ]
+}

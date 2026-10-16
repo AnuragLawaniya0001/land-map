@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "<string>", line 5, in <module>
+    r,g,b = aci2rgb(i)
+            ~~~~~~~^^^
+  File "C:\Users\Jasjot Jeet\AppData\Roaming\Python\Python314\site-packages\ezdxf\colors.py", line 264, in aci2rgb
+    raise IndexError(index)
+IndexError: 0

@@ -1,0 +1,116 @@
+[
+  {
+    "filename": "layout_geo.pdf",
+    "file_size_bytes": 24827,
+    "classification": "Synthetic Test Fixture",
+    "python_result": {
+      "success": true,
+      "duration_ms": 362.88,
+      "mode": "geopdf",
+      "counts": {
+        "plots": 64,
+        "zones": 4,
+        "greens": 4,
+        "roads": 10
+      }
+    },
+    "node_result": {
+      "success": false,
+      "duration_ms": 65.21,
+      "error": "The file has no real-world coordinates. Add a Google Maps link so the layout can be placed on the land."
+    },
+    "parity": {
+      "success_match": false,
+      "plot_count_match": false,
+      "area_diff_pct": null,
+      "matched_plots": 0,
+      "missing_in_node": [],
+      "extra_in_node": [],
+      "plot_comparisons": []
+    }
+  },
+  {
+    "filename": "layout_latlng.dxf",
+    "file_size_bytes": 48986,
+    "classification": "Synthetic Test Fixture",
+    "python_result": {
+      "success": true,
+      "duration_ms": 149.43,
+      "mode": "latlng",
+      "counts": {
+        "plots": 64,
+        "zones": 4,
+        "greens": 3,
+        "roads": 0
+      }
+    },
+    "node_result": {
+      "success": false,
+      "duration_ms": 5,
+      "error": "No closed shapes could be formed from the drawing"
+    },
+    "parity": {
+      "success_match": false,
+      "plot_count_match": false,
+      "area_diff_pct": null,
+      "matched_plots": 0,
+      "missing_in_node": [],
+      "extra_in_node": [],
+      "plot_comparisons": []
+    }
+  },
+  {
+    "filename": "layout_scaled.pdf",
+    "file_size_bytes": 24485,
+    "classification": "Synthetic Test Fixture",
+    "python_result": {
+      "success": false,
+      "duration_ms": 15.72,
+      "error": "The file has no real-world coordinates. Add a Google Maps link so the layout can be placed on the land."
+    },
+    "node_result": {
+      "success": false,
+      "duration_ms": 8.05,
+      "error": "The file has no real-world coordinates. Add a Google Maps link so the layout can be placed on the land."
+    },
+    "parity": {
+      "success_match": true,
+      "plot_count_match": false,
+      "area_diff_pct": null,
+      "matched_plots": 0,
+      "missing_in_node": [],
+      "extra_in_node": [],
+      "plot_comparisons": []
+    }
+  },
+  {
+    "filename": "layout_utm_lines.dxf",
+    "file_size_bytes": 84083,
+    "classification": "Synthetic Test Fixture",
+    "python_result": {
+      "success": true,
+      "duration_ms": 105.1,
+      "mode": "utm43",
+      "counts": {
+        "plots": 64,
+        "zones": 4,
+        "greens": 2,
+        "roads": 0
+      }
+    },
+    "node_result": {
+      "success": false,
+      "duration_ms": 2.73,
+      "error": "No closed shapes could be formed from the drawing"
+    },
+    "parity": {
+      "success_match": false,
+      "plot_count_match": false,
+      "area_diff_pct": null,
+      "matched_plots": 0,
+      "missing_in_node": [],
+      "extra_in_node": [],
+      "plot_comparisons": []
+    }
+  }
+]
