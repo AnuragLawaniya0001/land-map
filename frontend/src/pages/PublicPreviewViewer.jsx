@@ -86,7 +86,7 @@ export default function PublicPreviewViewer() {
         <h2>Preview unavailable</h2>
         <p>{error}</p>
         <Link
-          to="/owner-panel"
+          to="/superadmin"
           className="lm-btn-primary px-6 py-2.5 bg-violet-600 hover:bg-violet-500 rounded-lg font-semibold text-white transition"
         >
           Go to Control Panel
@@ -254,8 +254,8 @@ export default function PublicPreviewViewer() {
 
       {/* Brand & Preview Badge Bar */}
       <header className="lm-stage-brand" style={{ top: "72px" }}>
-        <div className="lm-stage-logo">
-          <span className="lm-brand-dot bg-amber-400" />
+        <div className="lm-stage-logo" style={{ padding: "4px" }}>
+          <img src="/logo.png" alt="LiveMap" style={{ width: "28px", height: "28px", objectFit: "contain" }} />
         </div>
         <div>
           <h1 data-testid="preview-colony-name" className="flex items-center gap-2">

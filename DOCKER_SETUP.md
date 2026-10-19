@@ -1,162 +1,76 @@
-# LiveMap Docker Setup
+# LiveMap Single-Container Production Docker Setup
 
-This document provides instructions for running LiveMap with Docker for MongoDB and Frontend, while running the Python Backend locally.
+This document provides complete instructions for running the unified LiveMap application in a **Single Docker Container** with:
+- **Frontend (Nginx + React UI):** Port `4800`
+- **Backend (Python FastAPI + GIS Engine + AI Models):** Port `4801`
+- **Process Manager:** `supervisord` managing both services concurrently in one container
 
-## Prerequisites
+---
 
-- Docker Desktop installed and running
-- Python 3.11+ installed locally
-- Node.js (already in Docker)
+## Architecture Overview
 
-## Quick Start
+```
+[ Browser / Client ]
+         │
+         ├── Port 4800 ──► Nginx (Serves React UI & Proxies /api/ to 127.0.0.1:4801)
+         └── Port 4801 ──► Python FastAPI (Direct REST API & GIS Pipeline)
+```
 
-### Step 1: Start Docker Services (MongoDB + Frontend)
+Both services run inside the same `livemap-app` container.
+
+---
+
+## Quick Start (Single Command)
+
+### Step 1: Start Container
 ```bash
-docker compose up -d
+docker compose up --build -d
 ```
 
-### Step 2: Start Python Backend Locally
+### Step 2: Access the Application
+- **Frontend (Web Application):** http://localhost:4800
+- **Backend API (Direct Access / Docs):** http://localhost:4801/docs
+- **Health Check:** http://localhost:4800/health (or http://localhost:4801/health)
+
+### Step 3: Stop Container
 ```bash
-cd backend/python
-.venv\Scripts\python.exe -m uvicorn app.server:app --host 127.0.0.1 --port 8001 --reload
+docker compose down
 ```
 
-### Step 3: Access the application
-- Frontend: http://localhost:5173
-- Backend API: http://localhost:8001
-- MongoDB: mongodb://livemap:livemap_password@localhost:27017
+---
 
-## Services
+## Ports Configuration
 
-### MongoDB (Docker)
-- Port: 27017
-- Username: `livemap`
-- Password: `livemap_password`
-- Database: `spacer_land`
-- Data persistence: Docker volumes
+| Service | Port | Description |
+|---|---|---|
+| **Frontend UI** | **`4800`** | Nginx web server serving compiled React production build and reverse-proxying `/api/` |
+| **Backend API** | **`4801`** | Python FastAPI server running with Uvicorn multi-worker engine |
 
-### Frontend (Docker - React/Vite)
-- Port: 5173
-- Hot module replacement enabled
-- Proxies API requests to local backend
+---
 
-### Backend (Local - Python/FastAPI)
-- Port: 8001
-- Auto-reload enabled for development
-- Connects to Docker MongoDB via localhost:27017
+## GitHub Clone & Automated Model Download
 
-## Environment Variables
+When you or someone else clones this project from GitHub:
+1. Model files are ignored in `.gitignore` (not committed to git).
+2. On running `docker compose up --build -d`:
+   - The container starts and automatically checks `/app/backend/models`.
+   - If model checkpoints are missing, **it automatically downloads all 6 AI models** (PaddleOCR, SAM 2, SegFormer, Mask2Former, Grounding DINO, Qwen2.5-VL) directly from official repositories (HuggingFace, Meta, Baidu).
+   - Because `./backend/models` is mapped as a volume, downloaded models are cached locally on host so they never need to be downloaded again on container restarts!
 
-### Docker Services (docker-compose.yml)
-**MongoDB:**
-- `MONGODB_URI=mongodb://livemap:livemap_password@mongodb:27017`
-- `MONGODB_DB=spacer_land`
+---
 
-**Frontend:**
-- `VITE_API_BASE_URL=/api`
-- `VITE_BACKEND_URL=http://localhost:8001`
+## Useful Docker Commands
 
-### Local Backend (backend/python/.env)
-```
-PORT=8001
-HOST=0.0.0.0
-NODE_ENV=development
-FRONTEND_URL=http://localhost:5173
-MONGODB_URI=mongodb://livemap:livemap_password@localhost:27017
-MONGODB_DB=spacer_land
-JWT_SECRET=livemap-dev-secret-change-in-prod-docker-environment
-TOKEN_TTL_SECONDS=86400
-JWT_COOKIE_NAME=access_token
-COOKIE_SECURE=false
-COOKIE_SAME_SITE=lax
-INTERNAL_GIS_SECRET=dev-internal-secret-key-change-in-prod-docker
-STORAGE_DRIVER=local
-LOCAL_STORAGE_PATH=./storage
-```
-
-## Common Commands
-
-### Docker Services:
 ```bash
-# Start Docker services
-docker compose up -d
-
-# View Docker logs
+# View real-time logs of both frontend & backend:
 docker compose logs -f
 
-# Stop Docker services
-docker compose down
+# Check container status:
+docker compose ps
 
-# Stop and remove volumes (cleans database)
-docker compose down -v
+# Rebuild and restart after changes:
+docker compose up --build -d
 
-# Rebuild frontend
-docker compose up -d --build frontend
-```
-
-### Local Backend:
-```bash
-# Start backend (Windows)
-cd backend/python
-.venv\Scripts\python.exe -m uvicorn app.server:app --host 127.0.0.1 --port 8001 --reload
-
-# Start backend (Linux/Mac)
-cd backend/python
-.venv/bin/python -m uvicorn app.server:app --host 127.0.0.1 --port 8001 --reload
-```
-
-### MongoDB Operations:
-```bash
-# Access MongoDB shell
-docker exec -it livemap-mongodb mongosh -u livemap -p livemap_password
-
-# Backup MongoDB data
-docker exec livemap-mongodb mongodump --uri="mongodb://livemap:livemap_password@localhost:27017" --archive=/tmp/backup.archive
-docker cp livemap-mongodb:/tmp/backup.archive ./backup.archive
-
-# Restore MongoDB data
-docker cp ./backup.archive livemap-mongodb:/tmp/backup.archive
-docker exec livemap-mongodb mongorestore --uri="mongodb://livemap:livemap_password@localhost:27017" --archive=/tmp/backup.archive
-```
-
-## Troubleshooting
-
-### MongoDB connection issues
-- Ensure MongoDB container is healthy: `docker compose ps`
-- Check MongoDB logs: `docker compose logs mongodb`
-- Verify backend .env has correct MONGODB_URI
-
-### Backend not starting
-- Ensure Python virtual environment is activated
-- Check MongoDB is running: `docker compose ps`
-- Verify port 8001 is not in use
-- Check backend .env configuration
-
-### Frontend not accessible
-- Check if frontend container is running: `docker compose ps`
-- View frontend logs: `docker compose logs frontend`
-- Ensure port 5173 is not in use
-
-### Frontend can't connect to backend
-- Ensure backend is running locally on port 8001
-- Check backend logs for errors
-- Verify VITE_BACKEND_URL in docker-compose.yml
-
-## Storage
-
-MongoDB data is stored in Docker volumes:
-- `mongodb_data`: MongoDB database files
-- `mongodb_config`: MongoDB configuration
-
-Backend files are stored locally:
-- `backend/python/storage`: Local file storage (uploads, etc.)
-
-To view volumes:
-```bash
-docker volume ls
-```
-
-To remove volumes (⚠️ deletes all data):
-```bash
-docker compose down -v
+# Restart container:
+docker compose restart
 ```

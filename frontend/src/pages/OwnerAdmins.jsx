@@ -77,108 +77,105 @@ export default function OwnerAdmins() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="lm-page-container" data-testid="owner-admins-page">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold font-serif tracking-tight">Admin Accounts</h1>
-          <p className="text-sm opacity-70">Govern platform administrators and their associated tenant data</p>
+      <header className="lm-modern-header">
+        <div className="lm-modern-header-left">
+          <span className="lm-modern-eyebrow">Tenant Management</span>
+          <h1 className="lm-modern-title">Admin Workspaces</h1>
+          <p className="lm-modern-subtitle">
+            Govern platform administrators and their associated colonies, inventory, and inquiries.
+          </p>
         </div>
 
-        <button
-          onClick={() => { setFormError(""); setShowModal(true); }}
-          className="neo-btn-primary self-start sm:self-auto flex items-center gap-2"
-        >
-          <UserPlus size={16} />
-          + New Admin
-        </button>
-      </div>
+        <div className="lm-modern-header-actions">
+          <button
+            onClick={() => { setFormError(""); setShowModal(true); }}
+            className="lm-btn-glow"
+            data-testid="owner-new-admin-btn"
+          >
+            <UserPlus size={16} />
+            + New Admin Workspace
+          </button>
+        </div>
+      </header>
 
       {loading ? (
-        <div className="neo-card p-12 text-center text-sm opacity-70 animate-pulse">
+        <div className="lm-modern-card p-12 text-center text-sm text-slate-400 animate-pulse">
           Loading platform administrators...
         </div>
       ) : error ? (
-        <div className="neo-card p-6 border-l-4 border-red-500 text-red-600 dark:text-red-400">
+        <div className="lm-badge-danger p-3 rounded-xl mb-4 text-xs font-medium w-full">
           {error}
         </div>
       ) : (
-        <div className="neo-card p-6 overflow-x-auto">
-          <table className="w-full text-left border-collapse text-sm">
+        <div className="lm-modern-table-container">
+          <table className="lm-modern-table">
             <thead>
-              <tr className="border-b border-gray-200 dark:border-gray-800 opacity-60 uppercase text-xs tracking-wider">
-                <th className="py-3 px-4">Admin</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4">Colonies</th>
-                <th className="py-3 px-4">Plots (Avail / Sold)</th>
-                <th className="py-3 px-4">Inquiries</th>
-                <th className="py-3 px-4">Shares</th>
-                <th className="py-3 px-4">Created</th>
-                <th className="py-3 px-4 text-right">Actions</th>
+              <tr>
+                <th style={{ width: "24%" }}>Admin Name & Email</th>
+                <th style={{ width: "12%" }}>Status</th>
+                <th style={{ width: "10%" }}>Colonies</th>
+                <th style={{ width: "16%" }}>Plots (Avail / Sold)</th>
+                <th style={{ width: "10%" }}>Inquiries</th>
+                <th style={{ width: "10%" }}>Shares</th>
+                <th style={{ width: "18%", textAlign: "right" }}>Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+            <tbody>
               {admins.length === 0 ? (
                 <tr>
-                  <td colSpan="8" className="py-8 text-center opacity-60">
+                  <td colSpan="7" className="py-8 text-center text-slate-400">
                     No administrators found.
                   </td>
                 </tr>
               ) : (
                 admins.map((admin) => (
-                  <tr key={admin.uid} className="hover:bg-violet-500/5 transition-colors">
-                    <td className="py-4 px-4">
-                      <div className="font-semibold">{admin.name || "Unnamed Admin"}</div>
-                      <div className="text-xs opacity-60 font-mono">{admin.email}</div>
+                  <tr key={admin.uid || admin.id} data-testid={`admin-row-${admin.email}`}>
+                    <td>
+                      <div className="font-bold text-[#172A25] text-xs">{admin.name || "Unnamed Admin"}</div>
+                      <div className="text-[11px] text-[#6B7280] font-mono">{admin.email}</div>
                     </td>
-                    <td className="py-4 px-4">
-                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${
-                        admin.active !== false
-                          ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
-                          : "bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20"
-                      }`}>
-                        {admin.active !== false ? (
-                          <><CheckCircle size={12} /> ACTIVE</>
-                        ) : (
-                          <><XCircle size={12} /> INACTIVE</>
-                        )}
+                    <td>
+                      <span className={`lm-badge ${admin.active !== false ? "lm-badge-success" : "lm-badge-danger"}`}>
+                        <span className="lm-badge-dot" />
+                        {admin.active !== false ? "ACTIVE" : "INACTIVE"}
                       </span>
                     </td>
-                    <td className="py-4 px-4 font-mono font-medium">
+                    <td className="font-mono font-bold text-xs text-[#172A25]">
                       {admin.metrics?.coloniesCount || 0}
                     </td>
-                    <td className="py-4 px-4">
-                      <span className="font-mono font-medium">{admin.metrics?.totalPlots || 0}</span>
-                      <span className="text-xs opacity-60 font-mono ml-2">
-                        ({admin.metrics?.availablePlots || 0} / {admin.metrics?.soldPlots || 0})
+                    <td>
+                      <span className="font-mono font-bold text-xs text-[#172A25]">{admin.metrics?.totalPlots || 0}</span>
+                      <span className="text-[11px] text-[#6B7280] font-mono ml-1.5">
+                        (<span className="text-[#047857] font-semibold">{admin.metrics?.availablePlots || 0}</span> / <span className="text-[#BE123C] font-semibold">{admin.metrics?.soldPlots || 0}</span>)
                       </span>
                     </td>
-                    <td className="py-4 px-4 font-mono font-medium">
+                    <td className="font-mono font-medium text-xs text-[#B45309]">
                       {admin.metrics?.inquiriesCount || 0}
                     </td>
-                    <td className="py-4 px-4 font-mono font-medium">
+                    <td className="font-mono font-medium text-xs text-[#0D1B2A]">
                       {admin.metrics?.activeSharesCount || 0}
                     </td>
-                    <td className="py-4 px-4 text-xs opacity-60 font-mono">
-                      {admin.createdAt ? new Date(admin.createdAt).toLocaleDateString() : "N/A"}
-                    </td>
-                    <td className="py-4 px-4 text-right flex items-center justify-end gap-2">
-                      <Link
-                        to={`/owner-panel/admins/${admin.id || admin.uid}/inspect`}
-                        className="text-xs font-semibold px-3 py-1.5 rounded-lg neo-card hover:border-violet-500/40 text-violet-600 dark:text-violet-400 transition-all flex items-center gap-1"
-                      >
-                        <Eye size={14} /> Inspect Workspace
-                      </Link>
-                      <button
-                        onClick={() => handleToggleStatus(admin.id || admin.uid, admin.active !== false)}
-                        className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition-all ${
-                          admin.active !== false
-                            ? "border-red-500/30 text-red-600 dark:text-red-400 hover:bg-red-500/10"
-                            : "border-emerald-500/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10"
-                        }`}
-                      >
-                        {admin.active !== false ? "Deactivate" : "Activate"}
-                      </button>
+                    <td className="text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <Link
+                          to={`/superadmin/admins/${admin.id || admin.uid}/inspect`}
+                          className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-[#F4EFE6] border border-[#E8E2D6] text-[#173F35] hover:bg-[#EAE5DB] transition-all flex items-center gap-1"
+                        >
+                          <Eye size={13} /> Inspect
+                        </Link>
+                        <button
+                          onClick={() => handleToggleStatus(admin.id || admin.uid, admin.active !== false)}
+                          className={`text-xs font-semibold px-2.5 py-1 rounded-lg border transition-all ${
+                            admin.active !== false
+                              ? "border-rose-300 text-rose-700 bg-rose-50 hover:bg-rose-100"
+                              : "border-emerald-300 text-emerald-800 bg-emerald-50 hover:bg-emerald-100"
+                          }`}
+                        >
+                          {admin.active !== false ? "Deactivate" : "Activate"}
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -190,70 +187,70 @@ export default function OwnerAdmins() {
 
       {/* Create Admin Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="neo-card p-6 w-full max-w-md space-y-4">
-            <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 pb-3">
-              <h2 className="text-lg font-bold font-serif">Create New Administrator</h2>
+        <div className="lm-modal-shade" onClick={() => setShowModal(false)}>
+          <div className="lm-modal max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+            <div className="lm-modal-head">
+              <h3>Create New Administrator</h3>
               <button
                 onClick={() => setShowModal(false)}
-                className="text-xs opacity-60 hover:opacity-100"
+                className="lm-icon-btn"
               >
                 ✕
               </button>
             </div>
 
             {formError && (
-              <div className="text-xs p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400">
+              <div className="lm-badge-danger p-3 rounded-xl text-xs font-medium w-full">
                 {formError}
               </div>
             )}
 
             <form onSubmit={handleCreateAdmin} className="space-y-4">
-              <div>
-                <label className="block text-xs font-semibold mb-1 opacity-70">Admin Full Name</label>
+              <div className="lm-modern-input-group">
+                <label>Admin Full Name</label>
                 <input
                   type="text"
                   required
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                   placeholder="e.g. Jasjot Singh"
-                  className="w-full px-3 py-2 text-sm rounded-lg neo-input bg-transparent border border-gray-300 dark:border-gray-700"
+                  className="lm-modern-input"
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold mb-1 opacity-70">Email Address</label>
+              <div className="lm-modern-input-group">
+                <label>Email Address</label>
                 <input
                   type="email"
                   required
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  placeholder="admin@spacer.com"
-                  className="w-full px-3 py-2 text-sm rounded-lg neo-input bg-transparent border border-gray-300 dark:border-gray-700"
+                  placeholder="admin@livemap.com"
+                  className="lm-modern-input"
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold mb-1 opacity-70">Password</label>
+              <div className="lm-modern-input-group">
+                <label>Password</label>
                 <input
                   type="password"
                   required
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
                   placeholder="••••••••"
-                  className="w-full px-3 py-2 text-sm rounded-lg neo-input bg-transparent border border-gray-300 dark:border-gray-700"
+                  className="lm-modern-input"
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold mb-1 opacity-70">Confirm Password</label>
+              <div className="lm-modern-input-group">
+                <label>Confirm Password</label>
                 <input
                   type="password"
                   required
                   value={form.confirmPassword}
                   onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
                   placeholder="••••••••"
-                  className="w-full px-3 py-2 text-sm rounded-lg neo-input bg-transparent border border-gray-300 dark:border-gray-700"
+                  className="lm-modern-input"
                 />
               </div>
 
@@ -261,14 +258,14 @@ export default function OwnerAdmins() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 text-xs font-semibold opacity-70 hover:opacity-100"
+                  className="lm-btn-secondary-dark text-xs"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="neo-btn-primary text-xs"
+                  className="lm-btn-glow text-xs"
                 >
                   {submitting ? "Creating..." : "Create Admin Account"}
                 </button>

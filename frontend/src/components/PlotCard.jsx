@@ -27,7 +27,11 @@ export function estimateDimsText(plot, a) {
 }
 
 export function PlotSummary({ plot, status, zone, showGps = true }) {
-  const a = areaConversions(plot.area_sqm || 0);
+  const a = (plot.area_sqft || plot.area_sqyd) ? {
+    sqft: Math.round(plot.area_sqft || (plot.area_sqyd * 9)),
+    sqyd: Math.round(plot.area_sqyd || (plot.area_sqft / 9)),
+    sqm: Math.round(plot.area_sqm || (plot.area_sqft * 0.092903)),
+  } : areaConversions(plot.area_sqm || 0);
   const c = plotCenter(plot);
 
   const formatPrice = (val) => {

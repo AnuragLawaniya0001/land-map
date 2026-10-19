@@ -35,138 +35,153 @@ export default function OwnerDashboard() {
   const recentActivity = data.recent_activity || [];
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+    <div className="lm-page-container" data-testid="owner-dashboard-page">
       {/* Top Bar / Welcome */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div>
-          <div style={{ fontSize: "0.8rem", color: "var(--owner-accent)", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.1em" }}>
-            Platform Governance
-          </div>
-          <h1 style={{ fontFamily: "Fraunces, serif", fontSize: "2rem", fontWeight: "800", margin: 0 }}>
+      <header className="lm-modern-header">
+        <div className="lm-modern-header-left">
+          <span className="lm-modern-eyebrow">Platform Governance</span>
+          <h1 className="lm-modern-title">
             Welcome back, {data.user?.name || "Owner"}.
           </h1>
-          <p style={{ color: "var(--owner-text-muted)", fontSize: "0.9rem", marginTop: "0.2rem" }}>
-            Complete platform-wide monitoring over every admin, colony, plot, and public share link.
+          <p className="lm-modern-subtitle">
+            Complete platform-wide monitoring over every admin workspace, colony layout, plot inventory, and public link.
           </p>
         </div>
-      </div>
+      </header>
 
       {/* Metric Cards Row */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.25rem" }}>
-        <div className="owner-card-neumorph" data-testid="owner-metric-admins">
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", color: "var(--owner-text-muted)", marginBottom: "0.5rem" }}>
-            <span style={{ fontSize: "0.8rem", fontWeight: "700", textTransform: "uppercase" }}>Total Admins</span>
-            <Users size={18} style={{ color: "var(--owner-accent)" }} />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="lm-stat colonies" data-testid="owner-metric-admins">
+          <div className="lm-stat-top">
+            <span className="lm-stat-label">Total Admins</span>
+            <div className="lm-stat-icon-wrap">
+              <Users size={16} />
+            </div>
           </div>
-          <div style={{ fontSize: "2rem", fontWeight: "800", color: "var(--owner-text-primary)" }}>
+          <div className="lm-stat-val">
             {totals.admins || 0}
           </div>
-          <div style={{ fontSize: "0.75rem", color: "var(--owner-text-muted)", marginTop: "0.25rem" }}>Registered platform tenants</div>
+          <div className="lm-stat-sub">Registered platform tenants</div>
         </div>
 
-        <div className="owner-card-neumorph" data-testid="owner-metric-colonies">
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", color: "var(--owner-text-muted)", marginBottom: "0.5rem" }}>
-            <span style={{ fontSize: "0.8rem", fontWeight: "700", textTransform: "uppercase" }}>Total Colonies</span>
-            <MapPin size={18} style={{ color: "#38bdf8" }} />
+        <div className="lm-stat colonies" data-testid="owner-metric-colonies">
+          <div className="lm-stat-top">
+            <span className="lm-stat-label">Total Colonies</span>
+            <div className="lm-stat-icon-wrap">
+              <MapPin size={16} />
+            </div>
           </div>
-          <div style={{ fontSize: "2rem", fontWeight: "800", color: "var(--owner-text-primary)" }}>
+          <div className="lm-stat-val">
             {totals.colonies || 0}
           </div>
-          <div style={{ fontSize: "0.75rem", color: "var(--owner-text-muted)", marginTop: "0.25rem" }}>Imported GIS layouts</div>
+          <div className="lm-stat-sub">Imported GIS layouts</div>
         </div>
 
-        <div className="owner-card-neumorph" data-testid="owner-metric-plots">
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", color: "var(--owner-text-muted)", marginBottom: "0.5rem" }}>
-            <span style={{ fontSize: "0.8rem", fontWeight: "700", textTransform: "uppercase" }}>Total Plots</span>
-            <Layers size={18} style={{ color: "#a7f3d0" }} />
+        <div className="lm-stat available" data-testid="owner-metric-plots">
+          <div className="lm-stat-top">
+            <span className="lm-stat-label">Total Plots</span>
+            <div className="lm-stat-icon-wrap">
+              <Layers size={16} />
+            </div>
           </div>
-          <div style={{ fontSize: "2rem", fontWeight: "800", color: "var(--owner-text-primary)" }}>
+          <div className="lm-stat-val">
             {totals.plots || 0}
           </div>
-          <div style={{ fontSize: "0.75rem", color: "var(--owner-text-muted)", marginTop: "0.25rem" }}>Tracked real-estate units</div>
+          <div className="lm-stat-sub">Tracked real-estate units</div>
         </div>
 
-        <div className="owner-card-neumorph" data-testid="owner-metric-inquiries">
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", color: "var(--owner-text-muted)", marginBottom: "0.5rem" }}>
-            <span style={{ fontSize: "0.8rem", fontWeight: "700", textTransform: "uppercase" }}>Inquiries</span>
-            <MessageSquare size={18} style={{ color: "#fef08a" }} />
+        <div className="lm-modern-card" data-testid="owner-metric-inquiries">
+          <div className="flex items-center justify-between text-[#6B7280] mb-2">
+            <span className="text-xs font-bold uppercase tracking-wider font-mono">Inquiries</span>
+            <div className="p-2 rounded-lg bg-[#F4EFE6] text-[#173F35] border border-[#E8E2D6]">
+              <MessageSquare size={16} />
+            </div>
           </div>
-          <div style={{ fontSize: "2rem", fontWeight: "800", color: "var(--owner-text-primary)" }}>
-            {inquiries.new || 0} <span style={{ fontSize: "1rem", color: "var(--owner-text-muted)", fontWeight: "500" }}>/ {inquiries.total || 0}</span>
+          <div className="text-3xl font-extrabold text-[#172A25] font-mono tracking-tight">
+            {inquiries.new || 0} <span className="text-sm text-[#6B7280] font-normal">/ {inquiries.total || 0}</span>
           </div>
-          <div style={{ fontSize: "0.75rem", color: "var(--owner-text-muted)", marginTop: "0.25rem" }}>New / Total customer leads</div>
+          <div className="text-xs text-[#6B7280] mt-1">New / Total customer leads</div>
         </div>
       </div>
 
       {/* Inventory Status Breakdown & Shares Section */}
-      <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "1.5rem" }}>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         {/* Inventory Breakdown */}
-        <div className="owner-card-neumorph">
-          <h3 style={{ fontSize: "1.1rem", fontWeight: "700", marginBottom: "1rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <Layers size={18} style={{ color: "var(--owner-accent)" }} />
-            Platform Inventory Breakdown
+        <div className="lm-modern-card lg:col-span-2">
+          <h3 className="text-base font-bold text-[#172A25] mb-4 flex items-center gap-2">
+            <Layers size={18} className="text-[#173F35]" />
+            <span>Platform Inventory Breakdown</span>
           </h3>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "0.75rem", textAlign: "center" }}>
-            <div className="owner-card-inset">
-              <div style={{ fontSize: "0.75rem", color: "var(--owner-text-muted)", textTransform: "uppercase", fontWeight: "700" }}>Available</div>
-              <div style={{ fontSize: "1.4rem", fontWeight: "800", color: "#4ade80", marginTop: "0.25rem" }}>{statusCounts.available || 0}</div>
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-center">
+            <div className="bg-[#F6F4EE] border border-[#E8E2D6] rounded-xl p-3">
+              <div className="text-[11px] text-[#047857] uppercase font-mono font-bold">Available</div>
+              <div className="text-2xl font-extrabold text-[#172A25] font-mono mt-1">{statusCounts.available || 0}</div>
             </div>
-            <div className="owner-card-inset">
-              <div style={{ fontSize: "0.75rem", color: "var(--owner-text-muted)", textTransform: "uppercase", fontWeight: "700" }}>Hold</div>
-              <div style={{ fontSize: "1.4rem", fontWeight: "800", color: "#fb923c", marginTop: "0.25rem" }}>{statusCounts.hold || 0}</div>
+            <div className="bg-[#F6F4EE] border border-[#E8E2D6] rounded-xl p-3">
+              <div className="text-[11px] text-[#D97706] uppercase font-mono font-bold">Hold</div>
+              <div className="text-2xl font-extrabold text-[#172A25] font-mono mt-1">{statusCounts.hold || 0}</div>
             </div>
-            <div className="owner-card-inset">
-              <div style={{ fontSize: "0.75rem", color: "var(--owner-text-muted)", textTransform: "uppercase", fontWeight: "700" }}>Reserved</div>
-              <div style={{ fontSize: "1.4rem", fontWeight: "800", color: "#facc15", marginTop: "0.25rem" }}>{statusCounts.reserved || 0}</div>
+            <div className="bg-[#F6F4EE] border border-[#E8E2D6] rounded-xl p-3">
+              <div className="text-[11px] text-[#B45309] uppercase font-mono font-bold">Reserved</div>
+              <div className="text-2xl font-extrabold text-[#172A25] font-mono mt-1">{statusCounts.reserved || 0}</div>
             </div>
-            <div className="owner-card-inset">
-              <div style={{ fontSize: "0.75rem", color: "var(--owner-text-muted)", textTransform: "uppercase", fontWeight: "700" }}>Sold</div>
-              <div style={{ fontSize: "1.4rem", fontWeight: "800", color: "#f87171", marginTop: "0.25rem" }}>{statusCounts.sold || 0}</div>
+            <div className="bg-[#F6F4EE] border border-[#E8E2D6] rounded-xl p-3">
+              <div className="text-[11px] text-[#BE123C] uppercase font-mono font-bold">Sold</div>
+              <div className="text-2xl font-extrabold text-[#172A25] font-mono mt-1">{statusCounts.sold || 0}</div>
             </div>
-            <div className="owner-card-inset">
-              <div style={{ fontSize: "0.75rem", color: "var(--owner-text-muted)", textTransform: "uppercase", fontWeight: "700" }}>Blocked</div>
-              <div style={{ fontSize: "1.4rem", fontWeight: "800", color: "#94a3b8", marginTop: "0.25rem" }}>{statusCounts.blocked || 0}</div>
+            <div className="bg-[#F6F4EE] border border-[#E8E2D6] rounded-xl p-3 col-span-2 sm:col-span-1">
+              <div className="text-[11px] text-[#6B7280] uppercase font-mono font-bold">Blocked</div>
+              <div className="text-2xl font-extrabold text-[#172A25] font-mono mt-1">{statusCounts.blocked || 0}</div>
             </div>
           </div>
         </div>
 
         {/* Shares Overview */}
-        <div className="owner-card-neumorph">
-          <h3 style={{ fontSize: "1.1rem", fontWeight: "700", marginBottom: "1rem" }}>
-            Public Share Tokens
+        <div className="lm-modern-card">
+          <h3 className="text-base font-bold text-[#172A25] mb-4 flex items-center gap-2">
+            <span>Public Share Tokens</span>
           </h3>
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ color: "var(--owner-text-secondary)", fontSize: "0.9rem" }}>Active Shared Links</span>
-              <span style={{ fontWeight: "800", color: "#34d399" }}>{shares.active || 0}</span>
+          <div className="flex flex-col gap-3 text-xs">
+            <div className="flex justify-between items-center py-2 border-b border-[#F0ECE1]">
+              <span className="text-[#6B7280]">Active Shared Links</span>
+              <span className="font-bold font-mono text-[#173F35] text-sm">{shares.active || 0}</span>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ color: "var(--owner-text-secondary)", fontSize: "0.9rem" }}>Total Generated</span>
-              <span style={{ fontWeight: "800" }}>{shares.total || 0}</span>
+            <div className="flex justify-between items-center py-2 border-b border-[#F0ECE1]">
+              <span className="text-[#6B7280]">Total Generated</span>
+              <span className="font-bold font-mono text-[#0D1B2A] text-sm">{shares.total || 0}</span>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ color: "var(--owner-text-secondary)", fontSize: "0.9rem" }}>Registry Deeds Attached</span>
-              <span style={{ fontWeight: "800", color: "#818cf8" }}>{totals.registry_docs || 0}</span>
+            <div className="flex justify-between items-center py-2">
+              <span className="text-[#6B7280]">Registry Deeds Attached</span>
+              <span className="font-bold font-mono text-[#173F35] text-sm">{totals.registry_docs || 0}</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Recent Platform Activity */}
-      <div className="owner-card-neumorph">
-        <h3 style={{ fontSize: "1.1rem", fontWeight: "700", marginBottom: "1rem" }}>
-          Recent Platform Audit Activity
+      <div className="lm-modern-card">
+        <h3 className="text-base font-bold text-[#172A25] mb-4 flex items-center justify-between">
+          <span>Recent Platform Audit Activity</span>
+          <Link to="/superadmin/audit" className="text-xs text-[#173F35] hover:underline font-semibold">
+            View All Audit Logs →
+          </Link>
         </h3>
         {recentActivity.length === 0 ? (
-          <div style={{ color: "var(--owner-text-muted)", fontSize: "0.85rem" }}>No recent activity records.</div>
+          <div className="text-xs text-[#6B7280] py-6 text-center">No recent activity records.</div>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+          <div className="flex flex-col gap-2">
             {recentActivity.map((act) => (
-              <div key={act.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0.6rem 0.8rem", background: "var(--owner-bg)", borderRadius: "8px", border: "1px solid var(--owner-border)", fontSize: "0.85rem" }}>
+              <div
+                key={act.id}
+                className="flex items-center justify-between p-3 bg-[#F6F4EE] border border-[#E8E2D6] rounded-xl text-xs hover:border-[#173F35]/40 transition-colors"
+                data-testid={`owner-activity-row-${act.id}`}
+              >
                 <div>
-                  <strong style={{ color: "var(--owner-accent)" }}>{act.user_name || "System"}</strong>: {act.action ? act.action.replaceAll("_", " ") : "Action"} on <code>{act.entity_type}</code>
+                  <strong className="text-[#173F35]">{act.user_name || "System"}</strong>:{" "}
+                  <span className="text-[#374151]">{act.action ? act.action.replaceAll("_", " ") : "Action"}</span> on{" "}
+                  <code className="text-[#0D1B2A] font-mono text-[11px] bg-[#EAE5DB] px-1.5 py-0.5 rounded">{act.entity_type}</code>
                 </div>
-                <span style={{ color: "var(--owner-text-muted)", fontSize: "0.75rem" }}>
+                <span className="text-[11px] text-[#6B7280] font-mono">
                   {new Date(act.created_at).toLocaleString()}
                 </span>
               </div>

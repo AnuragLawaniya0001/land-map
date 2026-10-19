@@ -18,6 +18,7 @@ import {
   Search,
   X,
   Box,
+  Satellite,
   Map as MapIcon,
   List,
   Layers,
@@ -33,6 +34,8 @@ import {
   AlertTriangle,
   RefreshCw,
   Sparkles,
+  PencilRuler,
+  Table,
 } from "lucide-react";
 import { api, BACKEND, errMsg } from "@/lib/api";
 import { usePortalBase } from "@/lib/portal";
@@ -49,6 +52,7 @@ import Canonical3DInspector from "@/components/canonical/Canonical3DInspector";
 import CanonicalExportModal from "@/components/canonical/CanonicalExportModal";
 import AdminPlotTable from "@/components/AdminPlotTable";
 import AdminPlotEditModal from "@/components/AdminPlotEditModal";
+import AdminPlotCsvModal from "@/components/AdminPlotCsvModal";
 import PlacementCalibrationModal from "@/components/PlacementCalibrationModal";
 import ColonySettingsModal from "@/components/ColonySettingsModal";
 import ColonyDataUsedModal from "@/components/ColonyDataUsedModal";
@@ -60,6 +64,7 @@ export default function CanonicalColonyMap() {
   // Primary state
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [showCsvModal, setShowCsvModal] = useState(false);
   const [colonyRaw, setColonyRaw] = useState(null);
   const [colonyName, setColonyName] = useState("");
   const [colonyLocation, setColonyLocation] = useState("");
@@ -165,6 +170,33 @@ export default function CanonicalColonyMap() {
 
         const usingLegacyPlots = canonicalPlots.length === 0 && normalizedLegacy.plots.length > 0;
         let activePlots = usingLegacyPlots ? normalizedLegacy.plots : canonicalPlots;
+
+        // Ensure zone_id, status_id, dimensions, facing, area etc. are hydrated from colonyData.plots
+        const colonyPlotsMap = new Map();
+        (colonyData.plots || []).forEach((cp) => {
+          if (cp.number) colonyPlotsMap.set(String(cp.number).trim().toLowerCase(), cp);
+          if (cp.id) colonyPlotsMap.set(String(cp.id), cp);
+          if (cp._id) colonyPlotsMap.set(String(cp._id), cp);
+        });
+
+        activePlots = activePlots.map((plot) => {
+          const numKey = String(plot.number || plot.original_number || "").trim().toLowerCase();
+          const match = colonyPlotsMap.get(String(plot.id)) || (numKey ? colonyPlotsMap.get(numKey) : null);
+          if (match) {
+            return {
+              ...match,
+              ...plot,
+              zone_id: plot.zone_id || match.zone_id,
+              status_id: plot.status_id || match.status_id,
+              facing: plot.facing || match.facing,
+              dimensions: plot.dimensions || match.dimensions,
+              area_sqft: plot.area_sqft || match.area_sqft,
+              area_sqyd: plot.area_sqyd || match.area_sqyd,
+              price: plot.price || match.price,
+            };
+          }
+          return plot;
+        });
 
         const overlay = bundleData.pdf_overlay || colonyObj.pdf_overlay;
 
@@ -293,6 +325,26 @@ export default function CanonicalColonyMap() {
     }
   };
 
+  const handleDirectExportCsv = async () => {
+    try {
+      const res = await api.get(`/admin/colonies/${id}/plots/export-csv`, {
+        responseType: "blob",
+      });
+      const blob = new Blob([res.data], { type: "text/csv;charset=utf-8;" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      const cleanName = (colonyName || "colony").replace(/[^a-zA-Z0-9_-]/g, "_");
+      a.download = `${cleanName}_plots.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (e) {
+      setError(errMsg(e));
+    }
+  };
+
   useEffect(() => {
     setSelectedPlot(null);
     setSelectedRoad(null);
@@ -302,17 +354,38 @@ export default function CanonicalColonyMap() {
     loadColonyData();
   }, [id]); // eslint-disable-line
 
+  // Fast zones lookup
+  const zonesById = useMemo(() => {
+    const map = {};
+    (zones || []).forEach((z) => {
+      if (z.id) map[z.id] = z;
+      if (z.code) {
+        map[z.code] = z;
+        map[z.code.toLowerCase()] = z;
+        map[`zone ${z.code}`.toLowerCase()] = z;
+      }
+      if (z.name) {
+        map[z.name] = z;
+        map[z.name.toLowerCase()] = z;
+      }
+    });
+    return map;
+  }, [zones]);
+
   // Filtered plots by search and zone
   const filteredPlots = useMemo(() => {
     let result = plots;
     if (selectedZone) {
-      result = result.filter((p) => p.zone_id === selectedZone);
+      result = result.filter((p) => {
+        const pz = zonesById[p.zone_id];
+        return p.zone_id === selectedZone || (pz && pz.id === selectedZone) || (pz && pz.code === selectedZone) || (pz && pz.name === selectedZone);
+      });
     }
     if (searchQuery.trim()) {
       result = result.filter((p) => matchesPlotSearch(p, searchQuery));
     }
     return result;
-  }, [plots, selectedZone, searchQuery]);
+  }, [plots, selectedZone, searchQuery, zonesById]);
 
   const filteredRoads = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -380,11 +453,6 @@ export default function CanonicalColonyMap() {
     setResetKey((k) => k + 1);
   };
 
-  // Fast zones lookup
-  const zonesById = useMemo(() => {
-    return Object.fromEntries(zones.map((z) => [z.id, z]));
-  }, [zones]);
-
   // Total area calculation
   const totalAreaDisplay = useMemo(() => {
     let totalSqyd = 0;
@@ -429,19 +497,8 @@ export default function CanonicalColonyMap() {
       <header className="lm-gis-top-bar">
         {/* Left: Colony Info & Location */}
         <div className="lm-top-left">
-          <Link
-            to={`${base}/colonies`}
-            className="lm-top-back-btn"
-            data-testid="back-to-colonies"
-            title="Back to All Colonies"
-          >
-            <ArrowLeft size={16} />
-          </Link>
           <div className="lm-top-colony">
-            <div className="lm-top-title-row">
-              <span className="lm-top-live-dot" />
-              <h1 className="lm-top-title">{colonyName}</h1>
-            </div>
+            <h1 className="lm-top-title">{colonyName}</h1>
             <div className="lm-top-meta">
               <span>{colonyLocation}</span>
               <span>·</span>
@@ -494,10 +551,19 @@ export default function CanonicalColonyMap() {
 
         {/* Right: 3D View Indicators & Global GIS Controls */}
         <div className="lm-top-right">
+          <Link
+            to={`${base}/colonies/${id}`}
+            className="lm-top-btn"
+            title="Switch to 2D Satellite View"
+            data-testid="switch-to-satellite-view"
+          >
+            <Satellite size={13} /> Satellite
+          </Link>
+
           {/* Active 3D View Highlight Button */}
           <button
             type="button"
-            className="lm-top-btn active-3d"
+            className="lm-top-btn active"
             data-testid="admin-active-3d-btn"
             title="3D Spatial Viewer Active"
           >
@@ -566,6 +632,20 @@ export default function CanonicalColonyMap() {
               </button>
               <button
                 type="button"
+                className="lm-top-menu-item text-amber-400 font-medium"
+                onClick={handleDirectExportCsv}
+              >
+                <Download size={13} /> Export Plots (CSV)
+              </button>
+              <button
+                type="button"
+                className="lm-top-menu-item text-amber-400 font-medium"
+                onClick={() => setShowCsvModal(true)}
+              >
+                <Upload size={13} /> Import Plots (CSV)
+              </button>
+              <button
+                type="button"
                 className="lm-top-menu-item text-blue-400"
                 onClick={() => setExportModalOpen(true)}
               >
@@ -616,12 +696,40 @@ export default function CanonicalColonyMap() {
                 statuses,
               }}
               busy={busy}
-              onStatusChange={() => {}}
-              onBulkStatus={() => {}}
+              onStatusChange={async (p, statusId) => {
+                try {
+                  await api.patch(`/admin/plots/${p.id}/status`, { status_id: statusId });
+                  setPlots((prev) =>
+                    prev.map((item) => (item.id === p.id ? { ...item, status_id: statusId } : item))
+                  );
+                  if (selectedPlot?.id === p.id) {
+                    setSelectedPlot((curr) => ({ ...curr, status_id: statusId }));
+                  }
+                } catch (e) {
+                  setError(errMsg(e));
+                }
+              }}
+              onBulkStatus={async (ids, statusId) => {
+                try {
+                  await api.patch("/admin/plots/bulk-status", { plot_ids: ids, status_id: statusId });
+                  const idSet = new Set(ids);
+                  setPlots((prev) =>
+                    prev.map((item) => (idSet.has(item.id) ? { ...item, status_id: statusId } : item))
+                  );
+                  if (selectedPlot && idSet.has(selectedPlot.id)) {
+                    setSelectedPlot((curr) => ({ ...curr, status_id: statusId }));
+                  }
+                } catch (e) {
+                  setError(errMsg(e));
+                }
+              }}
               onOpenOnMap={(p) => {
                 setSelectedPlot(p);
                 setTab("map");
               }}
+              onEditPlot={(p) => setEditingPlot(p)}
+              onExportCsv={handleDirectExportCsv}
+              onImportCsv={() => setShowCsvModal(true)}
             />
           </div>
         ) : (
@@ -652,7 +760,10 @@ export default function CanonicalColonyMap() {
               layerVisibility={visibleLayers}
               showStatusColors={showStatusColors}
               showZones={showZones}
+              zones={zones}
               zonesById={zonesById}
+              selectedZone={selectedZone}
+              onSelectZone={(z) => setSelectedZone(z)}
               plotContainmentById={boundaryValidation?.plotContainmentById || {}}
               boundaryValidation={boundaryValidation}
               onImageryLoaded={handleImageryLoaded}
@@ -700,21 +811,33 @@ export default function CanonicalColonyMap() {
           onClose={() => setEditingPlot(null)}
           onSaved={(updated) => {
             setPlots((prev) =>
-              prev.map((p) => (p.id === updated.id ? { ...p, ...updated } : p))
+              prev.map((p) => {
+                const match =
+                  (updated.id && p.id === updated.id) ||
+                  (updated._id && (p._id === updated._id || p.id === updated._id)) ||
+                  (editingPlot && (p.id === editingPlot.id || p._id === editingPlot._id || p._id === editingPlot.id)) ||
+                  (updated.number && String(p.number) === String(updated.number));
+                return match ? { ...p, ...updated } : p;
+              })
             );
             setSelectedPlot((curr) =>
-              curr?.id === updated.id ? { ...curr, ...updated } : curr
+              curr && (curr.id === updated.id || String(curr.number) === String(updated.number))
+                ? { ...curr, ...updated }
+                : curr
             );
             setEditingPlot(null);
+            loadColonyData();
           }}
         />
       )}
 
-      {/* Placement Calibration Modal */}
+      {/* Placement Calibration & Layout Studio Modal */}
       {showPlacementModal && (
         <PlacementCalibrationModal
           colony={colonyRaw || { id, name: colonyName, boundary }}
           plots={plots}
+          roads={roads}
+          greens={greens}
           onClose={() => setShowPlacementModal(false)}
           onConfirmed={() => {
             setShowPlacementModal(false);
@@ -755,6 +878,24 @@ export default function CanonicalColonyMap() {
         plotsCount={plots.length}
         roadsCount={roads.length}
       />
+
+      {/* CSV Bulk Import / Export Modal */}
+      {showCsvModal && (
+        <AdminPlotCsvModal
+          colonyId={id}
+          colonyName={colonyName}
+          onClose={() => setShowCsvModal(false)}
+          onImported={(newPlots) => {
+            setPlots(newPlots);
+            if (selectedPlot) {
+              const found = newPlots.find(
+                (p) => p.id === selectedPlot.id || String(p.number) === String(selectedPlot.number)
+              );
+              if (found) setSelectedPlot(found);
+            }
+          }}
+        />
+      )}
     </div>
   );
 }

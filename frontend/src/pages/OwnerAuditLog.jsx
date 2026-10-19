@@ -28,90 +28,96 @@ export default function OwnerAuditLog() {
   }, [page]);
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold font-serif tracking-tight">Platform Audit Logs</h1>
-        <p className="text-sm opacity-70">Governance history and activity tracking across all platform users</p>
-      </div>
+    <div className="lm-page-container" data-testid="owner-audit-page">
+      <header className="lm-modern-header">
+        <div className="lm-modern-header-left">
+          <span className="lm-modern-eyebrow">Platform Governance</span>
+          <h1 className="lm-modern-title">Platform Audit Trail</h1>
+          <p className="lm-modern-subtitle">
+            Activity tracking and security logs across all platform tenant administrators.
+          </p>
+        </div>
+      </header>
 
       {loading ? (
-        <div className="neo-card p-12 text-center text-sm opacity-70 animate-pulse">
+        <div className="lm-modern-card p-12 text-center text-sm text-slate-400 animate-pulse">
           Loading audit logs...
         </div>
       ) : error ? (
-        <div className="neo-card p-6 border-l-4 border-red-500 text-red-600 dark:text-red-400">
+        <div className="lm-badge-danger p-3 rounded-xl mb-4 text-xs font-medium w-full">
           {error}
         </div>
       ) : (
-        <div className="neo-card p-6 space-y-4">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-sm">
-              <thead>
-                <tr className="border-b border-gray-200 dark:border-gray-800 opacity-60 uppercase text-xs tracking-wider">
-                  <th className="py-3 px-4">Timestamp</th>
-                  <th className="py-3 px-4">Actor</th>
-                  <th className="py-3 px-4">Role</th>
-                  <th className="py-3 px-4">Action</th>
-                  <th className="py-3 px-4">Resource</th>
-                  <th className="py-3 px-4">Result</th>
+        <div className="lm-modern-table-container">
+          <table className="lm-modern-table">
+            <thead>
+              <tr>
+                <th style={{ width: "20%" }}>Timestamp</th>
+                <th style={{ width: "22%" }}>Actor</th>
+                <th style={{ width: "12%" }}>Role</th>
+                <th style={{ width: "20%" }}>Action</th>
+                <th style={{ width: "14%" }}>Resource</th>
+                <th style={{ width: "12%", textAlign: "right" }}>Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              {logs.length === 0 ? (
+                <tr>
+                  <td colSpan="6" className="py-12 text-center text-slate-400 text-xs">
+                    No audit events recorded yet.
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 dark:divide-gray-800 font-mono text-xs">
-                {logs.length === 0 ? (
-                  <tr>
-                    <td colSpan="6" className="py-8 text-center opacity-60">
-                      No audit events recorded yet.
+              ) : (
+                logs.map((log) => (
+                  <tr key={log._id || log.id}>
+                    <td className="text-xs text-[#6B7280] font-mono">
+                      {log.timestamp ? new Date(log.timestamp).toLocaleString() : "N/A"}
+                    </td>
+                    <td>
+                      <span className="font-semibold text-[#172A25] text-xs">{log.user_email || log.user_id || "System"}</span>
+                    </td>
+                    <td>
+                      <span className="uppercase text-[10px] font-mono text-[#173F35] font-bold bg-[#F4EFE6] px-2 py-0.5 rounded border border-[#E8E2D6]">
+                        {log.user_role || "system"}
+                      </span>
+                    </td>
+                    <td className="font-bold text-xs text-[#172A25]">
+                      {log.action}
+                    </td>
+                    <td className="text-xs text-[#6B7280] font-mono">
+                      {log.resource_type ? `${log.resource_type}:${log.resource_id || ""}` : "-"}
+                    </td>
+                    <td className="text-right">
+                      <span className={`lm-badge ${
+                        log.status === "SUCCESS" || !log.status
+                          ? "lm-badge-success"
+                          : "lm-badge-danger"
+                      }`}>
+                        <span className="lm-badge-dot" />
+                        {log.status || "SUCCESS"}
+                      </span>
                     </td>
                   </tr>
-                ) : (
-                  logs.map((log) => (
-                    <tr key={log._id} className="hover:bg-violet-500/5 transition-colors">
-                      <td className="py-3 px-4 opacity-70">
-                        {log.timestamp ? new Date(log.timestamp).toLocaleString() : "N/A"}
-                      </td>
-                      <td className="py-3 px-4">
-                        <span className="font-semibold font-sans">{log.user_email || log.user_id || "System"}</span>
-                      </td>
-                      <td className="py-3 px-4 uppercase text-[10px] tracking-wider opacity-70">
-                        {log.user_role || "system"}
-                      </td>
-                      <td className="py-3 px-4 font-bold text-violet-500">
-                        {log.action}
-                      </td>
-                      <td className="py-3 px-4 opacity-80">
-                        {log.resource_type ? `${log.resource_type}:${log.resource_id || ""}` : "-"}
-                      </td>
-                      <td className="py-3 px-4">
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                          log.status === "SUCCESS" || !log.status
-                            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                            : "bg-red-500/10 text-red-600 dark:text-red-400"
-                        }`}>
-                          {log.status || "SUCCESS"}
-                        </span>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                ))
+              )}
+            </tbody>
+          </table>
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-800 text-xs">
+            <div className="flex items-center justify-between p-4 border-t border-[#F0ECE1] text-xs text-[#6B7280]">
               <button
                 disabled={page <= 1}
                 onClick={() => setPage(page - 1)}
-                className="px-3 py-1.5 rounded neo-card disabled:opacity-40"
+                className="lm-btn-secondary-dark px-3 py-1.5 text-xs"
               >
                 Previous
               </button>
-              <span className="opacity-70">Page {page} of {totalPages}</span>
+              <span className="font-mono text-[#172A25] font-semibold">Page {page} of {totalPages}</span>
               <button
                 disabled={page >= totalPages}
                 onClick={() => setPage(page + 1)}
-                className="px-3 py-1.5 rounded neo-card disabled:opacity-40"
+                className="lm-btn-secondary-dark px-3 py-1.5 text-xs"
               >
                 Next
               </button>

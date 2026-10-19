@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Search, LocateFixed, X, Upload, Download, Lock, Settings, Map as MapIcon, List, Layers, CircleDot, Edit3, Share2, Image as ImageIcon, UserCheck, Database, Move, Satellite, Box, Compass, PanelRightClose, PanelRightOpen } from "lucide-react";
+import { ArrowLeft, Search, LocateFixed, X, Upload, Download, Lock, Settings, Map as MapIcon, List, Layers, CircleDot, Edit3, Share2, Image as ImageIcon, UserCheck, Database, Move, Satellite, Box, Compass, PanelRightClose, PanelRightOpen, Loader2, PencilRuler, Table } from "lucide-react";
 import { api, errMsg, BACKEND } from "@/lib/api";
 import { usePortalBase } from "@/lib/portal";
 import InteractiveMap from "@/components/InteractiveMap";
@@ -10,6 +10,7 @@ import ColonySettingsModal from "@/components/ColonySettingsModal";
 import ColonyDataUsedModal from "@/components/ColonyDataUsedModal";
 import { estimatePlotDimensions, isSelectablePlotGeometry } from "@/lib/geo";
 import AdminPlotEditModal from "@/components/AdminPlotEditModal";
+import AdminPlotCsvModal from "@/components/AdminPlotCsvModal";
 import AdminShareModal from "@/components/AdminShareModal";
 import AdminPlotMediaModal from "@/components/AdminPlotMediaModal";
 import AdminPlotOwnershipModal from "@/components/AdminPlotOwnershipModal";
@@ -22,6 +23,7 @@ export default function AdminColonyMap() {
   const [tab, setTab] = useState("map");
   const [showPanel, setShowPanel] = useState(true);
   const [selectedPlot, setSelectedPlot] = useState(null);
+  const [showCsvModal, setShowCsvModal] = useState(false);
   const [selectedZone, setSelectedZone] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState(null);
   const [showStatusColors, setShowStatusColors] = useState(true);
@@ -48,6 +50,7 @@ export default function AdminColonyMap() {
   const [soldFile, setSoldFile] = useState(null);
   const [soldModalErr, setSoldModalErr] = useState("");
   const [soldSubmitting, setSoldSubmitting] = useState(false);
+  const [pipelineStatus, setPipelineStatus] = useState(null);
   const fileInputRef = useRef(null);
 
   const load = () => api.get(`/admin/colonies/${id}`).then((r) => setData(r.data)).catch((e) => setErr(errMsg(e)));
@@ -55,6 +58,41 @@ export default function AdminColonyMap() {
     setShowPdfArtwork(false);
     load();
   }, [id]); // eslint-disable-line
+
+  // Live polling when colony pipeline is actively running in background
+  useEffect(() => {
+    const isProcessing =
+      data?.is_processing ||
+      data?.colony?.processing_status === "running" ||
+      data?.colony?.processing_status === "queued";
+
+    if (!isProcessing) return;
+
+    let timer;
+    let cancelled = false;
+
+    const poll = async () => {
+      try {
+        const res = await api.get(`/admin/colonies/${id}/status`);
+        if (cancelled) return;
+        setPipelineStatus(res.data);
+        if (res.data.status === "ready") {
+          // Pipeline finished! Automatically reload entire colony map
+          load();
+        } else if (res.data.status !== "failed") {
+          timer = setTimeout(poll, 2000);
+        }
+      } catch (e) {
+        if (!cancelled) timer = setTimeout(poll, 3000);
+      }
+    };
+
+    poll();
+    return () => {
+      cancelled = true;
+      if (timer) clearTimeout(timer);
+    };
+  }, [id, data?.is_processing, data?.colony?.processing_status]);
 
   const rebuildOverlayRegions = async () => {
     setRebuildingRegions(true);
@@ -72,32 +110,75 @@ export default function AdminColonyMap() {
     }
   };
 
+  const handleDirectExportCsv = async () => {
+    try {
+      const res = await api.get(`/admin/colonies/${id}/plots/export-csv`, {
+        responseType: "blob",
+      });
+      const blob = new Blob([res.data], { type: "text/csv;charset=utf-8;" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      const cleanName = (data?.colony?.name || "colony").replace(/[^a-zA-Z0-9_-]/g, "_");
+      a.download = `${cleanName}_plots.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (e) {
+      setErr(errMsg(e));
+    }
+  };
+
 
   useEffect(() => {
     if (!selectedPlot || selectedPlot.is_pdf_detected) { setRegistry([]); setUploadErr(""); return; }
     api.get(`/admin/plots/${selectedPlot.id}/registry`).then((r) => setRegistry(r.data)).catch(() => setRegistry([]));
   }, [selectedPlot?.id]); // eslint-disable-line
 
+  const zonesById = useMemo(() => {
+    const map = {};
+    (data?.zones || []).forEach((z) => {
+      if (z.id) map[z.id] = z;
+      if (z.code) {
+        map[z.code] = z;
+        map[z.code.toLowerCase()] = z;
+        map[`zone ${z.code}`.toLowerCase()] = z;
+      }
+      if (z.name) {
+        map[z.name] = z;
+        map[z.name.toLowerCase()] = z;
+      }
+    });
+    return map;
+  }, [data?.zones]);
+
   const filteredIds = useMemo(() => {
     if (!data) return null;
     const q = query.trim().toLowerCase();
     if (!selectedZone && !selectedStatus && !q) return null;
     const savedPlotIds = data.plots
-      .filter((p) => (!selectedZone || p.zone_id === selectedZone) &&
-        (!selectedStatus || p.status_id === selectedStatus) &&
-        (!q || p.number.toLowerCase().includes(q)))
+      .filter((p) => {
+        if (selectedZone) {
+          const pz = zonesById[p.zone_id];
+          const matches = p.zone_id === selectedZone || (pz && pz.id === selectedZone);
+          if (!matches) return false;
+        }
+        if (selectedStatus && p.status_id !== selectedStatus) return false;
+        if (q && !p.number.toLowerCase().includes(q)) return false;
+        return true;
+      })
       .map((p) => p.id);
     const pdfRegionIds = selectedZone ? [] : (data.colony.pdf_overlay?.plot_regions || [])
       .filter((region) => (!selectedStatus || (region.status_id || "available") === selectedStatus) &&
         (!q || String(region.number || "").toLowerCase().includes(q)))
       .map((region) => region.id);
     return new Set([...savedPlotIds, ...pdfRegionIds]);
-  }, [data, selectedZone, selectedStatus, query]);
+  }, [data, selectedZone, selectedStatus, query, zonesById]);
 
   if (err && !data) return <div className="lm-error-page"><h2>Not available</h2><p>{err}</p></div>;
   if (!data) return <div className="lm-loading">Loading inventory…</div>;
 
-  const zonesById = Object.fromEntries(data.zones.map((z) => [z.id, z]));
   const statusesById = Object.fromEntries(data.statuses.map((s) => [s.id, s]));
   const overlay = data.colony.pdf_overlay;
   const isCadOverlay = overlay?.source_type === "cad";
@@ -261,18 +342,12 @@ export default function AdminColonyMap() {
       <header className="lm-gis-top-bar">
         {/* Left: Colony Title & Location */}
         <div className="lm-top-left">
-          <Link to={`${base}/colonies`} className="lm-top-back-btn" data-testid="back-to-colonies" title="Back to All Colonies">
-            <ArrowLeft size={16} />
-          </Link>
           <div className="lm-top-colony">
-            <div className="lm-top-title-row">
-              <span className="lm-top-live-dot" />
-              <h1 className="lm-top-title">{data.colony.name}</h1>
-            </div>
+            <h1 className="lm-top-title">{data.colony.name}</h1>
             <div className="lm-top-meta">
               <span>{data.colony.location || "27.22308°N, 78.25477°E"}</span>
               {data.colony.whatsapp_number && (
-                <span className="lm-top-wa">· WA {data.colony.whatsapp_number}</span>
+                <span className="lm-top-wa">WA {data.colony.whatsapp_number}</span>
               )}
             </div>
           </div>
@@ -391,6 +466,20 @@ export default function AdminColonyMap() {
               >
                 <Settings size={13} /> Colony Settings
               </button>
+              <button
+                className="lm-top-menu-item text-amber-500 font-medium"
+                onClick={handleDirectExportCsv}
+                data-testid="colony-plots-export-btn"
+              >
+                <Download size={13} /> Export Plots (CSV)
+              </button>
+              <button
+                className="lm-top-menu-item text-amber-500 font-medium"
+                onClick={() => setShowCsvModal(true)}
+                data-testid="colony-plots-csv-btn"
+              >
+                <Upload size={13} /> Import Plots (CSV)
+              </button>
               <a
                 className="lm-top-menu-item"
                 href={`${BACKEND}/api/admin/colonies/${id}/geojson`}
@@ -444,12 +533,54 @@ export default function AdminColonyMap() {
             onStatusChange={(p, s) => handleStatusClick(p, s)}
             onBulkStatus={bulkStatus}
             onOpenOnMap={(p) => { setSelectedPlot(p); setTab("map"); }}
+            onEditPlot={(p) => { setSelectedPlot(p); setEditingPlot(true); }}
+            onExportCsv={handleDirectExportCsv}
+            onImportCsv={() => setShowCsvModal(true)}
           />
         </div>
       ) : (
         <div className="lm-gis-workspace">
           {/* Main Map Viewport */}
-          <div className="lm-gis-map-viewport">
+          <div className="lm-gis-map-viewport relative">
+            {/* Live Pipeline Processing Banner / HUD */}
+            {(data?.is_processing ||
+              data?.colony?.processing_status === "running" ||
+              data?.colony?.processing_status === "queued") && (
+              <div className="lm-map-processing-hud" role="status" aria-live="polite">
+                <div className="flex items-center justify-between gap-4 mb-2.5">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shrink-0">
+                      <Loader2 size={18} className="animate-spin text-amber-400" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-amber-300">
+                        AI GIS Pipeline In Progress
+                      </h4>
+                      <p className="text-[11px] text-slate-300">
+                        {pipelineStatus?.stage || data?.colony?.processing_stage || "Extracting plot parcels and georeferencing..."}
+                      </p>
+                    </div>
+                  </div>
+                  <span className="font-mono text-xs font-bold text-amber-300 bg-amber-950/80 px-2.5 py-1 rounded border border-amber-800/60 shrink-0">
+                    {pipelineStatus?.progress ?? data?.colony?.processing_progress ?? 25}%
+                  </span>
+                </div>
+                <div className="w-full h-1.5 bg-[#E8E2D6] rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-amber-500 via-sky-400 to-[#173F35] transition-all duration-300"
+                    style={{ width: `${Math.max(pipelineStatus?.progress ?? data?.colony?.processing_progress ?? 20, 10)}%` }}
+                  />
+                </div>
+                <div className="flex items-center justify-between text-[10px] text-[#6B7280] mt-2">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
+                    Processing layout vectors & OCR
+                  </span>
+                  <span className="text-[#047857] font-semibold">Plots will load automatically once ready</span>
+                </div>
+              </div>
+            )}
+
             <div className="lm-gis-canvas">
               <InteractiveMap
                 data={data}
@@ -470,7 +601,35 @@ export default function AdminColonyMap() {
 
             {/* Compact, Clean Bottom Legend Capsule */}
             <div className="lm-gis-legend-dock">
-              {!showStatusColors && (
+              {showZones && (data.zones || []).length > 0 ? (
+                <>
+                  <span className="lm-gis-legend-label" style={{ fontSize: "11px", fontWeight: 700, color: "#173F35", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                    Zones:
+                  </span>
+                  {data.zones.map((z) => {
+                    const count = data.plots.filter((p) => {
+                      const pz = zonesById[p.zone_id];
+                      return p.zone_id === z.id || (pz && pz.id === z.id);
+                    }).length;
+                    const isSel = selectedZone === z.id;
+                    return (
+                      <button
+                        key={z.id}
+                        className={`lm-legend-pill ${isSel ? "active" : ""}`}
+                        onClick={() => setSelectedZone(isSel ? null : z.id)}
+                        data-testid={`admin-zone-filter-${z.code || z.id}`}
+                      >
+                        <i style={{ background: z.color }} />
+                        <span>{z.name || `Zone ${z.code}`}</span>
+                        <span className="lm-legend-pill-count">{count}</span>
+                      </button>
+                    );
+                  })}
+                  <span className="lm-fsep" style={{ width: "1px", height: "16px", background: "#D1D5DB", margin: "0 4px" }} />
+                </>
+              ) : null}
+
+              {!showStatusColors && !showZones && (
                 <span className="lm-gis-legend-warning" data-testid="status-colors-hidden">
                   Colors hidden
                 </span>
@@ -480,7 +639,7 @@ export default function AdminColonyMap() {
                 return (
                   <button
                     key={s.id}
-                    className={`lm-legend-pill ${selectedStatus === s.id ? "active" : ""} ${!showStatusColors ? "muted" : ""}`}
+                    className={`lm-legend-pill ${selectedStatus === s.id ? "active" : ""} ${!showStatusColors && !showZones ? "muted" : ""}`}
                     onClick={() => setSelectedStatus(selectedStatus === s.id ? null : s.id)}
                     data-testid={`admin-status-filter-${s.id}`}
                   >
@@ -548,16 +707,19 @@ export default function AdminColonyMap() {
                   <div className="lm-deck-zones-chips">
                     {data.zones.map((z) => {
                       const sel = selectedZone === z.id;
-                      const count = data.plots.filter((p) => p.zone_id === z.id).length;
+                      const count = data.plots.filter((p) => {
+                        const pz = zonesById[p.zone_id];
+                        return p.zone_id === z.id || (pz && pz.id === z.id);
+                      }).length;
                       return (
                         <button
                           key={z.id}
                           className={`lm-deck-zone-chip ${sel ? "active" : ""}`}
                           onClick={() => setSelectedZone(sel ? null : z.id)}
-                          data-testid={`admin-zone-chip-${z.code}`}
+                          data-testid={`admin-zone-chip-${z.code || z.id}`}
                         >
                           <span className="lm-deck-zone-dot" style={{ background: z.color }} />
-                          <span>Zone {z.code}</span>
+                          <span>{z.name || `Zone ${z.code}`}</span>
                           <span className="lm-deck-zone-qty">{count}</span>
                         </button>
                       );
@@ -766,14 +928,41 @@ export default function AdminColonyMap() {
       {editingPlot && selectedPlot && (
         <AdminPlotEditModal
           plot={selectedPlot}
+          zones={data.zones || []}
+          statuses={data.statuses || []}
           onClose={() => setEditingPlot(false)}
           onSaved={(updated) => {
             setSelectedPlot(updated);
             setData((d) => ({
               ...d,
-              plots: d.plots.map((p) => (p.id === updated.id ? { ...p, ...updated } : p)),
+              plots: (d.plots || []).map((p) => {
+                const isTarget =
+                  (updated.id && p.id === updated.id) ||
+                  (updated._id && (p._id === updated._id || p.id === updated._id)) ||
+                  (selectedPlot && (p.id === selectedPlot.id || p._id === selectedPlot._id || p._id === selectedPlot.id)) ||
+                  (updated.number && String(p.number) === String(updated.number));
+                return isTarget ? { ...p, ...updated } : p;
+              }),
             }));
             setEditingPlot(false);
+            load();
+          }}
+        />
+      )}
+
+      {showCsvModal && (
+        <AdminPlotCsvModal
+          colonyId={id}
+          colonyName={data.colony?.name || "colony"}
+          onClose={() => setShowCsvModal(false)}
+          onImported={(newPlots) => {
+            setData((d) => ({ ...d, plots: newPlots }));
+            if (selectedPlot) {
+              const found = newPlots.find(
+                (p) => p.id === selectedPlot.id || String(p.number) === String(selectedPlot.number)
+              );
+              if (found) setSelectedPlot(found);
+            }
           }}
         />
       )}
@@ -848,6 +1037,8 @@ export default function AdminColonyMap() {
         <PlacementCalibrationModal
           colony={data.colony}
           plots={data.plots}
+          roads={data.colony?.roads || []}
+          greens={data.colony?.greens || []}
           onClose={() => setShowPlacementModal(false)}
           onConfirmed={() => load()}
         />

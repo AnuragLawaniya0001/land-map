@@ -60,36 +60,33 @@ export default function AdminPlotMediaModal({ plot, onClose }) {
       .catch((err) => alert(err.response?.data?.error || "Failed to delete image"));
   };
 
-  if (!plot) return null;
-
   return (
-    <div style={{ position: "fixed", inset: 0, zIndex: 9999, background: "rgba(15, 23, 42, 0.75)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
-      <div style={{ background: "#1e293b", border: "1px solid #334155", borderRadius: "12px", width: "100%", maxWidth: "650px", color: "#f8fafc", padding: "1.5rem", boxShadow: "0 20px 25px -5px rgba(0,0,0,0.5)" }}>
+    <div className="lm-modal-shade" data-testid="plot-media-modal-shade">
+      <div className="lm-modal" style={{ width: "min(680px, 95vw)" }} data-testid="plot-media-modal">
         {/* Header */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.25rem", borderBottom: "1px solid #334155", pb: "0.75rem" }}>
+        <div className="lm-modal-head">
           <div>
-            <h3 style={{ margin: 0, fontSize: "1.2rem", fontWeight: "700" }}>
-              Property Gallery — Plot #{plot.number}
-            </h3>
-            <div style={{ fontSize: "0.8rem", color: "#94a3b8", marginTop: "0.2rem" }}>
+            <p className="lm-eyebrow">PROPERTY GALLERY</p>
+            <h3 className="text-lg font-bold text-white">Plot #{plot.number} Media</h3>
+            <div className="text-xs text-slate-400 mt-0.5">
               Upload JPEG, PNG, or WEBP property images (Max 10 MB per image)
             </div>
           </div>
-          <button onClick={onClose} style={{ background: "transparent", border: "none", color: "#94a3b8", fontSize: "1.5rem", cursor: "pointer" }}>
+          <button className="lm-icon-btn" onClick={onClose} data-testid="close-media-modal">
             &times;
           </button>
         </div>
 
         {error && (
-          <div style={{ background: "#7f1d1d", color: "#fca5a5", border: "1px solid #991b1b", padding: "0.6rem 0.8rem", borderRadius: "6px", fontSize: "0.85rem", marginBottom: "1rem" }}>
+          <div className="lm-error mb-4" data-testid="media-modal-error">
             {error}
           </div>
         )}
 
         {/* Upload Action */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "#0f172a", padding: "0.75rem 1rem", borderRadius: "8px", border: "1px solid #334155", marginBottom: "1.25rem" }}>
-          <div style={{ fontSize: "0.85rem", color: "#cbd5e1" }}>
-            Images Attached: <strong>{mediaList.length}</strong>
+        <div className="flex justify-between items-center p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.08] mb-4">
+          <div className="text-xs text-slate-300">
+            Images Attached: <strong className="text-white">{mediaList.length}</strong>
           </div>
           <input
             ref={fileInputRef}
@@ -102,51 +99,56 @@ export default function AdminPlotMediaModal({ plot, onClose }) {
             type="button"
             disabled={uploading}
             onClick={() => fileInputRef.current?.click()}
-            style={{ display: "flex", alignItems: "center", gap: "0.5rem", background: "#3b82f6", color: "#fff", border: "none", padding: "0.5rem 1rem", borderRadius: "6px", fontWeight: "600", fontSize: "0.85rem", cursor: "pointer" }}
+            className="lm-btn-glow px-3.5 py-1.5 text-xs font-semibold gap-1.5"
           >
             <Upload size={14} />
-            {uploading ? "Uploading..." : "Upload Image"}
+            {uploading ? "Uploading…" : "Upload Image"}
           </button>
         </div>
 
         {/* Media Grid */}
-        <div style={{ maxHeight: "340px", overflowY: "auto", paddingRight: "0.25rem" }}>
+        <div className="max-h-[340px] overflow-y-auto pr-1">
           {loading ? (
-            <div style={{ textAlign: "center", color: "#94a3b8", padding: "2rem" }}>Loading property gallery...</div>
+            <div className="text-center text-slate-400 text-xs py-8">Loading property gallery…</div>
           ) : mediaList.length === 0 ? (
-            <div style={{ textAlign: "center", color: "#64748b", padding: "2.5rem", background: "#0f172a", borderRadius: "8px", border: "1px dashed #334155" }}>
-              <ImageIcon size={32} style={{ marginBottom: "0.5rem", opacity: 0.5 }} />
-              <div>No images uploaded for this plot yet.</div>
+            <div className="text-center text-slate-500 py-10 bg-white/[0.02] rounded-2xl border border-dashed border-white/10 flex flex-col items-center justify-center gap-2">
+              <ImageIcon size={32} className="opacity-40" />
+              <div className="text-xs">No images uploaded for this plot yet.</div>
             </div>
           ) : (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(170px, 1fr))", gap: "0.75rem" }}>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {mediaList.map((m) => (
-                <div key={m.id} style={{ background: "#0f172a", border: m.is_primary ? "2px solid #3b82f6" : "1px solid #334155", borderRadius: "8px", overflow: "hidden", display: "flex", flexDirection: "column" }}>
-                  <div style={{ height: "110px", background: "#020617", position: "relative" }}>
-                    <img src={m.url} alt={m.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <div
+                  key={m.id}
+                  className={`rounded-xl overflow-hidden flex flex-col bg-white/[0.02] border transition-all ${
+                    m.is_primary ? "border-emerald-500/60 ring-1 ring-emerald-500/40" : "border-white/[0.08]"
+                  }`}
+                >
+                  <div className="h-28 bg-black/40 relative overflow-hidden">
+                    <img src={m.url} alt={m.title} className="w-full h-full object-cover" />
                     {m.is_primary && (
-                      <span style={{ position: "absolute", top: "6px", left: "6px", background: "#2563eb", color: "#fff", fontSize: "0.65rem", fontWeight: "700", padding: "0.15rem 0.4rem", borderRadius: "4px", display: "flex", alignItems: "center", gap: "0.25rem" }}>
+                      <span className="absolute top-2 left-2 bg-emerald-600/90 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-1 shadow-md">
                         <Star size={10} fill="#fff" /> COVER
                       </span>
                     )}
                   </div>
-                  <div style={{ padding: "0.5rem", display: "flex", justifyContent: "space-between", alignItems: "center", background: "#0f172a" }}>
+                  <div className="p-2.5 flex justify-between items-center bg-black/20 text-xs">
                     {!m.is_primary ? (
                       <button
                         onClick={() => handleSetPrimary(m.id)}
-                        style={{ background: "transparent", border: "none", color: "#94a3b8", fontSize: "0.75rem", cursor: "pointer", padding: 0 }}
+                        className="text-slate-400 hover:text-white text-xs cursor-pointer bg-transparent border-0 p-0"
                       >
                         Set Cover
                       </button>
                     ) : (
-                      <span style={{ fontSize: "0.75rem", color: "#60a5fa", fontWeight: "600" }}>Primary Cover</span>
+                      <span className="text-xs text-emerald-400 font-semibold">Primary Cover</span>
                     )}
                     <button
                       onClick={() => handleDelete(m.id)}
-                      style={{ background: "transparent", border: "none", color: "#fca5a5", cursor: "pointer", padding: "0.2rem" }}
+                      className="text-rose-400 hover:text-rose-300 cursor-pointer bg-transparent border-0 p-1 rounded"
                       title="Delete Image"
                     >
-                      <Trash2 size={14} />
+                      <Trash2 size={13} />
                     </button>
                   </div>
                 </div>

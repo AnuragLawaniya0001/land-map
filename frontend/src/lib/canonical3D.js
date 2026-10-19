@@ -270,19 +270,18 @@ export function createNeutralTerrainMesh({
   const terrainGroup = new THREE.Group();
   terrainGroup.name = "aerial-terrain-base";
 
-  const terrainSize = Math.max(span * 3.5, 300);
+  // Expansive natural terrain foundation spanning into the horizon
+  const terrainSize = Math.max(span * 35, 12000);
   const segments = terrainEnabled ? 32 : 1;
   const geometry = new THREE.PlaneGeometry(terrainSize, terrainSize, segments, segments);
   geometry.rotateX(-Math.PI / 2);
 
-  const material = new THREE.MeshStandardMaterial({
-    color: 0x1e2530, // Clean, neutral slate-earth ground
-    roughness: 0.96,
-    metalness: 0.04,
+  const material = new THREE.MeshLambertMaterial({
+    color: 0xb5a68e, // Natural warm earth landscape tone matching aerial outskirts
   });
 
   const mesh = new THREE.Mesh(geometry, material);
-  mesh.position.set(0, -0.02, 0);
+  mesh.position.set(0, -0.4, 0);
   mesh.receiveShadow = true;
   terrainGroup.add(mesh);
 
@@ -379,6 +378,19 @@ export function createPlot3DMesh(
   const showStatus = options?.showStatusColors ?? options?.showInventoryStatus ?? false;
   const showZones = options?.showZones ?? false;
   const zonesById = options?.zonesById ?? {};
+  const plotZoneId = plot.zone_id || plot.zone_code || plot.zone || plot.sector;
+  let zoneHex = null;
+  if (showZones && plotZoneId) {
+    const zObj = zonesById[plotZoneId] ||
+      Object.values(zonesById).find((z) =>
+        z.id === plotZoneId ||
+        z.code === plotZoneId ||
+        z.name === plotZoneId ||
+        (z.name && String(z.name).toLowerCase() === String(plotZoneId).toLowerCase()) ||
+        (z.code && String(z.code).toLowerCase() === String(plotZoneId).toLowerCase())
+      );
+    zoneHex = zObj?.color;
+  }
 
   if (isSelected) {
     baseColor = 0x10b981; // Vibrant emerald highlight
@@ -386,6 +398,8 @@ export function createPlot3DMesh(
     baseColor = 0xef4444; // Warning red for out-of-boundary plots
   } else if (isToleranceOverlap) {
     baseColor = 0xf59e0b; // Amber warning color for boundary tolerance overlap
+  } else if (showZones && zoneHex) {
+    baseColor = parseInt(zoneHex.replace("#", "0x"), 16);
   } else if (showStatus) {
     // Inventory status palette
     if (inventoryStatus === "sold") {
@@ -397,10 +411,8 @@ export function createPlot3DMesh(
     } else {
       baseColor = 0xf8fafc; // Available luxury warm ivory
     }
-  } else if (showZones && plot.zone_id && zonesById[plot.zone_id]) {
-    const zoneHex = zonesById[plot.zone_id].color;
-    baseColor = zoneHex ? parseInt(zoneHex.replace("#", "0x"), 16) : 0x38bdf8;
   } else if (status === "review_required") {
+    baseColor = 0xfef08a; // Warning yellow
     baseColor = 0xfef08a; // Warning yellow
   } else if (status === "conflicted") {
     baseColor = 0xfecaca; // Conflicted red
@@ -429,15 +441,15 @@ export function createPlot3DMesh(
     polygonOffsetUnits: 1,
   });
 
+  let edgeColor = 0xe2e8f0;
+  if (isSelected) edgeColor = 0x059669;
+  else if (isOutOfBoundary) edgeColor = 0xdc2626;
+  else if (isToleranceOverlap) edgeColor = 0xd97706;
+  else if (showZones && zoneHex) edgeColor = parseInt(zoneHex.replace("#", "0x"), 16);
+
   const wireframeMaterial = new THREE.LineBasicMaterial({
-    color: isSelected
-      ? 0x059669
-      : isOutOfBoundary
-        ? 0xdc2626
-        : isToleranceOverlap
-          ? 0xd97706
-          : 0x64748b,
-    linewidth: isSelected || isOutOfBoundary ? 2 : 1,
+    color: edgeColor,
+    linewidth: isSelected || isOutOfBoundary || (showZones && zoneHex) ? 2.5 : 1.5,
   });
 
   let meshCreated = false;
@@ -515,12 +527,29 @@ export function createPlotNumberSprite(plot, cx, cy, crsMetadata = null, isSelec
 
   ctx.clearRect(0, 0, 256, 128);
 
-  // Status dot color
+  // Status or Zone dot color
   const statusId = plot.status_id || "available";
   let statusDotColor = "#10b981"; // available = green
   if (statusId === "sold") statusDotColor = "#ef4444";
   else if (statusId === "reserved") statusDotColor = "#8b5cf6";
   else if (statusId === "hold") statusDotColor = "#f59e0b";
+
+  const plotZoneId = plot.zone_id || plot.zone_code || plot.zone || plot.sector;
+  let zoneColor = null;
+  if (options.showZones && plotZoneId && options.zonesById) {
+    const zObj = options.zonesById[plotZoneId] ||
+      Object.values(options.zonesById).find((z) =>
+        z.id === plotZoneId ||
+        z.code === plotZoneId ||
+        z.name === plotZoneId ||
+        (z.name && String(z.name).toLowerCase() === String(plotZoneId).toLowerCase()) ||
+        (z.code && String(z.code).toLowerCase() === String(plotZoneId).toLowerCase())
+      );
+    if (zObj?.color) {
+      zoneColor = zObj.color;
+      statusDotColor = zObj.color;
+    }
+  }
 
   // Background rounded pill
   if (isSelected) {
@@ -529,8 +558,8 @@ export function createPlotNumberSprite(plot, cx, cy, crsMetadata = null, isSelec
     ctx.lineWidth = 4;
   } else {
     ctx.fillStyle = "rgba(15, 23, 42, 0.90)";
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.35)";
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = zoneColor || "rgba(255, 255, 255, 0.35)";
+    ctx.lineWidth = zoneColor ? 3.5 : 2;
   }
 
   // Draw rounded rectangle
@@ -747,22 +776,66 @@ export function createBoundary3DLine(boundaryGeometry, cx, cy, crsMetadata = nul
   group.name = "boundary-perimeter";
 
   const lineMaterial = new THREE.LineBasicMaterial({
-    color: 0x38bdf8,
-    linewidth: 2.5,
+    color: 0xffffff,
+    linewidth: 3,
   });
 
   for (const ring of rings) {
     const points = [];
     for (const pt of ring) {
+      if (!pt || !Number.isFinite(pt[0]) || !Number.isFinite(pt[1])) continue;
       const [x, z] = gisTo3DCoord(pt[0], pt[1], cx, cy, crsMetadata);
-      points.push(new THREE.Vector3(x, 0.08, z)); // Elevated slightly above roads
+      if (Number.isFinite(x) && Number.isFinite(z)) {
+        points.push(new THREE.Vector3(x, 0.08, z)); // Elevated slightly above roads
+      }
     }
-    const geometry = new THREE.BufferGeometry().setFromPoints(points);
-    const line = new THREE.Line(geometry, lineMaterial);
-    group.add(line);
+    if (points.length >= 2) {
+      try {
+        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+        const line = new THREE.Line(geometry, lineMaterial);
+        group.add(line);
+      } catch (err) {
+        console.warn("Boundary 3D line creation warning:", err);
+      }
+    }
   }
 
-  return group;
+  return group.children.length ? group : null;
+}
+
+/**
+ * Builds 3D ground base mesh covering the interior of the colony boundary.
+ * Completely covers the underlying aerial satellite texture inside the development perimeter.
+ */
+export function createColonyGroundBaseMesh(boundaryGeometry, cx, cy, crsMetadata = null) {
+  if (!boundaryGeometry || !boundaryGeometry.coordinates) return null;
+  const prep = preparePolygonForTriangulation(boundaryGeometry, cx, cy, crsMetadata);
+  if (!prep.valid || !prep.shapes || prep.shapes.length === 0) return null;
+
+  const group = new THREE.Group();
+  group.name = "colony-ground-base";
+
+  // Sleek dark masterplan site surface matching 2D Satellite view
+  const groundMaterial = new THREE.MeshStandardMaterial({
+    color: 0x1b222c,
+    roughness: 0.9,
+    metalness: 0.05,
+  });
+
+  for (const shape of prep.shapes) {
+    try {
+      const geometry = new THREE.ShapeGeometry(shape);
+      geometry.rotateX(-Math.PI / 2);
+      const mesh = new THREE.Mesh(geometry, groundMaterial);
+      mesh.position.y = 0.01; // Sits above satellite plane (y=0) and below roads/plots (y=0.02)
+      mesh.receiveShadow = true;
+      group.add(mesh);
+    } catch (err) {
+      console.warn("Colony 3D ground base geometry error:", err);
+    }
+  }
+
+  return group.children.length ? group : null;
 }
 
 /**
@@ -797,35 +870,44 @@ export function createColonyBoundaryWall(boundaryGeometry, cx, cy, crsMetadata =
   const wallThickness = 0.35;
 
   for (let i = 0; i < outerRing.length - 1; i++) {
-    const [p1x, p1z] = gisTo3DCoord(outerRing[i][0], outerRing[i][1], cx, cy, crsMetadata);
-    const [p2x, p2z] = gisTo3DCoord(outerRing[i + 1][0], outerRing[i + 1][1], cx, cy, crsMetadata);
+    const pt1 = outerRing[i];
+    const pt2 = outerRing[i + 1];
+    if (!pt1 || !pt2 || !Number.isFinite(pt1[0]) || !Number.isFinite(pt1[1]) || !Number.isFinite(pt2[0]) || !Number.isFinite(pt2[1])) continue;
+
+    const [p1x, p1z] = gisTo3DCoord(pt1[0], pt1[1], cx, cy, crsMetadata);
+    const [p2x, p2z] = gisTo3DCoord(pt2[0], pt2[1], cx, cy, crsMetadata);
+    if (!Number.isFinite(p1x) || !Number.isFinite(p1z) || !Number.isFinite(p2x) || !Number.isFinite(p2z)) continue;
 
     const dx = p2x - p1x;
     const dz = p2z - p1z;
     const len = Math.sqrt(dx * dx + dz * dz);
     if (len < 0.1) continue;
 
-    const angle = Math.atan2(dz, dx);
-    const midX = (p1x + p2x) / 2;
-    const midZ = (p1z + p2z) / 2;
+    try {
+      const angle = Math.atan2(dz, dx);
+      const midX = (p1x + p2x) / 2;
+      const midZ = (p1z + p2z) / 2;
 
-    const wallGeom = new THREE.BoxGeometry(len, wallHeight, wallThickness);
-    const wallMesh = new THREE.Mesh(wallGeom, wallMat);
-    wallMesh.position.set(midX, wallHeight / 2, midZ);
-    wallMesh.rotation.y = -angle;
-    wallMesh.castShadow = true;
-    wallMesh.receiveShadow = true;
-    wallGroup.add(wallMesh);
+      const wallGeom = new THREE.BoxGeometry(len, wallHeight, wallThickness);
+      const wallMesh = new THREE.Mesh(wallGeom, wallMat);
+      wallMesh.position.set(midX, wallHeight / 2, midZ);
+      wallMesh.rotation.y = -angle;
+      wallMesh.castShadow = true;
+      wallMesh.receiveShadow = true;
+      wallGroup.add(wallMesh);
 
-    // Concrete pillar at vertex
-    const pierGeom = new THREE.BoxGeometry(wallThickness * 1.5, wallHeight + 0.15, wallThickness * 1.5);
-    const pierMesh = new THREE.Mesh(pierGeom, pierMat);
-    pierMesh.position.set(p1x, (wallHeight + 0.15) / 2, p1z);
-    pierMesh.castShadow = true;
-    wallGroup.add(pierMesh);
+      // Concrete pillar at vertex
+      const pierGeom = new THREE.BoxGeometry(wallThickness * 1.5, wallHeight + 0.15, wallThickness * 1.5);
+      const pierMesh = new THREE.Mesh(pierGeom, pierMat);
+      pierMesh.position.set(p1x, (wallHeight + 0.15) / 2, p1z);
+      pierMesh.castShadow = true;
+      wallGroup.add(pierMesh);
+    } catch (err) {
+      console.warn("Colony boundary segment 3D wall warning:", err);
+    }
   }
 
-  return wallGroup;
+  return wallGroup.children.length ? wallGroup : null;
 }
 
 /**

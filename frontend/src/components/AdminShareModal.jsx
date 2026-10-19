@@ -71,49 +71,49 @@ export default function AdminShareModal({ plot, onClose }) {
   if (!plot) return null;
 
   return (
-    <div style={{ position: "fixed", inset: 0, zIndex: 9999, background: "rgba(15, 23, 42, 0.75)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
-      <div style={{ background: "#1e293b", border: "1px solid #334155", borderRadius: "12px", width: "100%", maxWidth: "600px", color: "#f8fafc", padding: "1.5rem", boxShadow: "0 20px 25px -5px rgba(0,0,0,0.5)" }}>
+    <div className="lm-modal-shade" data-testid="admin-share-modal-shade">
+      <div className="lm-modal" style={{ width: "min(640px, 95vw)" }} data-testid="admin-share-modal">
         {/* Modal Header */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.25rem", borderBottom: "1px solid #334155", pb: "0.75rem" }}>
+        <div className="lm-modal-head">
           <div>
-            <h3 style={{ margin: 0, fontSize: "1.2rem", fontWeight: "700" }}>
-              Controlled Share Management — Plot #{plot.number}
-            </h3>
-            <div style={{ fontSize: "0.8rem", color: "#94a3b8", marginTop: "0.2rem" }}>
+            <p className="lm-eyebrow">CONTROLLED SHARE MANAGEMENT</p>
+            <h3 className="text-lg font-bold text-white">Share Plot #{plot.number}</h3>
+            <div className="text-xs text-slate-400 mt-0.5">
               Generate & revoke cryptographically secure public viewing tokens
             </div>
           </div>
-          <button onClick={onClose} style={{ background: "transparent", border: "none", color: "#94a3b8", fontSize: "1.5rem", cursor: "pointer", padding: "0 0.5rem" }}>
+          <button className="lm-icon-btn" onClick={onClose} data-testid="close-share-modal">
             &times;
           </button>
         </div>
 
         {error && (
-          <div style={{ background: "#7f1d1d", color: "#fca5a5", border: "1px solid #991b1b", padding: "0.6rem 0.8rem", borderRadius: "6px", fontSize: "0.85rem", marginBottom: "1rem" }}>
+          <div className="lm-error mb-4" data-testid="share-modal-error">
             {error}
           </div>
         )}
 
         {/* Newly Created Token Banner */}
         {newShareUrl && (
-          <div style={{ background: "#064e3b", border: "1px solid #047857", color: "#a7f3d0", padding: "1rem", borderRadius: "8px", marginBottom: "1.25rem" }}>
-            <div style={{ fontWeight: "700", fontSize: "0.9rem", marginBottom: "0.25rem", color: "#34d399" }}>
-              ✓ Secure Share Token Generated!
+          <div className="p-4 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 mb-5">
+            <div className="font-bold text-xs text-emerald-300 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              Secure Share Token Generated!
             </div>
-            <div style={{ fontSize: "0.8rem", color: "#6ee7b7", marginBottom: "0.75rem" }}>
-              This raw URL contains the cryptographic secret key. Copy it now; the full key will not be shown again.
+            <div className="text-[11px] text-emerald-400/80 mb-3">
+              This URL contains the cryptographic secret key. Copy it now; the full key will not be shown again.
             </div>
-            <div style={{ display: "flex", gap: "0.5rem" }}>
+            <div className="flex gap-2">
               <input
                 type="text"
                 readOnly
                 value={newShareUrl}
-                style={{ flex: 1, background: "#022c22", border: "1px solid #059669", color: "#a7f3d0", padding: "0.5rem 0.75rem", borderRadius: "4px", fontSize: "0.85rem", fontFamily: "monospace" }}
+                className="lm-modern-input flex-1 font-mono text-xs text-emerald-200 bg-emerald-950/80 border-emerald-700/60"
               />
               <button
                 type="button"
                 onClick={() => copyToClipboard(newShareUrl)}
-                style={{ background: "#059669", color: "#fff", border: "none", padding: "0.5rem 1rem", borderRadius: "4px", fontWeight: "600", fontSize: "0.85rem", cursor: "pointer" }}
+                className="lm-btn-glow px-4 text-xs font-bold shrink-0"
               >
                 {copied ? "Copied!" : "Copy Link"}
               </button>
@@ -122,14 +122,14 @@ export default function AdminShareModal({ plot, onClose }) {
         )}
 
         {/* Create Share Form */}
-        <form onSubmit={handleCreateShare} style={{ background: "#0f172a", padding: "1rem", borderRadius: "8px", border: "1px solid #334155", marginBottom: "1.25rem" }}>
-          <div style={{ fontSize: "0.85rem", fontWeight: "700", color: "#cbd5e1", marginBottom: "0.75rem" }}>
+        <form onSubmit={handleCreateShare} className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.08] mb-5">
+          <div className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3">
             Create New Controlled Link
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr auto", gap: "0.75rem", alignItems: "end" }}>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
             <div>
-              <label style={{ display: "block", fontSize: "0.75rem", color: "#94a3b8", marginBottom: "0.25rem" }}>
-                Expiry (Days) <span style={{ color: "#64748b" }}>(Optional)</span>
+              <label className="block text-[11px] font-mono text-slate-400 mb-1">
+                Expiry (Days) <span className="text-slate-500">(Optional)</span>
               </label>
               <input
                 type="number"
@@ -137,12 +137,12 @@ export default function AdminShareModal({ plot, onClose }) {
                 min="1"
                 value={expiryDays}
                 onChange={(e) => setExpiryDays(e.target.value)}
-                style={{ width: "100%", background: "#1e293b", border: "1px solid #475569", color: "#fff", padding: "0.45rem 0.6rem", borderRadius: "4px", fontSize: "0.85rem" }}
+                className="lm-modern-input w-full text-xs"
               />
             </div>
             <div>
-              <label style={{ display: "block", fontSize: "0.75rem", color: "#94a3b8", marginBottom: "0.25rem" }}>
-                Max Views <span style={{ color: "#64748b" }}>(Optional)</span>
+              <label className="block text-[11px] font-mono text-slate-400 mb-1">
+                Max Views <span className="text-slate-500">(Optional)</span>
               </label>
               <input
                 type="number"
@@ -150,54 +150,66 @@ export default function AdminShareModal({ plot, onClose }) {
                 min="1"
                 value={maxViews}
                 onChange={(e) => setMaxViews(e.target.value)}
-                style={{ width: "100%", background: "#1e293b", border: "1px solid #475569", color: "#fff", padding: "0.45rem 0.6rem", borderRadius: "4px", fontSize: "0.85rem" }}
+                className="lm-modern-input w-full text-xs"
               />
             </div>
             <button
               type="submit"
               disabled={creating}
-              style={{ background: "#3b82f6", color: "#fff", border: "none", padding: "0.5rem 1rem", borderRadius: "4px", fontWeight: "600", fontSize: "0.85rem", cursor: "pointer", height: "34px" }}
+              className="lm-btn-glow w-full justify-center text-xs h-[38px]"
             >
-              {creating ? "Generating..." : "Generate Token"}
+              {creating ? "Generating…" : "Generate Token"}
             </button>
           </div>
         </form>
 
         {/* Existing Shares List */}
         <div>
-          <div style={{ fontSize: "0.85rem", fontWeight: "700", color: "#cbd5e1", marginBottom: "0.5rem" }}>
+          <div className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
             Active & Historic Share Links
           </div>
           {loading ? (
-            <div style={{ color: "#94a3b8", fontSize: "0.85rem", textAlign: "center", padding: "1rem" }}>Loading shares...</div>
+            <div className="text-slate-400 text-xs text-center py-4">Loading shares…</div>
           ) : shares.length === 0 ? (
-            <div style={{ color: "#64748b", fontSize: "0.85rem", textAlign: "center", padding: "1rem", background: "#0f172a", borderRadius: "6px" }}>
+            <div className="text-slate-500 text-xs text-center py-4 bg-white/[0.02] border border-white/[0.05] rounded-xl">
               No active share tokens created for this property yet.
             </div>
           ) : (
-            <div style={{ maxHeight: "200px", overflowY: "auto", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            <div className="max-h-52 overflow-y-auto flex flex-col gap-2 pr-1">
               {shares.map((s) => (
-                <div key={s.id} style={{ background: "#0f172a", border: "1px solid #334155", borderRadius: "6px", padding: "0.75rem", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                  <div style={{ fontSize: "0.8rem" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.2rem" }}>
-                      <span style={{
-                        padding: "0.15rem 0.5rem", borderRadius: "4px", fontSize: "0.7rem", fontWeight: "700",
-                        background: s.status === "ACTIVE" ? "#065f46" : s.status === "EXPIRED" ? "#854d0e" : s.status === "EXHAUSTED" ? "#9a3412" : "#991b1b",
-                        color: s.status === "ACTIVE" ? "#6ee7b7" : s.status === "EXPIRED" ? "#fef08a" : s.status === "EXHAUSTED" ? "#ffedd5" : "#fca5a5"
-                      }}>
+                <div
+                  key={s.id}
+                  className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] flex items-center justify-between text-xs"
+                >
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span
+                        className={`px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase ${
+                          s.status === "ACTIVE"
+                            ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
+                            : s.status === "EXPIRED"
+                            ? "bg-amber-500/15 text-amber-400 border border-amber-500/30"
+                            : s.status === "EXHAUSTED"
+                            ? "bg-orange-500/15 text-orange-400 border border-orange-500/30"
+                            : "bg-rose-500/15 text-rose-400 border border-rose-500/30"
+                        }`}
+                      >
                         {s.status}
                       </span>
-                      <span style={{ color: "#64748b" }}>Created: {new Date(s.created_at).toLocaleDateString()}</span>
+                      <span className="text-slate-400 text-[11px]">
+                        Created: {new Date(s.created_at).toLocaleDateString()}
+                      </span>
                     </div>
-                    <div style={{ color: "#94a3b8", fontSize: "0.75rem" }}>
-                      Views: <strong>{s.view_count}</strong> {s.max_views != null ? `/ ${s.max_views}` : "(Unlimited)"}
+                    <div className="text-slate-300 text-[11px]">
+                      Views: <strong className="text-white">{s.view_count}</strong>{" "}
+                      {s.max_views != null ? `/ ${s.max_views}` : "(Unlimited)"}
                       {s.expires_at && ` • Expires: ${new Date(s.expires_at).toLocaleString()}`}
                     </div>
                   </div>
                   {s.status === "ACTIVE" && (
                     <button
                       onClick={() => handleRevokeShare(s.id)}
-                      style={{ background: "#7f1d1d", color: "#fca5a5", border: "1px solid #991b1b", padding: "0.3rem 0.6rem", borderRadius: "4px", fontSize: "0.75rem", fontWeight: "600", cursor: "pointer" }}
+                      className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 transition-all cursor-pointer"
                     >
                       Revoke
                     </button>

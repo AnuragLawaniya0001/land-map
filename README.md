@@ -15,13 +15,13 @@ docker compose up -d
 
 ### Step 2: Start Python Backend Locally
 ```powershell
-cd backend/python
-.venv\Scripts\python.exe -m uvicorn app.server:app --host 127.0.0.1 --port 8001 --reload
+cd backend
+.\.venv\Scripts\python.exe -m uvicorn app.server:app --host 127.0.0.1 --port 4801 --reload
 ```
 
 ### Step 3: Access the application
-- Frontend: http://localhost:5173
-- Backend API: http://localhost:8001
+- Frontend: http://localhost:4800
+- Backend API: http://localhost:4801
 - MongoDB: mongodb://livemap:livemap_password@localhost:27017
 
 ### Step 4: Stop services
@@ -37,13 +37,13 @@ For detailed instructions, see [DOCKER_SETUP.md](./DOCKER_SETUP.md).
 ## Run locally (without Docker)
 
 Prerequisites: Python 3.11+, Node.js (frontend only), MongoDB, and the
-dependencies listed in `backend/python/requirements.txt`.
+dependencies listed in `backend/requirements.txt`.
 
-1. Copy `backend/python/.env.example` to `backend/python/.env`. Configure MongoDB
+1. Copy `backend/.env.example` to `backend/.env`. Configure MongoDB
    and a strong `JWT_SECRET`. To keep current login cookies valid, use the same
    `JWT_SECRET` as the previous API. Keep `.env` private.
 2. Create a virtual environment and install the Python dependencies from
-   `backend/python`:
+   `backend`:
 
    ```powershell
    py -3.11 -m venv .venv
@@ -56,7 +56,7 @@ dependencies listed in `backend/python/requirements.txt`.
 
    ```powershell
    .\.venv\Scripts\python.exe -c "from pyproj import Transformer; print('pyproj import OK')"
-   .\.venv\Scripts\python.exe -m uvicorn app.server:app --host 127.0.0.1 --port 8001 --reload
+   .\.venv\Scripts\python.exe -m uvicorn app.server:app --host 127.0.0.1 --port 4801 --reload
    ```
 
    If the import reports that an Application Control or Code Integrity policy
@@ -73,21 +73,21 @@ dependencies listed in `backend/python/requirements.txt`.
    npm run dev
    ```
 
-Open <http://localhost:5173>. Vite proxies `/api` to the Python API on port 8001.
+Open <http://localhost:4800>. Vite proxies `/api` to the Python API on port 4801.
 For a production build, run `npm run build` in `frontend`; when `frontend/dist`
 exists, the Python service serves it by default. Set `SERVE_FRONTEND=false` to
 serve the frontend separately.
 
 ## Tests
 
-The Python API tests are in `backend/python/tests` and run with:
+The Python API tests are in `backend/tests` and run with:
 
 ```powershell
-cd backend/python
+cd backend
 .\.venv\Scripts\python.exe -m pytest
 ```
 
-GIS fixture files in `backend/python/tests/fixtures` are test inputs and are
+GIS fixture files in `backend/tests/fixtures` are test inputs and are
 intentionally retained. Generated reports, caches, and bytecode are not source.
 
 ## PDF image overlays
@@ -230,7 +230,7 @@ disable artifact output.
 
 - The API uses `MONGODB_URI` / `MONGODB_DB`; `MONGO_URL` / `DB_NAME` remain
   supported as aliases.
-- Local file storage defaults to `backend/node/storage` so existing registry
+- Local file storage defaults to `backend/storage` so existing registry
   documents remain available. Configure `LOCAL_STORAGE_PATH` before relocating
   that data. Alternatively set `STORAGE_DRIVER=emergent` and configure the
   object-storage credentials.

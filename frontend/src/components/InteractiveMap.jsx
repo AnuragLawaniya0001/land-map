@@ -124,7 +124,17 @@ function getPolygonPerimeterPoints(rawPts, count = 6) {
 
 function FitBounds({ data, resetKey, entrancePosition }) {
   const map = useMap();
+  const hasFittedRef = useRef(false);
+  const lastResetKeyRef = useRef(resetKey);
+
   useEffect(() => {
+    const isInitial = !hasFittedRef.current;
+    const isReset = resetKey !== lastResetKeyRef.current;
+    lastResetKeyRef.current = resetKey;
+
+    // Do NOT re-fit bounds on background sync or re-renders
+    if (!isInitial && !isReset) return;
+
     const doFit = (animate = false) => {
       if (!map) return;
       map.invalidateSize({ pan: false });
@@ -144,15 +154,17 @@ function FitBounds({ data, resetKey, entrancePosition }) {
       }
       if (!bounds || !bounds.isValid()) return;
 
+      hasFittedRef.current = true;
+
       const fitB = L.latLngBounds(bounds.getSouthWest(), bounds.getNorthEast());
       if (entrancePosition && Array.isArray(entrancePosition) && entrancePosition.length >= 2) {
         fitB.extend(entrancePosition);
       }
 
       const fitOptions = {
-        paddingTopLeft: [8, 8],
-        paddingBottomRight: [12, 8],
-        maxZoom: 22,
+        paddingTopLeft: [50, 50],
+        paddingBottomRight: [50, 50],
+        maxZoom: 18.0,
       };
 
       if (animate) {
@@ -171,13 +183,22 @@ function FitBounds({ data, resetKey, entrancePosition }) {
 
 function FocusPlot({ selected, geometry }) {
   const map = useMap();
+  const lastSelectedIdRef = useRef(null);
+
   useEffect(() => {
-    if (!selected) return;
+    if (!selected) {
+      lastSelectedIdRef.current = null;
+      return;
+    }
+    // Only fly if selected plot ID changed, prevent background sync from flying to plot repeatedly
+    if (selected.id === lastSelectedIdRef.current) return;
+    lastSelectedIdRef.current = selected.id;
+
     const bounds = L.geoJSON(geometry || selected.geometry).getBounds();
     if (bounds.isValid()) {
-      map.flyToBounds(bounds, { padding: [90, 90], duration: 0.7, maxZoom: 21.5 });
+      map.flyToBounds(bounds, { padding: [90, 90], duration: 0.7, maxZoom: 19.0 });
     }
-  }, [selected?.id, geometry, map]); // eslint-disable-line
+  }, [selected?.id, geometry, map]);
   return null;
 }
 
@@ -285,7 +306,23 @@ export default function InteractiveMap({
   const [hoveredPlotId, setHoveredPlotId] = useState(null);
   const clearSelectionRef = useRef(null);
   const statuses = useMemo(() => Object.fromEntries((data?.statuses || []).map((s) => [s.id, s])), [data]);
-  const zones = useMemo(() => Object.fromEntries((data?.zones || []).map((z) => [z.id, z])), [data]);
+  const zones = useMemo(() => {
+    const map = {};
+    (data?.zones || []).forEach((z) => {
+      if (z.id) map[z.id] = z;
+      if (z.code) {
+        map[z.code] = z;
+        map[z.code.toLowerCase()] = z;
+        map[`zone ${z.code}`.toLowerCase()] = z;
+      }
+      if (z.name) {
+        map[z.name] = z;
+        map[z.name.toLowerCase()] = z;
+      }
+    });
+    return map;
+  }, [data?.zones]);
+
   const plotGeo = useMemo(() => Object.fromEntries((data?.plots || []).map((p) => {
     const geometry = p.geometry;
     const pos = geoJSONToLatLngs(geometry);
@@ -302,6 +339,40 @@ export default function InteractiveMap({
     () => (data?.plots || []).filter((plot) => plotGeo[plot.id]?.selectable),
     [data?.plots, plotGeo],
   );
+
+  const zoneCentroids = useMemo(() => {
+    if (!data?.zones) return {};
+    const centroids = {};
+    for (const z of data.zones) {
+      const zPlots = (data.plots || []).filter((p) => {
+        const pz = p.zone_id;
+        return (
+          pz === z.id ||
+          pz === z.name ||
+          pz === z.code ||
+          (pz && String(pz).toLowerCase() === String(z.name || "").toLowerCase()) ||
+          (pz && String(pz).toLowerCase() === String(z.code || "").toLowerCase())
+        );
+      });
+      if (zPlots.length > 0) {
+        let latSum = 0;
+        let lngSum = 0;
+        let count = 0;
+        for (const p of zPlots) {
+          const m = plotGeo[p.id]?.m;
+          if (m?.center) {
+            latSum += m.center[0];
+            lngSum += m.center[1];
+            count++;
+          }
+        }
+        if (count > 0) {
+          centroids[z.id] = [latSum / count, lngSum / count];
+        }
+      }
+    }
+    return centroids;
+  }, [data?.zones, data?.plots, plotGeo]);
   const pdfOverlayPlots = useMemo(() => {
     return (data?.colony?.pdf_overlay?.plot_regions || []).flatMap((region, index) => {
       const geometry = transformOverlayGeometry(
@@ -556,6 +627,10 @@ export default function InteractiveMap({
       fill = "#4eb995"; // Luminous mint emerald from Reference 1 (Plot 128)
     } else if (isHovered) {
       fill = "#ffffff";
+    } else if (showZones && zone) {
+      fill = zone.color || "#35c7b4";
+      stroke = zone.color || "#047857";
+      strokeWidth = 2.2;
     } else if (showStatus && status) {
       const sid = String(status.id || status.code || "").toLowerCase();
       if (sid.includes("sold")) {
@@ -578,9 +653,6 @@ export default function InteractiveMap({
         fill = "#f6f3eb";
         stroke = "#544c3e";
       }
-    } else if (showZones && zone) {
-      fill = zone.color ? `${zone.color}25` : "#f6f3eb";
-      stroke = zone.color || "#544c3e";
     }
     return { fill, stroke, strokeWidth };
   };
@@ -588,8 +660,12 @@ export default function InteractiveMap({
   // Card details for selected plot matching Reference 1 (Plot 128 Card)
   const plotCardDetails = useMemo(() => {
     if (!selectedPlot) return null;
-    const a = areaConversions(selectedPlot.area_sqm || 0);
-    const sqft = Math.round((selectedPlot.area_sqm || 0) * 10.7639) || Math.round(a.sqyd * 9) || 1200;
+    const a = (selectedPlot.area_sqft || selectedPlot.area_sqyd) ? {
+      sqft: Math.round(selectedPlot.area_sqft || (selectedPlot.area_sqyd * 9)),
+      sqyd: Math.round(selectedPlot.area_sqyd || (selectedPlot.area_sqft / 9)),
+      sqm: Math.round(selectedPlot.area_sqm || (selectedPlot.area_sqft * 0.092903)),
+    } : areaConversions(selectedPlot.area_sqm || 0);
+    const sqft = selectedPlot.area_sqft ? Math.round(selectedPlot.area_sqft) : (Math.round((selectedPlot.area_sqm || 0) * 10.7639) || Math.round(a.sqyd * 9) || 1200);
 
     let dimStr = selectedPlot.dimensions || "";
     if (!dimStr && selectedPlot.geometry) {
@@ -659,9 +735,9 @@ export default function InteractiveMap({
 
   return (
     <div className="lm-map-wrap" data-testid="interactive-map">
-    <MapContainer center={center} zoom={18} scrollWheelZoom className={`lm-map lm-map-${mapStyle}`} zoomControl={false} maxZoom={22} zoomSnap={0} zoomDelta={0.25}>
+    <MapContainer center={center} zoom={17.5} scrollWheelZoom className={`lm-map lm-map-${mapStyle}`} zoomControl={false} maxZoom={20} zoomSnap={0} zoomDelta={0.25}>
       {mapStyle !== "plan" && (
-        <TileLayer url={ESRI} attribution="Imagery &copy; Esri, Maxar, Earthstar Geographics" maxZoom={22} maxNativeZoom={19} />
+        <TileLayer url={ESRI} attribution="Imagery &copy; Esri, Maxar, Earthstar Geographics" maxZoom={20} maxNativeZoom={18} />
       )}
       <FitBounds data={data} resetKey={resetKey} entrancePosition={entrancePosition} />
       <MapResizeObserver />
@@ -676,20 +752,38 @@ export default function InteractiveMap({
       <FlyTo target={flyTarget} />
       <MapWatcher onMapClick={selectPlotAtPoint} onZoom={setZoom} />
 
-      {/* 0. BASE LAYER: Masterplan Landscaped Ground & Perimeter Wall */}
+      {/* 0. BASE LAYER: Masterplan Landscaped Ground & Perimeter Wall (100% Opaque: Blocks underlying raw satellite earth) */}
       {boundary.length > 0 && (
-        <Polygon
-          positions={boundary}
-          interactive={false}
-          pathOptions={{
-            color: "#ffffff",
-            weight: 3.2,
-            opacity: 0.98,
-            fillColor: mapStyle === "plan" ? "#f1f5f9" : "#1e4418",
-            fillOpacity: mapStyle === "plan" ? 0.95 : (pdfArtworkVisible ? 0.0 : (existingSelectablePlots.length > 0 ? 0.35 : 0.0)),
-            lineJoin: "round",
-          }}
-        />
+        <>
+          {/* Solid Developed Masterplan Ground Base (Opaque asphalt/paved development surface) */}
+          <Polygon
+            positions={boundary}
+            interactive={false}
+            pathOptions={{
+              color: mapStyle === "plan" ? "#334155" : "#ffffff",
+              weight: 3.5,
+              opacity: 1,
+              fill: !pdfArtworkVisible,
+              fillColor: mapStyle === "plan" ? "#f1f5f9" : "#22262e",
+              fillOpacity: pdfArtworkVisible ? 0.0 : 1.0,
+              lineJoin: "round",
+            }}
+          />
+          {/* Inner Boundary Wall Architectural Curb Line */}
+          {mapStyle !== "plan" && !pdfArtworkVisible && (
+            <Polygon
+              positions={boundary}
+              interactive={false}
+              pathOptions={{
+                color: "#475569",
+                weight: 1.5,
+                opacity: 0.8,
+                fill: false,
+                lineJoin: "round",
+              }}
+            />
+          )}
+        </>
       )}
 
       {/* 1. LAYER: Walkway Curbs & Asphalt Roads */}
@@ -839,13 +933,79 @@ export default function InteractiveMap({
         );
       })}
 
-      {showZones && (data.zones || []).map((zone) => (
-        <Polygon key={`z-${zone.id}`} positions={toLeaflet(zone.geometry)} interactive={false} pathOptions={{ stroke: false, fill: true, fillOpacity: 0 }}>
-          <Tooltip permanent direction="center" className={`lm-tip-zone ${selectedZone === zone.id ? "sel" : ""}`} interactive={false}>
-            <span style={{ background: zone.color }}>{zone.name}</span>
-          </Tooltip>
-        </Polygon>
-      ))}
+      {showZones && (data.zones || []).map((zone) => {
+        const centerPos = zoneCentroids[zone.id];
+        const count = (data.plots || []).filter((p) => {
+          const pz = p.zone_id;
+          return (
+            pz === zone.id ||
+            pz === zone.name ||
+            pz === zone.code ||
+            (pz && String(pz).toLowerCase() === String(zone.name || "").toLowerCase()) ||
+            (pz && String(pz).toLowerCase() === String(zone.code || "").toLowerCase())
+          );
+        }).length;
+        const displayName = zone.name || `Zone ${zone.code}`;
+        const isSel = selectedZone === zone.id;
+
+        if (centerPos) {
+          return (
+            <CircleMarker
+              key={`z-marker-${zone.id}`}
+              center={centerPos}
+              radius={2}
+              interactive={false}
+              pathOptions={{ stroke: false, fill: false, opacity: 0, fillOpacity: 0 }}
+            >
+              <Tooltip
+                permanent
+                direction="center"
+                className={`lm-tip-zone ${isSel ? "sel" : ""}`}
+                interactive={false}
+              >
+                <span
+                  style={{
+                    background: zone.color,
+                    color: "#ffffff",
+                    border: isSel ? "2.5px solid #ffffff" : "1.5px solid rgba(255,255,255,0.9)",
+                    boxShadow: "0 4px 14px rgba(0,0,0,0.45)",
+                    textShadow: "0 1px 3px rgba(0,0,0,0.6)",
+                    fontWeight: 800,
+                  }}
+                >
+                  {displayName} ({count})
+                </span>
+              </Tooltip>
+            </CircleMarker>
+          );
+        }
+
+        return zone.geometry ? (
+          <Polygon
+            key={`z-${zone.id}`}
+            positions={toLeaflet(zone.geometry)}
+            interactive={false}
+            pathOptions={{
+              color: zone.color,
+              weight: 2,
+              dashArray: "5 5",
+              opacity: 0.6,
+              fill: true,
+              fillColor: zone.color,
+              fillOpacity: 0.05,
+            }}
+          >
+            <Tooltip
+              permanent
+              direction="center"
+              className={`lm-tip-zone ${isSel ? "sel" : ""}`}
+              interactive={false}
+            >
+              <span style={{ background: zone.color, color: "#fff" }}>{displayName}</span>
+            </Tooltip>
+          </Polygon>
+        ) : null;
+      })}
 
       {/* 5. LAYER: Plots (Crisp Modern Architectural Masterplan Parcels) */}
       {sortedPlots.map((plot) => {
@@ -858,7 +1018,11 @@ export default function InteractiveMap({
         const isHovered = hoveredPlotId === plot.id;
         const { fill, stroke, strokeWidth } = getPlotColors(plot, isSel, isHovered, status, zone);
 
-        const a = areaConversions(plot.area_sqm || 0);
+        const a = (plot.area_sqft || plot.area_sqyd) ? {
+          sqft: Math.round(plot.area_sqft || (plot.area_sqyd * 9)),
+          sqyd: Math.round(plot.area_sqyd || (plot.area_sqft / 9)),
+          sqm: Math.round(plot.area_sqm || (plot.area_sqft * 0.092903)),
+        } : areaConversions(plot.area_sqm || 0);
         const lines = isSel
           ? [plot.number, `${fmt(a.sqyd)} yd²`, `${fmt(a.sqm)} m²`]
           : [plot.number];
@@ -873,7 +1037,7 @@ export default function InteractiveMap({
               opacity: 1,
               weight: strokeWidth,
               fillColor: fill,
-              fillOpacity: isSel ? 0.98 : inFilter ? (isHovered ? 1 : 0.96) : 0.25,
+              fillOpacity: isSel ? 0.98 : inFilter ? (isHovered ? 1 : (showZones ? 0.45 : 0.96)) : 0.2,
               lineJoin: "round",
             }}
             eventHandlers={{

@@ -207,7 +207,7 @@
 .lm-fit::before { display: none !important; }
 .lm-fit span { display: inline-flex; flex-direction: column; align-items: center; line-height: 1.1; white-space: nowrap; }
 .lm-fit em { font-style: normal; display: block; }
-.lm-fit-plot span { color: #0f172a; font: 700 1.05em 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: -0.01em; text-shadow: 0 1px 2px rgba(255, 255, 255, 0.85); }
+.lm-fit-plot span { color: #0f172a; font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-weight: 700; letter-spacing: -0.01em; text-shadow: 0 1px 2px rgba(255, 255, 255, 0.85); }
 .lm-fit-plot em + em { font-size: 0.48em; font-weight: 600; margin-top: 0.16em; color: #1e293b; }
 .lm-fit-plot em:nth-child(2) { font-weight: 700; }
 .lm-fit-plot.selected span { color: #ffffff; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6); }
@@ -274,41 +274,39 @@
 .lm-z20 .lm-tip-zone, .lm-z21 .lm-tip-zone { display: none !important; }
 .lm-form-grid { display: grid; grid-template-columns: 1fr 1fr 0.8fr; gap: 10px; }
 .lm-form-help { font-size: 11px; color: var(--muted); margin-top: 8px; line-height: 1.5; }
-.lm-login.super .lm-login-art { background: #1a1230; }
-.lm-login.super .lm-login-copy h1 em, .lm-admin.super .lm-side-link.active { color: #c9a7ff; }
-.lm-login.super .lm-brand-dot, .lm-admin.super .lm-brand-dot, .lm-admin.super .lm-avatar { background: #a77bff; box-shadow: 0 0 0 4px rgba(167,123,255,0.25); }
-.lm-admin.super .lm-admin-side { background: #1a1230; }
-.lm-admin.super .lm-side-link.active { background: #2a1f4a; border-color: #a77bff; }
-.lm-admin.super .lm-share-card { background: #231a3d; border-color: #35285a; }
-.lm-admin.super .lm-share-btn { background: #a77bff; }
+.lm-login.super .lm-login-art { background: #173F35; }
+.lm-admin.super .lm-admin-side { background: #EDE6D6; border-right: 1px solid #DCD2BE; }
+.lm-admin.super .lm-side-link.active { background: #173F35; border-color: #173F35; color: #ffffff; }
+.lm-admin.super .lm-share-card { background: #F7F3EB; border-color: #DCD2BE; }
+.lm-admin.super .lm-share-btn { background: #0D1B2A; color: #FFFFFF; }
 .lm-side-tag { display: inline-flex; align-items: center; gap: 5px; }
 
 /* Super admin console login */
-.lm-super-login { min-height: 100vh; display: grid; place-items: center; background: #120c22; color: #efe9ff; position: relative; overflow: hidden; padding: 30px; }
-.lm-super-grid { position: absolute; inset: -20%; background: radial-gradient(circle at 30% 20%, rgba(167,123,255,0.35), transparent 40%), radial-gradient(circle at 80% 80%, rgba(53,199,180,0.2), transparent 45%), repeating-linear-gradient(45deg, rgba(255,255,255,0.025) 0 2px, transparent 2px 28px); }
-.lm-super-card { position: relative; z-index: 1; width: min(440px, 100%); background: rgba(26, 18, 48, 0.85); border: 1px solid rgba(167,123,255,0.35); border-radius: 22px; padding: 34px 36px; backdrop-filter: blur(20px); box-shadow: 0 40px 90px rgba(0,0,0,0.5); }
-.lm-super-crown { width: 54px; height: 54px; border-radius: 16px; background: #a77bff; color: #120c22; display: grid; place-items: center; margin-bottom: 18px; box-shadow: 0 0 0 8px rgba(167,123,255,0.18); }
-.lm-super-card h1 { font: 600 34px/1.05 'Fraunces', serif; letter-spacing: -0.03em; margin: 8px 0 10px; color: #fff; }
-.lm-super-blurb { color: #b9adda; font-size: 13px; line-height: 1.6; }
+.lm-super-login { min-height: 100vh; display: grid; place-items: center; background: #F6F4EE; color: #172A25; position: relative; overflow: hidden; padding: 30px; }
+.lm-super-grid { position: absolute; inset: -20%; background: radial-gradient(circle at 30% 20%, rgba(23, 63, 53, 0.08), transparent 40%), radial-gradient(circle at 80% 80%, rgba(13, 27, 42, 0.06), transparent 45%), repeating-linear-gradient(45deg, rgba(23, 42, 37, 0.02) 0 2px, transparent 2px 28px); }
+.lm-super-card { position: relative; z-index: 1; width: min(440px, 100%); background: #FFFFFF; border: 1px solid #E8E2D6; border-radius: 22px; padding: 34px 36px; box-shadow: 0 20px 50px rgba(23, 42, 37, 0.08); }
+.lm-super-crown { width: 54px; height: 54px; border-radius: 16px; background: #173F35; color: #FFFFFF; display: grid; place-items: center; margin-bottom: 18px; box-shadow: 0 0 0 8px rgba(23, 63, 53, 0.12); }
+.lm-super-card h1 { font: 600 34px/1.05 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.03em; margin: 8px 0 10px; color: #172A25; }
+.lm-super-blurb { color: #4B5563; font-size: 13px; line-height: 1.6; }
 .lm-super-perks { list-style: none; padding: 0; margin: 18px 0 6px; display: grid; gap: 6px; }
-.lm-super-perks li { font-size: 12px; color: #d9d0f5; padding-left: 18px; position: relative; }
-.lm-super-perks li::before { content: ""; position: absolute; left: 0; top: 6px; width: 8px; height: 8px; border-radius: 2px; background: #a77bff; }
-.lm-super-card label { display: block; font-size: 11px; font-weight: 600; margin-top: 16px; letter-spacing: 0.06em; text-transform: uppercase; color: #9f92c4; }
-.lm-super-card input { display: block; width: 100%; margin-top: 7px; padding: 13px 14px; background: #0f0a1d; border: 1px solid #3a2d63; border-radius: 10px; color: #fff; outline: none; font-size: 14px; }
-.lm-super-card input:focus { border-color: #a77bff; }
-.lm-super-btn { margin-top: 22px; width: 100%; display: inline-flex; justify-content: center; align-items: center; gap: 8px; background: #a77bff; color: #120c22; border: 0; padding: 14px; border-radius: 999px; font-weight: 700; font-size: 14px; transition: background-color 0.2s, transform 0.2s; }
-.lm-super-btn:hover { background: #bb99ff; transform: translateY(-1px); }
+.lm-super-perks li { font-size: 12px; color: #374151; padding-left: 18px; position: relative; }
+.lm-super-perks li::before { content: ""; position: absolute; left: 0; top: 6px; width: 8px; height: 8px; border-radius: 2px; background: #173F35; }
+.lm-super-card label { display: block; font-size: 11px; font-weight: 600; margin-top: 16px; letter-spacing: 0.06em; text-transform: uppercase; color: #4B5563; }
+.lm-super-card input { display: block; width: 100%; margin-top: 7px; padding: 13px 14px; background: #FFFFFF; border: 1px solid #E8E2D6; border-radius: 10px; color: #172A25; outline: none; font-size: 14px; }
+.lm-super-card input:focus { border-color: #173F35; }
+.lm-super-btn { margin-top: 22px; width: 100%; display: inline-flex; justify-content: center; align-items: center; gap: 8px; background: #0D1B2A; color: #FFFFFF; border: 0; padding: 14px; border-radius: 12px; font-weight: 700; font-size: 14px; transition: background-color 0.2s, transform 0.2s; }
+.lm-super-btn:hover { background: #173F35; transform: translateY(-1px); }
 .lm-super-btn:disabled { opacity: 0.6; }
-.lm-login-hint.light { color: #9f92c4; }
-.lm-login-hint.light .lm-text-link { color: #c9a7ff; }
+.lm-login-hint.light { color: #6B7280; }
+.lm-login-hint.light .lm-text-link { color: #173F35; }
 
 /* Access card + colony delete */
-.lm-access-card { margin-top: 12px; padding: 12px 14px; background: #152e2b; border-radius: 10px; border: 1px solid #203e3a; }
-.lm-admin.super .lm-access-card { background: #231a3d; border-color: #35285a; }
+.lm-access-card { margin-top: 12px; padding: 12px 14px; background: #FFFFFF; border-radius: 10px; border: 1px solid #E8E2D6; }
+.lm-admin.super .lm-access-card { background: #FFFFFF; border-color: #E8E2D6; }
 .lm-access-card ul { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 5px; }
-.lm-access-card li { font-size: 11px; color: #b9c9c4; padding-left: 14px; position: relative; }
-.lm-access-card li::before { content: ""; position: absolute; left: 0; top: 5px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-2); }
-.lm-admin.super .lm-access-card li::before { background: #a77bff; }
+.lm-access-card li { font-size: 11px; color: #4B5563; padding-left: 14px; position: relative; }
+.lm-access-card li::before { content: ""; position: absolute; left: 0; top: 5px; width: 6px; height: 6px; border-radius: 50%; background: #173F35; }
+.lm-admin.super .lm-access-card li::before { background: #173F35; }
 .lm-colony-card-wrap { position: relative; }
 .lm-card-delete { position: absolute; top: 12px; right: 12px; z-index: 2; background: rgba(255,255,255,0.92); color: #a93326; border: 0; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; }
 .lm-card-delete:hover { background: #fde8e4; }
@@ -552,7 +550,8 @@
 /* Masterplan plot labels: solid, high-contrast, bold architectural text */
 .lm-fit-plot span {
   color: #1a202c !important;
-  font: 700 1.05em 'Space Grotesk', 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif !important;
+  font-family: 'Space Grotesk', 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif !important;
+  font-weight: 700 !important;
   letter-spacing: -0.01em !important;
   text-shadow: none !important;
 }
@@ -621,10 +620,10 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: rgba(18, 22, 28, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: #FAF8F5;
+  border: 1px solid #DCD2BE;
   backdrop-filter: blur(12px);
-  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 6px 20px rgba(23, 42, 37, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -639,13 +638,13 @@
   justify-content: center;
 }
 .lm-compass-n { position: absolute; top: -1px; left: 50%; transform: translateX(-50%); font: 800 9px 'Space Grotesk', sans-serif; color: #ef4444; }
-.lm-compass-s { position: absolute; bottom: -1px; left: 50%; transform: translateX(-50%); font: 700 8px 'Space Grotesk', sans-serif; color: rgba(255, 255, 255, 0.45); }
-.lm-compass-w { position: absolute; left: 0; top: 50%; transform: translateY(-50%); font: 700 8px 'Space Grotesk', sans-serif; color: rgba(255, 255, 255, 0.45); }
-.lm-compass-e { position: absolute; right: 0; top: 50%; transform: translateY(-50%); font: 700 8px 'Space Grotesk', sans-serif; color: rgba(255, 255, 255, 0.45); }
+.lm-compass-s { position: absolute; bottom: -1px; left: 50%; transform: translateX(-50%); font: 700 8px 'Space Grotesk', sans-serif; color: #5C6470; }
+.lm-compass-w { position: absolute; left: 0; top: 50%; transform: translateY(-50%); font: 700 8px 'Space Grotesk', sans-serif; color: #5C6470; }
+.lm-compass-e { position: absolute; right: 0; top: 50%; transform: translateY(-50%); font: 700 8px 'Space Grotesk', sans-serif; color: #5C6470; }
 .lm-compass-needle {
   width: 2px;
   height: 18px;
-  background: linear-gradient(to bottom, #ef4444 50%, #94a3b8 50%);
+  background: linear-gradient(to bottom, #ef4444 50%, #5C6470 50%);
   border-radius: 1px;
 }
 .lm-compass-needle::before {
@@ -924,20 +923,20 @@
   color: #64748b;
 }
 
-/* Modern Plot Card (Matching Reference Screenshot) */
+/* Modern Plot Card (Warm Estate Styling) */
 .lm-plot-card-modern {
   position: absolute;
   left: 20px;
   bottom: 24px;
   z-index: 1000;
   width: min(360px, calc(100vw - 32px));
-  background: rgba(13, 20, 32, 0.94);
-  backdrop-filter: blur(28px) saturate(190%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #FFFFFF;
+  backdrop-filter: blur(28px);
+  border: 1px solid #DCD2BE;
   border-radius: 20px;
   padding: 22px;
-  color: #ffffff;
-  box-shadow: 0 24px 60px -10px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  color: #172A25;
+  box-shadow: 0 20px 45px rgba(23, 42, 37, 0.12), 0 4px 12px rgba(23, 42, 37, 0.06);
   animation: lm-rise 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -950,7 +949,7 @@
 .lm-plot-card-head h2 {
   font: 700 24px/1 'Inter', sans-serif;
   letter-spacing: -0.03em;
-  color: #ffffff;
+  color: #172A25;
   margin: 0;
 }
 .lm-card-icon-btn {
@@ -960,15 +959,15 @@
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  color: #94a3b8;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #F4EFE6;
+  color: #172A25;
+  border: 1px solid #E2DAC7;
   transition: all 0.2s ease;
   cursor: pointer;
 }
 .lm-card-icon-btn:hover {
-  background: rgba(255, 255, 255, 0.14);
-  color: #ffffff;
+  background: #EDE6D6;
+  color: #173F35;
   transform: translateY(-1px);
 }
 
@@ -1002,8 +1001,8 @@
 .lm-modern-specs-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #F7F4ED;
+  border: 1px solid #E5DFD3;
   border-radius: 12px;
   overflow: hidden;
   margin-bottom: 12px;
@@ -1017,18 +1016,18 @@
   align-items: center;
 }
 .lm-modern-spec-col:not(:last-child) {
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid #E5DFD3;
 }
 .lm-modern-spec-val {
   font: 700 14px/1.2 'Inter', sans-serif;
-  color: #ffffff;
+  color: #172A25;
   letter-spacing: -0.02em;
   white-space: nowrap;
 }
 .lm-modern-spec-sub {
   font-size: 10px;
   font-weight: 500;
-  color: #64748b;
+  color: #5C6470;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-top: 4px;
@@ -1049,21 +1048,22 @@
   height: 46px;
   padding: 0 14px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.06);
-  color: #f1f5f9;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #F4EFE6;
+  color: #172A25;
+  border: 1px solid #DCD2BE;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .lm-modern-btn-chat:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.22);
+  background: #EDE6D6;
+  color: #173F35;
+  border-color: #DCD2BE;
   transform: translateY(-1px);
 }
 .lm-modern-btn-chat svg {
-  color: #25d366;
+  color: #047857;
 }
 
 .lm-modern-btn-enquire {
@@ -1073,13 +1073,13 @@
   height: 46px;
   padding: 0 16px;
   border-radius: 12px;
-  background: #00c08b;
+  background: #173F35;
   color: #ffffff;
   border: 0;
   font-size: 14px;
   font-weight: 700;
   letter-spacing: -0.01em;
-  box-shadow: 0 4px 16px rgba(0, 192, 139, 0.35);
+  box-shadow: 0 4px 16px rgba(23, 63, 53, 0.25);
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -1373,13 +1373,13 @@
   z-index: 1000;
   width: 330px;
   max-width: calc(100% - 48px);
-  background: #0f172a;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: #FFFFFF;
+  border: 1px solid #DCD2BE;
   border-radius: 16px;
   padding: 18px 20px;
-  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.65), 0 4px 14px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 20px 45px rgba(23, 42, 37, 0.12), 0 4px 12px rgba(23, 42, 37, 0.06);
   backdrop-filter: blur(20px);
-  color: #ffffff;
+  color: #172A25;
   animation: lmCardSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   font-family: 'Space Grotesk', 'Inter', -apple-system, sans-serif;
 }
@@ -1405,7 +1405,7 @@
 .lm-fpc-title {
   font-size: 22px;
   font-weight: 800;
-  color: #f8fafc;
+  color: #172A25;
   letter-spacing: -0.02em;
 }
 
@@ -1419,9 +1419,9 @@
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #94a3b8;
+  background: #F4EFE6;
+  border: 1px solid #E2DAC7;
+  color: #172A25;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1430,8 +1430,8 @@
 }
 
 .lm-fpc-icon-btn:hover {
-  background: rgba(255, 255, 255, 0.18);
-  color: #ffffff;
+  background: #EDE6D6;
+  color: #173F35;
 }
 
 .lm-fpc-badge {
@@ -1447,27 +1447,27 @@
 }
 
 .lm-fpc-badge-available {
-  background: rgba(16, 185, 129, 0.15);
-  color: #10b981;
-  border: 1px solid rgba(16, 185, 129, 0.35);
+  background: rgba(16, 185, 129, 0.12);
+  color: #047857;
+  border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
 .lm-fpc-badge-sold {
-  background: rgba(239, 68, 68, 0.15);
-  color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.35);
+  background: rgba(239, 68, 68, 0.12);
+  color: #be123c;
+  border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 .lm-fpc-badge-hold {
-  background: rgba(245, 158, 11, 0.15);
-  color: #f59e0b;
-  border: 1px solid rgba(245, 158, 11, 0.35);
+  background: rgba(245, 158, 11, 0.12);
+  color: #b45309;
+  border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
 .lm-fpc-badge-reserved {
-  background: rgba(14, 165, 233, 0.15);
-  color: #0ea5e9;
-  border: 1px solid rgba(14, 165, 233, 0.35);
+  background: rgba(14, 165, 233, 0.12);
+  color: #0369a1;
+  border: 1px solid rgba(14, 165, 233, 0.3);
 }
 
 .lm-fpc-dot {
@@ -1475,7 +1475,7 @@
   height: 6px;
   border-radius: 50%;
   background: currentColor;
-  box-shadow: 0 0 8px currentColor;
+  box-shadow: 0 0 6px currentColor;
 }
 
 .lm-fpc-specs {
@@ -1486,8 +1486,8 @@
 }
 
 .lm-fpc-spec {
-  background: #1e293b;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: #F7F4ED;
+  border: 1px solid #E5DFD3;
   border-radius: 10px;
   padding: 10px 4px;
   text-align: center;
@@ -1499,7 +1499,7 @@
 .lm-fpc-spec-val {
   font-size: 12.5px;
   font-weight: 700;
-  color: #e2e8f0;
+  color: #172A25;
   white-space: nowrap;
 }
 
@@ -1510,9 +1510,9 @@
 
 .lm-fpc-btn-chat {
   flex: 1;
-  background: #1e293b;
-  color: #f8fafc;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #F4EFE6;
+  color: #172A25;
+  border: 1px solid #DCD2BE;
   border-radius: 10px;
   padding: 11px 12px;
   font-size: 13px;
@@ -1526,13 +1526,14 @@
 }
 
 .lm-fpc-btn-chat:hover {
-  background: #27354a;
-  border-color: rgba(255, 255, 255, 0.22);
+  background: #EDE6D6;
+  color: #173F35;
+  border-color: #DCD2BE;
 }
 
 .lm-fpc-btn-enquire {
   flex: 1;
-  background: #00b074;
+  background: #173F35;
   color: #ffffff;
   border: none;
   border-radius: 10px;
@@ -1543,13 +1544,13 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0, 176, 116, 0.4);
+  box-shadow: 0 4px 14px rgba(23, 63, 53, 0.25);
   transition: all 0.15s ease;
 }
 
 .lm-fpc-btn-enquire:hover {
-  background: #00c682;
-  box-shadow: 0 6px 20px rgba(0, 176, 116, 0.55);
+  background: #0D1B2A;
+  box-shadow: 0 6px 20px rgba(13, 27, 42, 0.3);
   transform: translateY(-1px);
 }
 
@@ -1667,29 +1668,33 @@
 }
 
 .lm-legend-pill {
-  background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  color: #cbd5e1 !important;
-  padding: 6px 10px !important;
-  border-radius: 8px !important;
-  font-size: 11px !important;
+  background: #FFFFFF !important;
+  border: 1px solid #DCD2BE !important;
+  color: #172A25 !important;
+  padding: 5px 12px !important;
+  border-radius: 9999px !important;
+  font-size: 11.5px !important;
   font-weight: 700 !important;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  transition: all 0.15s ease;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 1px 3px rgba(23, 42, 37, 0.05) !important;
 }
 
 .lm-legend-pill:hover {
-  background: rgba(255, 255, 255, 0.12) !important;
-  color: #ffffff !important;
+  background: #F4EFE6 !important;
+  color: #173F35 !important;
+  border-color: #DCD2BE !important;
+  transform: translateY(-1px) !important;
 }
 
 .lm-legend-pill.active {
-  background: rgba(255, 255, 255, 0.18) !important;
-  border-color: rgba(255, 255, 255, 0.28) !important;
-  color: #ffffff !important;
+  background: #173F35 !important;
+  border-color: #173F35 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 8px rgba(23, 63, 53, 0.25) !important;
 }
 /* ===================================================================
    PHOTOREALISTIC AERIAL DRONE MASTERPLAN LANDSCAPE & 3D GARDEN
@@ -1771,26 +1776,190 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background: #090d16;
+  background: #F6F4EE;
   display: flex;
 }
 
-/* Left Slim Docked Rail */
+/* Left GIS Navigation Sidebar with Visible Names & Option 2 Warm Estate Styling */
+.lm-gis-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  background: #EDE6D6;
+  border-right: 1px solid #DCD2BE;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 14px;
+  z-index: 1050;
+  overflow-y: auto;
+}
+
+.lm-gis-sidebar-head {
+  padding-bottom: 14px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #DCD2BE;
+}
+
+.lm-gis-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #172A25;
+}
+
+.lm-gis-brand-title {
+  font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+  color: #172A25;
+}
+
+.lm-gis-brand-tag {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  background: #E8F0EC;
+  border: 1px solid #D1E2DA;
+  color: #173F35;
+  padding: 2px 6px;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+.lm-gis-nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.lm-gis-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #4B5563;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.lm-gis-nav-link:hover {
+  background: #E0D7C5;
+  color: #172A25;
+}
+
+.lm-gis-nav-link.active {
+  background: #173F35;
+  color: #FFFFFF !important;
+  font-weight: 600;
+  border: 1px solid #173F35;
+  box-shadow: 0 4px 14px rgba(23, 63, 53, 0.25);
+}
+.lm-gis-nav-link.active svg {
+  color: #FFFFFF !important;
+}
+
+.lm-gis-sidebar-foot {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid #DCD2BE;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lm-gis-foot-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #F7F3EB;
+  border: 1px solid #DCD2BE;
+  color: #172A25;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  width: 100%;
+}
+
+.lm-gis-foot-btn:hover {
+  background: #E0D7C5;
+}
+
+.lm-gis-user-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 4px;
+}
+
+.lm-gis-user-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.lm-gis-user-info b {
+  font-size: 12px;
+  color: #172A25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lm-gis-user-info small {
+  font-size: 10px;
+  color: #6B7280;
+  text-transform: capitalize;
+}
+
+.lm-gis-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  background: #FEE2E2;
+  border: 1px solid #FECACA;
+  color: #DC2626;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  width: 100%;
+}
+
+.lm-gis-logout-btn:hover {
+  background: #FCA5A5;
+  color: #991B1B;
+}
+
+/* Left Slim Docked Rail (Legacy fallback) */
 .lm-gis-floating-dock {
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
-  width: 56px;
-  background: #0c111d;
+  width: 58px;
+  background: rgba(9, 13, 22, 0.92);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border-right: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 12px 0;
+  padding: 14px 0;
   z-index: 1050;
-  border-radius: 0;
-  box-shadow: none;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
 }
 
 .lm-gis-dock-brand {
@@ -1798,30 +1967,34 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  background: rgba(56, 189, 248, 0.12);
-  border: 1px solid rgba(56, 189, 248, 0.25);
-  color: #38bdf8;
-  margin-bottom: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(56, 189, 248, 0.1) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #10b981;
+  margin-bottom: 22px;
   text-decoration: none;
-  transition: all 0.15s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.2);
 }
 
 .lm-gis-dock-brand:hover {
-  background: rgba(56, 189, 248, 0.2);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(56, 189, 248, 0.2) 100%);
   color: #fff;
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
 }
 
 .lm-gis-dock-brand .lm-brand-dot {
   position: absolute;
   top: 3px;
   right: 3px;
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: #10b981;
+  box-shadow: 0 0 8px #10b981;
 }
 
 .lm-gis-dock-nav {
@@ -1838,44 +2011,47 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
   background: transparent;
   color: #94a3b8;
   border: 1px solid transparent;
   cursor: pointer;
   text-decoration: none;
-  transition: all 0.15s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .lm-gis-dock-item:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.08);
   color: #f8fafc;
+  transform: translateX(2px);
 }
 
 .lm-gis-dock-item.active {
-  background: rgba(59, 130, 246, 0.15);
-  border-color: rgba(96, 165, 250, 0.3);
-  color: #60a5fa;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(56, 189, 248, 0.15) 100%);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #10b981;
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.25);
 }
 
 .lm-gis-dock-item .lm-gis-dock-tip {
   position: absolute;
-  left: calc(100% + 12px);
-  background: #0f172a;
+  left: calc(100% + 14px);
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(12px);
   color: #f1f5f9;
   font-size: 11px;
   font-weight: 600;
-  padding: 4px 8px;
-  border-radius: 6px;
+  padding: 5px 10px;
+  border-radius: 8px;
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;
-  transform: translateX(-4px);
-  transition: all 0.12s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  transform: translateX(-6px);
+  transition: all 0.15s ease;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   z-index: 1060;
 }
 
@@ -1893,24 +2069,29 @@
 }
 
 .lm-gis-dock-avatar .lm-avatar.sm {
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #4f46e5, #0ea5e9);
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #10b981, #0284c7);
   color: #fff;
   font-weight: 700;
   font-size: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
 }
 
 /* Viewport Root */
 .lm-gis-viewport-main {
-  width: 100vw;
+  flex: 1;
+  min-width: 0;
+  width: 100%;
   height: 100vh;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .lm-gis-root {
@@ -1918,29 +2099,30 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #090d16;
+  background: #FAF8F5;
 }
 
 /* ==========================================================================
-   UNIFIED DOCKED TOP HEADER BAR (CLEAN & INTEGRATED)
+   UNIFIED DOCKED TOP HEADER BAR (WARM ESTATE CREAM ELEVATION)
    ========================================================================== */
 
 .lm-gis-top-bar {
   position: absolute;
   top: 0;
-  left: 56px;
+  left: 0;
   right: 0;
-  height: 54px;
-  background: rgba(12, 17, 29, 0.94);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  height: 56px;
+  background: #FAF8F5;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid #E5DFD3;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
+  padding: 0 18px;
   z-index: 1000;
   gap: 16px;
+  box-shadow: 0 2px 10px rgba(23, 42, 37, 0.03);
 }
 
 /* Left Colony Meta */
@@ -1954,19 +2136,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #94a3b8;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #FFFFFF;
+  border: 1px solid #E2DAC7;
+  color: #172A25;
   text-decoration: none;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .lm-top-back-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  background: #F4EFE6;
+  color: #173F35;
+  border-color: #DCD2BE;
+  transform: translateY(-1px);
 }
 
 .lm-top-colony {
@@ -1977,116 +2161,130 @@
 .lm-top-title-row {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
 }
 
 .lm-top-live-dot {
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: #10b981;
+  background: #047857;
+  box-shadow: 0 0 10px #047857;
+  animation: pulse 2s infinite;
 }
 
 .lm-top-title {
   margin: 0;
   font-size: 15px;
-  font-weight: 700;
-  color: #f8fafc;
+  font-weight: 800;
+  color: #172A25;
   letter-spacing: -0.01em;
   line-height: 1.2;
 }
 
 .lm-top-meta {
   font-size: 11px;
-  color: #94a3b8;
+  color: #5C6470;
   display: flex;
   align-items: center;
   gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 .lm-top-wa {
-  color: #34d399;
+  color: #173F35;
+  font-weight: 600;
+  background: #F3EFE6;
+  padding: 2px 7px;
+  border-radius: 6px;
+  border: 1px solid #E2DAC7;
+  font-size: 10.5px;
+  display: inline-flex;
+  align-items: center;
 }
 
 /* Center Search & View Mode */
 .lm-top-center {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   flex: 1;
-  max-width: 440px;
+  max-width: 480px;
 }
 
 .lm-top-tabs {
   display: flex;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 2px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: #F3EFE6;
+  padding: 3px;
+  border-radius: 10px;
+  border: 1px solid #E2DAC7;
 }
 
 .lm-top-tab {
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 5px 11px;
-  border-radius: 6px;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 8px;
   font-size: 12px;
   font-weight: 600;
-  color: #94a3b8;
+  color: #5C6470;
   background: transparent;
   border: 0;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .lm-top-tab:hover {
-  color: #fff;
+  color: #172A25;
 }
 
 .lm-top-tab.active {
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
+  background: #173F35;
+  color: #FFFFFF;
+  border: 1px solid #173F35;
+  box-shadow: 0 2px 6px rgba(23, 63, 53, 0.2);
 }
 
 .lm-top-search {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  padding: 5px 12px;
+  background: #FFFFFF;
+  border: 1px solid #E2DAC7;
+  border-radius: 10px;
+  padding: 6px 14px;
   flex: 1;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .lm-top-search:focus-within {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(56, 189, 248, 0.4);
+  background: #FFFFFF;
+  border-color: #173F35;
+  box-shadow: 0 0 12px rgba(23, 63, 53, 0.15);
 }
 
 .lm-search-icon {
-  color: #94a3b8;
+  color: #5C6470;
 }
 
 .lm-top-search input {
   background: transparent;
   border: none;
   outline: none;
-  color: #f8fafc;
+  color: #172A25;
   font-size: 12px;
   width: 100%;
 }
 
 .lm-top-search input::placeholder {
-  color: #64748b;
+  color: #5C6470;
 }
 
 .lm-search-clear {
   background: transparent;
   border: none;
-  color: #94a3b8;
+  color: #5C6470;
   cursor: pointer;
   padding: 0;
   display: flex;
@@ -2096,35 +2294,38 @@
 .lm-top-right {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .lm-top-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 11px;
-  border-radius: 8px;
+  padding: 6px 12px;
+  border-radius: 10px;
   font-size: 12px;
   font-weight: 600;
-  color: #cbd5e1;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #172A25;
+  background: #FFFFFF;
+  border: 1px solid #E2DAC7;
   cursor: pointer;
   text-decoration: none;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .lm-top-btn:hover {
-  background: rgba(255, 255, 255, 0.09);
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.14);
+  background: #F4EFE6;
+  color: #173F35;
+  border-color: #DCD2BE;
+  transform: translateY(-1px);
 }
 
-.lm-top-btn.active {
-  background: rgba(16, 185, 129, 0.15);
-  border-color: rgba(16, 185, 129, 0.35);
-  color: #34d399;
+.lm-top-btn.active,
+.lm-top-btn.active-3d {
+  background: #173F35;
+  border-color: #173F35;
+  color: #FFFFFF;
+  box-shadow: 0 2px 6px rgba(23, 63, 53, 0.2);
 }
 
 .lm-actions-summary {
@@ -2143,27 +2344,27 @@
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  width: 200px;
-  background: #0f172a;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 12px;
-  padding: 6px;
+  width: 220px;
+  background: #FFFFFF;
+  border: 1px solid #E2DAC7;
+  border-radius: 14px;
+  padding: 8px;
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+  gap: 4px;
+  box-shadow: 0 10px 25px rgba(23, 42, 37, 0.12);
   z-index: 1070;
 }
 
 .lm-top-menu-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 10px;
-  border-radius: 7px;
+  gap: 9px;
+  padding: 8px 12px;
+  border-radius: 9px;
   font-size: 12px;
   font-weight: 600;
-  color: #cbd5e1;
+  color: #172A25;
   background: transparent;
   border: 0;
   text-decoration: none;
@@ -2173,32 +2374,37 @@
 }
 
 .lm-top-menu-item:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
+  background: #F4EFE6;
+  color: #173F35;
+  transform: translateX(2px);
 }
 
 .lm-top-panel-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #94a3b8;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #FFFFFF;
+  border: 1px solid #E2DAC7;
+  color: #172A25;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .lm-top-panel-btn:hover {
-  background: rgba(255, 255, 255, 0.09);
-  color: #fff;
+  background: #F4EFE6;
+  color: #173F35;
+  border-color: #DCD2BE;
+  transform: translateY(-1px);
 }
 
 .lm-top-panel-btn.active {
-  color: #38bdf8;
-  border-color: rgba(56, 189, 248, 0.3);
+  color: #173F35;
+  background: #F4EFE6;
+  border-color: #173F35;
+  box-shadow: 0 0 8px rgba(23, 63, 53, 0.15);
 }
 
 /* ==========================================================================
@@ -2207,8 +2413,8 @@
 
 .lm-gis-workspace {
   position: absolute;
-  top: 54px;
-  left: 56px;
+  top: 56px;
+  left: 0;
   right: 0;
   bottom: 0;
   display: flex;
@@ -2233,277 +2439,327 @@
 .lm-gis-canvas .leaflet-container {
   width: 100% !important;
   height: 100% !important;
-  background: #090e18 !important;
+  background: #EDE6D6 !important;
 }
 
 /* ==========================================================================
-   RIGHT DOCKED TELEMETRY & INSPECTOR PANEL (CLEAN & MINIMAL)
+   RIGHT DOCKED TELEMETRY & INSPECTOR PANEL (GLASS TELEMETRY HUB)
    ========================================================================== */
 
 .lm-gis-telemetry-deck {
-  width: 320px;
+  width: 330px;
   height: 100%;
-  background: #0e1422;
-  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  background: #FAF8F5;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-left: 1px solid #E5DFD3;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
   z-index: 900;
   flex-shrink: 0;
+  box-shadow: -4px 0 20px rgba(23, 42, 37, 0.03);
+  color: #172A25;
 }
 
 .lm-deck-header {
-  padding: 14px 16px 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 16px 18px 12px;
+  background: #F5F1E8;
+  border-bottom: 1px solid #E5DFD3;
 }
 
 .lm-deck-eyebrow {
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #64748b;
+  letter-spacing: 0.1em;
+  color: #047857;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 .lm-deck-colony-title {
-  margin: 2px 0 0;
-  font-size: 16px;
-  font-weight: 700;
-  color: #f8fafc;
+  margin: 3px 0 0;
+  font-size: 17px;
+  font-weight: 800;
+  color: #172A25;
+  letter-spacing: -0.01em;
 }
 
-/* Clean 4-Card Metric Grid */
+/* Modern 4-Card Glowing Metric Tiles */
 .lm-deck-metrics-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  padding: 12px 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  gap: 10px;
+  padding: 14px 18px;
+  border-bottom: 1px solid #E5DFD3;
 }
 
 .lm-metric-box {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 10px;
-  padding: 10px 12px;
+  background: #FFFFFF;
+  border: 1px solid #DCD2BE;
+  border-radius: 14px;
+  padding: 12px 14px;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(23, 42, 37, 0.04);
+}
+
+.lm-metric-box:hover {
+  transform: translateY(-2px);
 }
 
 .lm-metric-val {
-  font-size: 22px;
-  font-weight: 800;
-  color: #f8fafc;
+  font-size: 24px;
+  font-weight: 900;
+  color: #172A25;
   line-height: 1.1;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 .lm-metric-tag {
   font-size: 11px;
-  font-weight: 600;
-  color: #94a3b8;
+  font-weight: 700;
+  color: #5C6470;
   margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
+.lm-metric-box.avail {
+  border-color: #A7F3D0;
+}
 .lm-metric-box.avail .lm-metric-val {
-  color: #10b981;
+  color: #047857;
 }
 
+.lm-metric-box.total {
+  border-color: #BAE6FD;
+}
+.lm-metric-box.total .lm-metric-val {
+  color: #0369A1;
+}
+
+.lm-metric-box.hold {
+  border-color: #FDE68A;
+}
 .lm-metric-box.hold .lm-metric-val {
-  color: #f59e0b;
+  color: #B45309;
 }
 
+.lm-metric-box.sold {
+  border-color: #FECDD3;
+}
 .lm-metric-box.sold .lm-metric-val {
-  color: #ef4444;
+  color: #BE123C;
 }
 
 /* Clean Zones Bar */
 .lm-deck-zones-bar {
-  padding: 12px 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 14px 18px;
+  border-bottom: 1px solid #E5DFD3;
 }
 
 .lm-deck-zones-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 9px;
 }
 
 .lm-deck-clear-link {
   background: transparent;
   border: none;
   font-size: 11px;
-  color: #38bdf8;
+  color: #047857;
   cursor: pointer;
   padding: 0;
+  font-weight: 700;
 }
 
 .lm-deck-zones-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 7px;
 }
 
 .lm-deck-zone-chip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 9px;
-  border-radius: 7px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  gap: 7px;
+  padding: 5px 11px;
+  border-radius: 9999px;
+  background: #FFFFFF;
+  border: 1px solid #E2DAC7;
   font-size: 11px;
   font-weight: 600;
-  color: #cbd5e1;
+  color: #172A25;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .lm-deck-zone-chip:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
+  background: #F4EFE6;
+  color: #173F35;
+  border-color: #DCD2BE;
+  transform: translateY(-1px);
 }
 
 .lm-deck-zone-chip.active {
-  background: rgba(255, 255, 255, 0.14);
-  border-color: rgba(255, 255, 255, 0.25);
-  color: #fff;
+  background: #173F35;
+  border-color: #173F35;
+  color: #FFFFFF;
+  box-shadow: 0 2px 6px rgba(23, 63, 53, 0.2);
 }
 
 .lm-deck-zone-dot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
+  box-shadow: 0 0 4px currentColor;
 }
 
 .lm-deck-zone-qty {
   font-size: 10px;
-  opacity: 0.7;
+  opacity: 0.85;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
 }
 
 /* Plot Inspector Card in Right Panel */
 .lm-gis-inspector-card {
-  padding: 16px;
+  padding: 18px;
   flex: 1;
   display: flex;
   flex-direction: column;
+  color: #172A25;
 }
 
 .lm-gis-inspector-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .lm-gis-inspector-badge {
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
-  color: #38bdf8;
-  background: rgba(56, 189, 248, 0.1);
-  padding: 2px 7px;
-  border-radius: 5px;
+  letter-spacing: 0.1em;
+  color: #0369A1;
+  background: #E0F2FE;
+  border: 1px solid #BAE6FD;
+  padding: 3px 9px;
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 .lm-gis-close-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.06);
-  border: none;
-  color: #94a3b8;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: #FFFFFF;
+  border: 1px solid #E2DAC7;
+  color: #172A25;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .lm-gis-close-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
+  background: #F4EFE6;
+  color: #173F35;
+  border-color: #DCD2BE;
 }
 
 .lm-gis-inspector-title-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .lm-gis-inspector-title-row h2 {
   margin: 0;
-  font-size: 18px;
-  font-weight: 700;
-  color: #f8fafc;
+  font-size: 19px;
+  font-weight: 800;
+  color: #172A25;
+  letter-spacing: -0.01em;
 }
 
 .lm-gis-inspector-quick-tools {
   display: flex;
-  gap: 4px;
+  gap: 5px;
 }
 
 .lm-gis-mini-tool {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #cbd5e1;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #FFFFFF;
+  border: 1px solid #E2DAC7;
+  color: #172A25;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .lm-gis-mini-tool:hover {
-  background: rgba(56, 189, 248, 0.2);
-  color: #38bdf8;
+  background: #F4EFE6;
+  color: #173F35;
+  border-color: #DCD2BE;
+  transform: translateY(-1px);
 }
 
 .lm-gis-inspector-note {
   font-size: 11px;
-  color: #94a3b8;
-  margin-bottom: 10px;
+  color: #5C6470;
+  margin-bottom: 12px;
 }
 
 .lm-gis-status-module {
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid #E5DFD3;
 }
 
 .lm-gis-status-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 5px;
+  gap: 6px;
   margin-top: 8px;
 }
 
 .lm-gis-status-pill {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 9px;
-  border-radius: 7px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  gap: 7px;
+  padding: 7px 10px;
+  border-radius: 9px;
+  background: #FFFFFF;
+  border: 1px solid #E2DAC7;
   font-size: 11px;
   font-weight: 600;
-  color: #cbd5e1;
+  color: #172A25;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .lm-gis-status-pill:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
+  background: #F4EFE6;
+  color: #173F35;
+  border-color: #DCD2BE;
+  transform: translateY(-1px);
 }
 
 .lm-gis-status-pill.active {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: var(--c, #38bdf8);
-  color: #fff;
+  background: #173F35;
+  border-color: #173F35;
+  color: #FFFFFF;
+  box-shadow: 0 2px 6px rgba(23, 63, 53, 0.2);
 }
 
 .lm-gis-status-pill:disabled {
@@ -2512,108 +2768,112 @@
 }
 
 .lm-gis-status-pill i {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
+  box-shadow: 0 0 6px currentColor;
 }
 
 .lm-gis-registry-vault {
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid #E5DFD3;
 }
 
 .lm-gis-vault-warning {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 10px;
-  background: rgba(245, 158, 11, 0.08);
-  border: 1px solid rgba(245, 158, 11, 0.2);
-  border-radius: 7px;
+  gap: 7px;
+  padding: 8px 12px;
+  background: #FEF3C7;
+  border: 1px solid #FDE68A;
+  border-radius: 9px;
   font-size: 11px;
-  color: #fbbf24;
-  margin-top: 6px;
+  color: #B45309;
+  margin-top: 8px;
 }
 
 .lm-gis-doc-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 9px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 7px;
-  margin-top: 5px;
+  padding: 8px 12px;
+  background: #FFFFFF;
+  border: 1px solid #E5DFD3;
+  border-radius: 9px;
+  margin-top: 6px;
 }
 
 .lm-gis-doc-info b {
   font-size: 11px;
-  color: #f1f5f9;
+  color: #172A25;
   display: block;
 }
 
 .lm-gis-doc-info small {
   font-size: 10px;
-  color: #94a3b8;
+  color: #5C6470;
 }
 
 .lm-gis-doc-download {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.05);
-  border: none;
-  color: #cbd5e1;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: #FFFFFF;
+  border: 1px solid #E2DAC7;
+  color: #172A25;
   cursor: pointer;
+  transition: all 0.15s ease;
 }
 
 .lm-gis-doc-download:hover {
-  background: rgba(56, 189, 248, 0.2);
-  color: #38bdf8;
+  background: #F4EFE6;
+  color: #173F35;
 }
 
 .lm-gis-upload-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 7px;
   width: 100%;
-  padding: 7px 10px;
-  border-radius: 8px;
-  background: rgba(16, 185, 129, 0.15);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  color: #34d399;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #173F35;
+  border: 1px solid #173F35;
+  color: #FFFFFF;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .lm-gis-upload-btn:hover:not(:disabled) {
-  background: rgba(16, 185, 129, 0.25);
-  color: #fff;
+  background: #0D1B2A;
+  border-color: #0D1B2A;
+  box-shadow: 0 2px 8px rgba(13, 27, 42, 0.2);
 }
 
 /* Idle Prompt Card */
 .lm-deck-idle-container {
-  padding: 16px;
+  padding: 18px;
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
 .lm-deck-idle-card {
-  padding: 12px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 10px;
+  padding: 16px;
+  background: #FFFFFF;
+  border: 1px solid #E5DFD3;
+  border-radius: 14px;
   font-size: 12px;
-  line-height: 1.5;
-  color: #94a3b8;
+  line-height: 1.6;
+  color: #5C6470;
+  box-shadow: 0 1px 3px rgba(23, 42, 37, 0.04);
 }
 
 .lm-deck-idle-card p {
@@ -2624,104 +2884,120 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 7px;
   width: 100%;
-  padding: 8px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  color: #cbd5e1;
+  padding: 10px;
+  background: #173F35;
+  border: 1px solid #173F35;
+  border-radius: 10px;
+  color: #FFFFFF;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
   margin-top: auto;
 }
 
 .lm-deck-view-table-btn:hover {
-  background: rgba(255, 255, 255, 0.09);
-  color: #fff;
+  background: #0D1B2A;
+  border-color: #0D1B2A;
+  transform: translateY(-1px);
 }
 
 .lm-deck-footer {
-  padding: 8px 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 10px 18px;
+  border-top: 1px solid #E5DFD3;
   font-size: 11px;
-  color: #64748b;
+  color: #5C6470;
   text-align: center;
 }
 
 /* ==========================================================================
-   COMPACT SLEEK BOTTOM LEGEND DOCK
+   COMPACT SLEEK BOTTOM LEGEND DOCK (FLOATING CREAM GLASS CAPSULE)
    ========================================================================== */
 
 .lm-gis-legend-dock {
   position: absolute;
-  bottom: 14px;
+  bottom: 18px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 6px;
-  background: rgba(12, 17, 29, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 4px 10px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  gap: 8px;
+  background: rgba(250, 248, 245, 0.96);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid #DCD2BE;
+  border-radius: 9999px;
+  padding: 6px 14px;
+  box-shadow: 0 10px 30px rgba(23, 42, 37, 0.08);
   z-index: 800;
 }
 
 .lm-legend-pill {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 9px;
-  border-radius: 7px;
-  font-size: 11px;
-  font-weight: 600;
-  color: #cbd5e1;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #172A25;
+  background: #FFFFFF;
+  border: 1px solid #DCD2BE;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(23, 42, 37, 0.04);
 }
 
 .lm-legend-pill:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
+  background: #F4EFE6;
+  color: #173F35;
+  border-color: #DCD2BE;
+  transform: translateY(-1px);
 }
 
 .lm-legend-pill.active {
-  background: rgba(255, 255, 255, 0.14);
-  border-color: rgba(255, 255, 255, 0.2);
-  color: #fff;
+  background: #173F35;
+  border-color: #173F35;
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(23, 63, 53, 0.25);
+}
+
+.lm-legend-pill.active .lm-legend-pill-count {
+  background: rgba(255, 255, 255, 0.25);
+  color: #FFFFFF;
+  border-color: transparent;
 }
 
 .lm-legend-pill i {
-  width: 7px;
-  height: 7px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
+  box-shadow: 0 0 5px currentColor;
+  flex-shrink: 0;
 }
 
 .lm-legend-pill-count {
   font-size: 10px;
-  background: rgba(0, 0, 0, 0.4);
-  color: #94a3b8;
-  padding: 0 5px;
-  border-radius: 4px;
+  background: #F3EFE6;
+  color: #172A25;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  border: 1px solid #E2DAC7;
 }
 
 .lm-legend-feature-tag {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 4px 8px;
-  font-size: 11px;
-  font-weight: 600;
-  color: #94a3b8;
-  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 6px;
+  padding: 5px 10px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #172A25;
+  border-left: 1px solid #DCD2BE;
   margin-left: 2px;
 }
 
@@ -2775,7 +3051,7 @@
   left: 56px;
   right: 0;
   bottom: 0;
-  background: #0c111d;
+  background: #FAF8F5;
   padding: 20px;
   overflow-y: auto;
   z-index: 990;
@@ -2786,34 +3062,35 @@
    ========================================================================== */
 
 .lm-top-btn.active-3d {
-  background: rgba(56, 189, 248, 0.18) !important;
-  border-color: rgba(56, 189, 248, 0.45) !important;
-  color: #38bdf8 !important;
-  box-shadow: 0 0 16px rgba(56, 189, 248, 0.28) !important;
+  background: #173F35 !important;
+  border-color: #173F35 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 6px rgba(23, 63, 53, 0.2) !important;
 }
 
 .lm-3d-root {
-  display: flex;
-  flex-direction: column;
-  width: 100vw;
-  height: 100vh;
   position: relative;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  background: #090d16;
+  background: #FAF8F5;
 }
 
 .lm-3d-workspace {
+  position: absolute;
+  top: 56px;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
-  width: 100%;
-  height: calc(100vh - 54px);
-  margin-top: 54px;
-  padding-left: 56px;
-  position: relative;
   overflow: hidden;
+  margin-top: 0;
+  padding-left: 0;
 }
 
 .lm-3d-viewport {
   flex: 1;
+  min-width: 0;
   height: 100%;
   position: relative;
   overflow: hidden;
@@ -2834,6 +3111,83 @@
   background: rgba(255, 255, 255, 0.25);
 }
 
+/* ==========================================================================
+   CALIBRATION & GEOMETRY MODAL CONTROLS
+   ========================================================================== */
+.calib-range-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background: #E2DAC7;
+  border-radius: 9999px;
+  outline: none;
+  margin: 6px 0;
+  cursor: pointer;
+}
 
+.calib-range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #173F35;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 2px 5px rgba(23, 63, 53, 0.35);
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
 
+.calib-range-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  background: #0F2922;
+}
 
+.calib-range-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #173F35;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 2px 5px rgba(23, 63, 53, 0.35);
+  cursor: pointer;
+}
+
+.calib-nudge-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 40px;
+  border-radius: 12px;
+  background: #F3EFE6;
+  border: 1px solid #DCD2BE;
+  color: #172A25;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+.calib-nudge-btn:hover {
+  background: #173F35;
+  border-color: #173F35;
+  color: #FFFFFF;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(23, 63, 53, 0.2);
+}
+.calib-nudge-btn:active {
+  transform: scale(0.96);
+}
+
+.calib-sidebar-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.calib-sidebar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.calib-sidebar-scroll::-webkit-scrollbar-thumb {
+  background: #DCD2BE;
+  border-radius: 4px;
+}
+.calib-sidebar-scroll::-webkit-scrollbar-thumb:hover {
+  background: #B8A990;
+}

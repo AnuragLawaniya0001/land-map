@@ -1,20 +1,25 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { api, errMsg } from "../lib/api";
 import { inspectGeoJsonPlotFile } from "../lib/geoImport";
-import { Building2, MapPin, Plus, User, Eye, Edit3, Globe, Shield, Upload, FileText, CheckCircle2, AlertCircle, X, Trash2, Terminal, ChevronDown, ChevronUp } from "lucide-react";
+import { Building2, MapPin, Plus, User, Eye, Edit3, Globe, Shield, Upload, FileText, CheckCircle2, AlertCircle, X, Trash2, Terminal, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 
 const MAPPING_UPLOAD_TIMEOUT_MS = 5 * 60 * 1000;
 
-export default function OwnerColonies() {
+export default function OwnerColonies({ user }) {
+  const isSuper = user?.role === "super_admin";
+  const base = isSuper ? "/superadmin" : "/admin";
+  const cacheKey = isSuper ? "livemap_cached_owner_colonies" : "livemap_cached_admin_colonies";
   const [colonies, setColonies] = useState(() => {
     try {
-      const cached = localStorage.getItem("livemap_cached_owner_colonies") || sessionStorage.getItem("livemap_cached_owner_colonies");
+      const cached = localStorage.getItem(cacheKey) || sessionStorage.getItem(cacheKey);
       return cached ? JSON.parse(cached) : [];
     } catch (_) {
       return [];
     }
   });
   const [admins, setAdmins] = useState(() => {
+    if (!isSuper) return [];
     try {
       const cached = localStorage.getItem("livemap_cached_owner_admins") || sessionStorage.getItem("livemap_cached_owner_admins");
       return cached ? JSON.parse(cached) : [];
@@ -24,7 +29,7 @@ export default function OwnerColonies() {
   });
   const [loading, setLoading] = useState(() => {
     try {
-      const cached = localStorage.getItem("livemap_cached_owner_colonies") || sessionStorage.getItem("livemap_cached_owner_colonies");
+      const cached = localStorage.getItem(cacheKey) || sessionStorage.getItem(cacheKey);
       return !cached;
     } catch (_) {
       return false;
@@ -89,12 +94,17 @@ export default function OwnerColonies() {
   const fetchColonies = async (silent = false) => {
     try {
       if (!silent && colonies.length === 0) setLoading(true);
-      const res = await api.get("/owner/colonies");
-      const list = res.data.colonies || [];
-      setColonies(list);
+      const res = await api.get(isSuper ? "/owner/colonies" : "/admin/colonies");
+      const list = Array.isArray(res.data) ? res.data : (res.data.colonies || []);
+      const normalized = list.map((c) => ({
+        ...c,
+        _id: c._id || c.id,
+        id: c.id || c._id,
+      }));
+      setColonies(normalized);
       try {
-        localStorage.setItem("livemap_cached_owner_colonies", JSON.stringify(list));
-        sessionStorage.setItem("livemap_cached_owner_colonies", JSON.stringify(list));
+        localStorage.setItem(cacheKey, JSON.stringify(normalized));
+        sessionStorage.setItem(cacheKey, JSON.stringify(normalized));
       } catch (_) {}
       setError(null);
     } catch (err) {
@@ -105,6 +115,7 @@ export default function OwnerColonies() {
   };
 
   const fetchAdmins = async () => {
+    if (!isSuper) return;
     try {
       const res = await api.get("/owner/admins");
       const list = res.data.admins || [];
@@ -119,10 +130,26 @@ export default function OwnerColonies() {
   };
 
   useEffect(() => {
-    const hasCache = colonies.length > 0;
-    fetchColonies(hasCache);
-    fetchAdmins();
-  }, []);
+    fetchColonies(false);
+    if (isSuper) fetchAdmins();
+  }, [isSuper]);
+
+  // Real-time auto-polling when any colony is actively running/queued in the AI GIS pipeline
+  useEffect(() => {
+    const hasActiveProcessing = colonies.some(
+      (c) =>
+        c.processing_status === "running" ||
+        c.processing_status === "queued" ||
+        c.processing_status === "processing"
+    );
+    if (!hasActiveProcessing) return;
+
+    const interval = setInterval(() => {
+      fetchColonies(true);
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [colonies]);
 
   const resetForm = () => {
     setFormError("");
@@ -211,20 +238,20 @@ export default function OwnerColonies() {
     e.preventDefault();
     setFormError("");
     if (!editingColony && selectedSourceFiles === 0) {
-      setFormError("Upload at least one mapping file (GeoJSON, PDF layout, or KML/DWG companion).");
+      setFormError("Upload at least one mapping file (KML boundary file or PDF/DXF layout drawing).");
       return;
     }
     if (geojsonFile) {
-      const review = await inspectGeoJsonPlotFile(geojsonFile);
-      const boundaryOnly = review.polygonCount === 0;
-      const companionIsKmlOrDwg = companionFile?.name.toLowerCase().endsWith(".kml") || companionFile?.name.toLowerCase().endsWith(".dwg") || review.isKml;
-      const hasPdfLayout = Boolean(layoutPdf);
-      if (review.error || (!hasPdfLayout && boundaryOnly && (!editingColony || (!review.boundaryCount && !companionIsKmlOrDwg)))) {
-        const message = review.error || (!editingColony
-          ? "Creating a colony requires a KML land boundary file plus a PDF layout drawing."
-          : "A boundary-only update requires a KML land boundary.");
-        setGeojsonReview(message);
-        setFormError(`${message} No colony data has been changed.`);
+      const ext = geojsonFile.name.toLowerCase().slice(geojsonFile.name.lastIndexOf("."));
+      if (ext !== ".kml") {
+        setFormError("Only .kml files are allowed for boundary. Please select a valid KML file.");
+        return;
+      }
+    }
+    if (layoutPdf) {
+      const ext = layoutPdf.name.toLowerCase().slice(layoutPdf.name.lastIndexOf("."));
+      if (ext !== ".pdf" && ext !== ".dxf") {
+        setFormError("Only .pdf and .dxf files are allowed for layout drawing.");
         return;
       }
     }
@@ -235,7 +262,9 @@ export default function OwnerColonies() {
         body.append("name", formData.name);
         body.append("location", formData.location);
         body.append("description", formData.description);
-        body.append("partner_admin_id", formData.partner_admin_id || "");
+        if (isSuper) {
+          body.append("partner_admin_id", formData.partner_admin_id || "");
+        }
         body.append("is_public", formData.is_public);
         if (selectedSourceFiles > 0) {
           if (geojsonFile) body.append("file", geojsonFile);
@@ -257,7 +286,7 @@ export default function OwnerColonies() {
         body.append("location", formData.location);
         body.append("description", formData.description);
         body.append("is_public", formData.is_public);
-        if (formData.partner_admin_id) {
+        if (isSuper && formData.partner_admin_id) {
           body.append("partner_admin_id", formData.partner_admin_id);
         }
         if (geojsonFile) body.append("file", geojsonFile);
@@ -289,19 +318,27 @@ export default function OwnerColonies() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold font-serif tracking-tight">All Platform Colonies</h1>
-          <p className="text-sm opacity-70">Platform-wide overview of colonies managed across all administrators</p>
+    <div className="lm-page-container" data-testid={`${isSuper ? "owner" : "admin"}-colonies-page`}>
+      <header className="lm-modern-header">
+        <div className="lm-modern-header-left">
+          <span className="lm-modern-eyebrow">{isSuper ? "Colony Oversight" : "Developer Workspace"}</span>
+          <h1 className="lm-modern-title">{isSuper ? "All Platform Colonies" : "My Colonies"}</h1>
+          <p className="lm-modern-subtitle">
+            {isSuper
+              ? "Platform-wide overview of colonies managed across all administrators and developers."
+              : "Overview and masterplan controls for your assigned colonies and plot inventory."}
+          </p>
         </div>
-        <button
-          onClick={handleOpenAddModal}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-violet-600 hover:bg-violet-700 text-white font-medium text-sm transition shadow-sm"
-        >
-          <Plus size={16} /> Add Colony
-        </button>
-      </div>
+        <div className="lm-modern-header-actions">
+          <button
+            onClick={handleOpenAddModal}
+            className="lm-btn-glow"
+            data-testid="owner-add-colony-btn"
+          >
+            <Plus size={16} /> Add Colony
+          </button>
+        </div>
+      </header>
 
       {createdImport && (
         <div className="neo-card p-4 border-l-4 border-emerald-500 space-y-3" role="status" data-testid="colony-import-summary">
@@ -365,30 +402,29 @@ export default function OwnerColonies() {
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-pulse">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="neo-card p-6 space-y-4 border border-violet-500/10">
-              <div className="flex justify-between items-start">
-                <div className="space-y-2">
-                  <div className="h-5 w-36 bg-slate-700/50 rounded" />
-                  <div className="h-3 w-24 bg-slate-800 rounded" />
+            <div key={i} className="bg-white rounded-2xl border border-[#E8E2D6] overflow-hidden shadow-sm">
+              <div className="h-32 bg-[#173F35]/20" />
+              <div className="p-5 space-y-4">
+                <div className="h-9 bg-[#F6F4EE] rounded-xl" />
+                <div className="grid grid-cols-5 gap-2">
+                  {[1, 2, 3, 4, 5].map((j) => (
+                    <div key={j} className="h-12 bg-[#F6F4EE] rounded-xl" />
+                  ))}
                 </div>
-                <div className="h-5 w-20 bg-slate-800 rounded-full" />
-              </div>
-              <div className="h-10 bg-slate-800/40 rounded-lg" />
-              <div className="grid grid-cols-5 gap-2 pt-2">
-                {[1, 2, 3, 4, 5].map((j) => (
-                  <div key={j} className="h-12 bg-slate-800/60 rounded" />
-                ))}
+                <div className="h-8 bg-[#F6F4EE] rounded-xl" />
               </div>
             </div>
           ))}
         </div>
       ) : error ? (
-        <div className="neo-card p-6 border-l-4 border-red-500 text-red-600 dark:text-red-400">
+        <div className="bg-white rounded-2xl border border-[#E8E2D6] border-l-4 border-l-rose-500 p-6 text-rose-700 shadow-sm">
           {error}
         </div>
       ) : colonies.length === 0 ? (
-        <div className="neo-card p-12 text-center text-sm opacity-60">
-          No colonies created on the platform yet. Click "+ Add Colony" to create one.
+        <div className="bg-white rounded-2xl border border-[#E8E2D6] p-12 text-center text-sm text-[#6B7280] shadow-sm">
+          {isSuper
+            ? "No colonies created on the platform yet. Click '+ Add Colony' to create one."
+            : "No colonies assigned to your account yet. Click '+ Add Colony' to add your colony."}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -399,122 +435,244 @@ export default function OwnerColonies() {
               colony.stats?.pdf_detected_plots ??
               colony.pdf_overlay?.plot_count;
             const isPublic = colony.is_public !== false;
+            const isProcessing =
+              colony.processing_status === "running" ||
+              colony.processing_status === "queued";
+            const progress =
+              typeof colony.processing_progress === "number"
+                ? colony.processing_progress
+                : 10;
+            const stageText =
+              colony.processing_stage || "Processing layout files...";
+
+            const totalPlots = stats.totalPlots || 0;
+            const availPlots = stats.available || 0;
+            const soldPlots = stats.sold || 0;
+            const availPct = totalPlots > 0 ? Math.round((availPlots / totalPlots) * 100) : 0;
+
             return (
-              <div key={colony._id} className="neo-card p-6 space-y-4 hover:border-violet-500/30 transition-all flex flex-col justify-between">
-                <div className="space-y-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <h3 className="font-bold text-lg font-serif">{colony.name || colony.colony_id}</h3>
-                      <p className="text-xs opacity-60 flex items-center gap-1 mt-0.5">
-                        <MapPin size={12} /> {colony.location || "Location not specified"}
-                      </p>
-                    </div>
+              <div
+                key={colony._id}
+                className={`bg-white rounded-2xl border border-[#E8E2D6] shadow-sm hover:shadow-xl hover:border-[#173F35] transition-all duration-300 flex flex-col justify-between overflow-hidden group ${
+                  isProcessing
+                    ? "border-amber-500/50 shadow-xl shadow-amber-500/10 ring-1 ring-amber-500/30"
+                    : ""
+                }`}
+              >
+                {/* Theme Green Art Banner with Contours */}
+                <div
+                  className="relative px-5 py-4 text-white flex flex-col justify-between overflow-hidden min-h-[125px]"
+                  style={{ background: "linear-gradient(135deg, #173F35 0%, #0D1B2A 100%)" }}
+                >
+                  <div className="lm-contour" />
+
+                  {/* Top Row: Visibility Badge + Plots count */}
+                  <div className="flex items-center justify-between gap-2 relative z-10">
                     <button
                       onClick={() => handleToggleVisibility(colony)}
                       title="Click to toggle homepage visibility"
-                      className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full border flex items-center gap-1 transition ${
+                      className={`text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full border flex items-center gap-1.5 transition-all ${
                         isPublic
-                          ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20"
-                          : "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20 hover:bg-amber-500/20"
+                          ? "bg-emerald-500/20 text-emerald-300 border-emerald-400/40 hover:bg-emerald-500/30 backdrop-blur-sm"
+                          : "bg-amber-500/20 text-amber-300 border-amber-400/40 hover:bg-amber-500/30 backdrop-blur-sm"
                       }`}
                     >
-                      <Globe size={10} />
-                      {isPublic ? "Homepage: ON" : "Homepage: OFF"}
+                      <span className={`w-1.5 h-1.5 rounded-full ${isPublic ? "bg-emerald-400 animate-pulse" : "bg-amber-400"}`} />
+                      {isPublic ? "Live: Public" : "Draft: Private"}
                     </button>
+
+                    <span className="text-[11px] font-mono text-emerald-200 font-semibold bg-black/25 backdrop-blur-sm px-2.5 py-0.5 rounded-full border border-white/10">
+                      {totalPlots} Plots
+                    </span>
                   </div>
 
-                  {/* Owner & Partner Governance */}
-                  <div className="space-y-1.5 p-2.5 rounded-lg bg-violet-500/5 text-xs border border-violet-500/10">
-                    <div className="flex items-center gap-2">
-                      <Shield size={13} className="text-violet-500" />
-                      <span className="opacity-70">Owner:</span>
-                      <span className="font-semibold">{colony.adminName || colony.adminEmail || "Super Admin"}</span>
-                    </div>
-                    {colony.partnerAdminName && (
-                      <div className="flex items-center gap-2 pt-1 border-t border-violet-500/10">
-                        <User size={13} className="text-amber-500" />
-                        <span className="opacity-70">Partner Admin:</span>
-                        <span className="font-semibold text-amber-600 dark:text-amber-400">{colony.partnerAdminName}</span>
+                  {/* Colony Name and Location Pin */}
+                  <div className="relative z-10 mt-3">
+                    <h3 className="font-bold text-lg text-white tracking-tight leading-snug group-hover:text-emerald-200 transition-colors">
+                      {colony.name || colony.colony_id}
+                    </h3>
+                    <p className="text-xs text-emerald-100/80 flex items-center gap-1.5 mt-1 font-mono">
+                      <MapPin size={12} className="text-emerald-300 shrink-0" />
+                      <span className="truncate">{colony.location || "Location not specified"}</span>
+                    </p>
+                  </div>
+                </div>
+
+                {/* Card Content Body */}
+                <div className="p-5 space-y-4 flex-1 flex flex-col justify-between">
+                  <div className="space-y-4">
+                    {isProcessing ? (
+                      /* Clean processing HUD */
+                      <div className="py-7 px-4 rounded-2xl bg-amber-50/70 border border-amber-200/80 flex flex-col items-center justify-center text-center space-y-3.5 relative overflow-hidden my-auto min-h-[195px]">
+                        <div className="relative">
+                          <div className="w-12 h-12 rounded-xl bg-amber-100 border border-amber-300 flex items-center justify-center shadow-sm">
+                            <Loader2 size={24} className="animate-spin text-amber-600" />
+                          </div>
+                          <span className="absolute -top-1 -right-1 w-3 h-3 bg-amber-500 rounded-full animate-ping" />
+                          <span className="absolute -top-1 -right-1 w-3 h-3 bg-amber-600 rounded-full" />
+                        </div>
+
+                        <div className="space-y-1.5 z-10 max-w-[90%]">
+                          <div className="flex items-center justify-center gap-2">
+                            <span className="text-xs font-bold uppercase tracking-wider text-amber-900 font-mono">
+                              AI GIS Pipeline
+                            </span>
+                            <span className="font-mono text-xs font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded border border-amber-300">
+                              {progress}%
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-amber-900/80 truncate max-w-full font-medium">
+                            {stageText}
+                          </p>
+                        </div>
+
+                        <div className="w-full max-w-[220px] h-2 bg-amber-100 rounded-full overflow-hidden border border-amber-200 z-10">
+                          <div
+                            className="h-full bg-gradient-to-r from-amber-500 to-emerald-600 transition-all duration-500 rounded-full"
+                            style={{ width: `${Math.max(progress, 10)}%` }}
+                          />
+                        </div>
+
+                        <span className="text-[10px] text-amber-700 font-mono tracking-wider uppercase z-10">
+                          Plots will load automatically
+                        </span>
                       </div>
+                    ) : (
+                      <>
+                        {/* Owner & Partner Governance Chip */}
+                        <div className="p-2.5 rounded-xl bg-[#F6F4EE] border border-[#E8E2D6] flex items-center justify-between text-xs">
+                          <div className="flex items-center gap-2">
+                            <Shield size={13} className="text-[#173F35]" />
+                            <span className="text-[#6B7280]">Owner:</span>
+                            <span className="font-semibold text-[#172A25]">{colony.adminName || colony.adminEmail || "Super Admin"}</span>
+                          </div>
+                          {colony.partnerAdminName && (
+                            <div className="flex items-center gap-1.5 text-[#6B7280]">
+                              <User size={12} className="text-amber-600" />
+                              <span className="text-amber-700 font-medium">{colony.partnerAdminName}</span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Modern 5-Pill Inventory Telemetry */}
+                        <div className="grid grid-cols-5 gap-1.5 text-center">
+                          <div className="p-2 rounded-xl bg-[#F6F4EE] border border-[#E8E2D6]">
+                            <div className="text-[9px] text-[#6B7280] font-semibold uppercase">Avail</div>
+                            <div className="text-sm font-bold font-mono text-emerald-700 mt-0.5">
+                              {stats.available || 0}
+                            </div>
+                          </div>
+                          <div className="p-2 rounded-xl bg-[#F6F4EE] border border-[#E8E2D6]">
+                            <div className="text-[9px] text-[#6B7280] font-semibold uppercase">Hold</div>
+                            <div className="text-sm font-bold font-mono text-purple-700 mt-0.5">
+                              {stats.hold || 0}
+                            </div>
+                          </div>
+                          <div className="p-2 rounded-xl bg-[#F6F4EE] border border-[#E8E2D6]">
+                            <div className="text-[9px] text-[#6B7280] font-semibold uppercase">Booked</div>
+                            <div className="text-sm font-bold font-mono text-amber-700 mt-0.5">
+                              {stats.reserved || 0}
+                            </div>
+                          </div>
+                          <div className="p-2 rounded-xl bg-[#F6F4EE] border border-[#E8E2D6]">
+                            <div className="text-[9px] text-[#6B7280] font-semibold uppercase">Sold</div>
+                            <div className="text-sm font-bold font-mono text-blue-700 mt-0.5">
+                              {stats.sold || 0}
+                            </div>
+                          </div>
+                          <div className="p-2 rounded-xl bg-[#F6F4EE] border border-[#E8E2D6]">
+                            <div className="text-[9px] text-[#6B7280] font-semibold uppercase">Block</div>
+                            <div className="text-sm font-bold font-mono text-rose-700 mt-0.5">
+                              {stats.blocked || 0}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Inventory Mini Bar */}
+                        {totalPlots > 0 && (
+                          <div className="space-y-1.5">
+                            <div className="flex justify-between text-[11px] text-[#6B7280] font-medium">
+                              <span>Availability ({availPct}%)</span>
+                              <span>{stats.totalPlots} Total Plots</span>
+                            </div>
+                            <div className="w-full h-2 bg-[#E8E2D6] rounded-full overflow-hidden flex">
+                              <div className="bg-[#173F35] h-full transition-all duration-300" style={{ width: `${availPct}%` }} />
+                              <div className="bg-rose-500 h-full transition-all duration-300" style={{ width: `${Math.round((soldPlots / totalPlots) * 100)}%` }} />
+                              <div className="bg-[#D1C9B8] h-full flex-1" />
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Detected PDF Plot Labels Banner in theme green */}
+                        {pdfDetectedPlots != null && (
+                          <div className="text-[11px] text-[#173F35] font-mono bg-[#EBF5F0] p-2.5 rounded-xl border border-[#C2E3D4] flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0 animate-pulse" />
+                            <span>PDF plot labels detected: <strong className="font-bold">{pdfDetectedPlots}</strong> (overlay layer)</span>
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
 
-                  {/* Plot breakdown grid */}
-                  <div className="grid grid-cols-5 gap-2 text-center pt-2 border-t border-gray-200 dark:border-gray-800">
-                    <div className="p-2 neo-inset rounded-lg">
-                      <div className="text-[10px] opacity-60 font-semibold uppercase">Avail</div>
-                      <div className="text-sm font-bold font-mono text-emerald-600 dark:text-emerald-400">
-                        {stats.available || 0}
-                      </div>
-                    </div>
-                    <div className="p-2 neo-inset rounded-lg">
-                      <div className="text-[10px] opacity-60 font-semibold uppercase">Booked</div>
-                      <div className="text-sm font-bold font-mono text-amber-600 dark:text-amber-400">
-                        {stats.reserved || 0}
-                      </div>
-                    </div>
-                    <div className="p-2 neo-inset rounded-lg">
-                      <div className="text-[10px] opacity-60 font-semibold uppercase">Hold</div>
-                      <div className="text-sm font-bold font-mono text-purple-600 dark:text-purple-400">
-                        {stats.hold || 0}
-                      </div>
-                    </div>
-                    <div className="p-2 neo-inset rounded-lg">
-                      <div className="text-[10px] opacity-60 font-semibold uppercase">Sold</div>
-                      <div className="text-sm font-bold font-mono text-blue-600 dark:text-blue-400">
-                        {stats.sold || 0}
-                      </div>
-                    </div>
-                    <div className="p-2 neo-inset rounded-lg">
-                      <div className="text-[10px] opacity-60 font-semibold uppercase">Block</div>
-                      <div className="text-sm font-bold font-mono text-red-600 dark:text-red-400">
-                        {stats.blocked || 0}
-                      </div>
-                    </div>
-                  </div>
+                  {/* Card Actions Footer */}
+                  <div className="pt-3 border-t border-[#E8E2D6] flex items-center justify-between gap-2">
+                    <Link
+                      to={`${base}/colonies/${colony._id}`}
+                      className="flex-1 bg-[#173F35] hover:bg-[#0D1B2A] text-white font-semibold text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 shadow-sm transition-all"
+                      title="Open colony live map viewport"
+                    >
+                      {isProcessing ? (
+                        <>
+                          <Loader2 size={13} className="animate-spin text-amber-300" />
+                          View Live Map
+                        </>
+                      ) : (
+                        "Manage Map"
+                      )}
+                    </Link>
 
-                  <div className="flex items-center justify-between text-xs pt-2 text-opacity-70">
-                    <span>Total Inventory: <strong className="font-mono">{stats.totalPlots || 0} plots</strong></span>
-                    <span>Inquiries: <strong className="font-mono">{stats.inquiries || 0}</strong></span>
-                  </div>
-                  {pdfDetectedPlots != null && (
-                    <div className="text-xs text-amber-600 dark:text-amber-300">
-                      PDF plot labels detected: <strong className="font-mono">{pdfDetectedPlots}</strong> (not interactive inventory)
-                    </div>
-                  )}
-                </div>
+                    <button
+                      onClick={() => handlePreview(colony)}
+                      disabled={previewingId === colony._id}
+                      className="bg-[#F6F4EE] hover:bg-[#E8E2D6] text-[#173F35] border border-[#E8E2D6] font-semibold text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 transition-colors disabled:opacity-50"
+                      title="Live Customer Preview"
+                    >
+                      <Eye size={13} />
+                      {previewingId === colony._id ? "Opening…" : "Preview"}
+                    </button>
 
-                {/* Card Actions */}
-                <div className="pt-3 border-t border-gray-200 dark:border-gray-800 flex items-center justify-between gap-2">
-                  <button
-                    onClick={() => handlePreview(colony)}
-                    disabled={previewingId === colony._id}
-                    className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-md bg-violet-600/10 hover:bg-violet-600/20 text-violet-600 dark:text-violet-300 font-medium text-xs transition"
-                  >
-                    <Eye size={14} />
-                    {previewingId === colony._id ? "Opening..." : "Preview"}
-                  </button>
-                  <button
-                    onClick={() => handleOpenEditModal(colony)}
-                    className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-md bg-gray-500/10 hover:bg-gray-500/20 text-gray-700 dark:text-gray-300 font-medium text-xs transition"
-                  >
-                    <Edit3 size={14} />
-                    Edit
-                  </button>
-                  <a
-                    href={`/superadmin/colonies/${colony._id}`}
-                    className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-md bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 font-medium text-xs transition"
-                    title="Open the colony map and manage its layers and plots."
-                  >
-                    Manage
-                  </a>
-                  <button
-                    onClick={() => { setDeletingColony(colony); setDeleteError(""); }}
-                    className="flex-none flex items-center justify-center gap-1 py-1.5 px-2.5 rounded-md bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 font-medium text-xs transition"
-                    title="Delete Colony"
-                  >
-                    <Trash2 size={14} />
-                  </button>
+                    <button
+                      onClick={() => handleOpenEditModal(colony)}
+                      className="p-2 rounded-xl bg-[#F6F4EE] hover:bg-[#E8E2D6] text-[#173F35] border border-[#E8E2D6] transition-colors"
+                      title="Edit Colony Configuration"
+                    >
+                      <Edit3 size={14} />
+                    </button>
+
+                    {(() => {
+                      const currentUid = String(user?.id || user?._id || "");
+                      const colonyOwnerId = String(colony.owner_id || colony.owner?.id || colony.owner?._id || "");
+                      const isColonyOwner = isSuper ||
+                        (Boolean(colonyOwnerId) && colonyOwnerId === currentUid) ||
+                        Boolean(user?.email && colony.adminEmail && colony.adminEmail.toLowerCase() === user.email.toLowerCase()) ||
+                        Boolean(user?.name && colony.adminName && colony.adminName.toLowerCase() === user.name.toLowerCase());
+                      const ownerDisplayName = colony.adminName || colony.owner?.name || colony.owner?.email || "Super Admin";
+
+                      return (
+                        <button
+                          onClick={() => { setDeletingColony(colony); setDeleteError(""); }}
+                          className={`p-2 rounded-xl transition-colors ${
+                            isColonyOwner
+                              ? "bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200"
+                              : "bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200"
+                          }`}
+                          title={isColonyOwner ? "Delete Colony" : `Shared Colony — Only owner (${ownerDisplayName}) can delete`}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      );
+                    })()}
+                  </div>
                 </div>
               </div>
             );
@@ -524,14 +682,17 @@ export default function OwnerColonies() {
 
       {/* Add / Edit Colony Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto space-y-5 text-white shadow-2xl">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+        <div className="lm-modal-shade animate-fade-in" data-testid="owner-colony-modal-shade">
+          <div className="lm-modal max-w-lg w-full max-h-[90vh] overflow-y-auto space-y-4" data-testid="owner-colony-modal">
+            <div className="lm-modal-head">
               <div>
-                <h2 className="text-xl font-bold font-serif">{editingColony ? "Edit Colony" : "Create New Colony"}</h2>
-                <p className="text-xs text-slate-400">Configure colony settings, governance, and GIS sources</p>
+                <p className="lm-eyebrow">{isSuper ? "PLATFORM GOVERNANCE" : "DEVELOPER WORKSPACE"}</p>
+                <h2 className="text-xl font-bold text-[#172A25]">{editingColony ? "Edit Colony" : "Create New Colony"}</h2>
+                <p className="text-xs text-[#6B7280] mt-0.5">
+                  {isSuper ? "Configure colony settings, governance, and GIS sources" : "Configure colony details, boundaries, and GIS layout drawing"}
+                </p>
               </div>
-              <button onClick={() => setShowAddModal(false)} className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-400">
+              <button onClick={() => setShowAddModal(false)} className="lm-icon-btn">
                 <X size={18} />
               </button>
             </div>
@@ -539,88 +700,87 @@ export default function OwnerColonies() {
             <form onSubmit={handleSubmitForm} className="space-y-4 text-sm">
               {/* SECTION A: Basic Info */}
               <div className="space-y-3">
-                <h4 className="text-xs uppercase font-bold tracking-wider text-violet-400">Basic Information</h4>
+                <h4 className="text-xs uppercase font-bold tracking-wider text-[#173F35] font-mono">Basic Information</h4>
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Colony Name *</label>
+                  <label className="block text-xs font-mono text-[#5C6470] mb-1">Colony Name *</label>
                   <input
                     type="text"
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="e.g. Durga Enclave Phase 2"
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm focus:outline-none focus:border-violet-500"
+                    className="lm-modern-input w-full text-xs"
                   />
                 </div>
                 {!editingColony && (
                   <div>
-                    <label className="block text-xs font-medium text-slate-300 mb-1">Colony Identifier Slug</label>
+                    <label className="block text-xs font-mono text-[#5C6470] mb-1">Colony Identifier Slug</label>
                     <input
                       type="text"
                       value={formData.colony_id}
                       onChange={(e) => setFormData({ ...formData, colony_id: e.target.value })}
                       placeholder="durga-enclave-phase-2 (auto-generated if empty)"
-                      className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm focus:outline-none focus:border-violet-500 font-mono"
+                      className="lm-modern-input w-full text-xs font-mono"
                     />
                   </div>
                 )}
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Location / Address</label>
+                  <label className="block text-xs font-mono text-[#5C6470] mb-1">Location / Address</label>
                   <input
                     type="text"
                     value={formData.location}
                     onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                     placeholder="e.g. Sector 14, City Center"
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm focus:outline-none focus:border-violet-500"
+                    className="lm-modern-input w-full text-xs"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Description</label>
+                  <label className="block text-xs font-mono text-[#5C6470] mb-1">Description</label>
                   <textarea
                     rows={2}
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     placeholder="Brief property overview..."
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm focus:outline-none focus:border-violet-500"
+                    className="lm-modern-input w-full text-xs resize-none"
                   />
                 </div>
               </div>
 
-              {/* SECTION B: Ownership & Partnership */}
-              <div className="space-y-3 pt-2 border-t border-slate-800">
-                <h4 className="text-xs uppercase font-bold tracking-wider text-violet-400">Ownership & Partnership</h4>
-                <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Partner Admin (Optional)</label>
-                  <select
-                    value={formData.partner_admin_id}
-                    onChange={(e) => setFormData({ ...formData, partner_admin_id: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm focus:outline-none focus:border-violet-500"
-                  >
-                    <option value="">None (Super Admin Only Property)</option>
-                    {admins.map((adm) => (
-                      <option key={adm._id} value={adm._id}>
-                        {adm.name} ({adm.email})
-                      </option>
-                    ))}
-                  </select>
-                  <p className="text-[11px] text-slate-400 mt-1">
-                    Partner Admin receives management access while Super Admin retains platform governance.
-                  </p>
+              {/* SECTION B: Ownership & Partnership (SUPER ADMIN ONLY) */}
+              {isSuper && (
+                <div className="space-y-3 pt-3 border-t border-[#E8E2D6]">
+                  <h4 className="text-xs uppercase font-bold tracking-wider text-[#173F35] font-mono">Ownership &amp; Partnership</h4>
+                  <div>
+                    <label className="block text-xs font-mono text-[#5C6470] mb-1">Partner Admin (Optional)</label>
+                    <select
+                      value={formData.partner_admin_id}
+                      onChange={(e) => setFormData({ ...formData, partner_admin_id: e.target.value })}
+                      className="lm-modern-input w-full text-xs"
+                    >
+                      <option value="">None (Super Admin Only Property)</option>
+                      {admins.map((adm) => (
+                        <option key={adm._id} value={adm._id}>
+                          {adm.name} ({adm.email})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* SECTION C: Public Visibility */}
-              <div className="space-y-3 pt-2 border-t border-slate-800">
-                <h4 className="text-xs uppercase font-bold tracking-wider text-violet-400">Public Homepage Visibility</h4>
-                <label className="flex items-center gap-3 p-3 bg-slate-800/60 rounded-lg border border-slate-700/60 cursor-pointer">
+              <div className="space-y-3 pt-3 border-t border-[#E8E2D6]">
+                <h4 className="text-xs uppercase font-bold tracking-wider text-[#173F35] font-mono">Public Homepage Visibility</h4>
+                <label className="flex items-center gap-3 p-3 bg-[#F6F4EE] rounded-xl border border-[#E8E2D6] cursor-pointer">
                   <input
                     type="checkbox"
                     checked={formData.is_public}
                     onChange={(e) => setFormData({ ...formData, is_public: e.target.checked })}
-                    className="w-4 h-4 rounded text-violet-600 focus:ring-violet-500 bg-slate-900 border-slate-700"
+                    className="w-4 h-4 rounded text-[#173F35] focus:ring-[#173F35] bg-white border-[#E8E2D6]"
                   />
                   <div>
-                    <span className="font-semibold text-xs block">Show on Public Homepage</span>
-                    <span className="text-[11px] text-slate-400 block">
+                    <span className="font-semibold text-xs text-[#172A25] block">Show on Public Showcase</span>
+                    <span className="text-[11px] text-[#6B7280] block">
                       Allows visitors to discover this colony on the platform landing page.
                     </span>
                   </div>
@@ -628,49 +788,46 @@ export default function OwnerColonies() {
               </div>
 
               {/* SECTION D: GIS source files */}
-              <div className="space-y-3 pt-2 border-t border-slate-800">
-                  <h4 className="text-xs uppercase font-bold tracking-wider text-violet-400">{editingColony ? "Replace mapping source files (KML + PDF/DWG/DWF)" : "Upload mapping sources (KML + PDF/DWG/DWF)"}</h4>
-                  {editingColony ? (
-                    <p className="text-[11px] text-amber-300">Upload KML file (boundary / GIS geometry) and/or layout drawing file (.pdf, .dwg, .dwf, .dxf) to update the live map layout.</p>
-                  ) : (
-                    <p className="text-[11px] text-slate-400">Upload KML file (site boundary polygon) and layout file (.pdf, .dwg, .dwf, .dxf) to create the colony map.</p>
-                  )}
-                  <div>
-                    <label className="block text-xs font-medium text-slate-300 mb-1">1 · KML File (.kml)</label>
-                    <input
-                      type="file"
-                      accept=".kml,application/vnd.google-earth.kml+xml,.geojson,.json"
-                      onChange={(e) => setGeojsonFile(e.target.files?.[0] || null)}
-                      className="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-violet-600 file:text-white hover:file:bg-violet-700 cursor-pointer"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium text-slate-300 mb-1">2 · Layout Drawing (.pdf, .dwg, .dwf, .dxf)</label>
-                    <input
-                      type="file"
-                      accept=".pdf,.dwg,.dxf,.dwf,application/pdf"
-                      onChange={(e) => setLayoutPdf(e.target.files?.[0] || null)}
-                      className="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-violet-600 file:text-white hover:file:bg-violet-700 cursor-pointer"
-                    />
-                  </div>
+              <div className="space-y-3 pt-3 border-t border-[#E8E2D6]">
+                <h4 className="text-xs uppercase font-bold tracking-wider text-[#173F35] font-mono">
+                  {editingColony ? "Replace Mapping Sources (KML + PDF/DXF)" : "Upload Mapping Sources (KML + PDF/DXF)"}
+                </h4>
+                <div>
+                  <label className="block text-xs font-mono text-[#5C6470] mb-1">1 · KML File (.kml)</label>
+                  <input
+                    type="file"
+                    accept=".kml,application/vnd.google-earth.kml+xml"
+                    onChange={(e) => setGeojsonFile(e.target.files?.[0] || null)}
+                    className="w-full text-xs text-[#6B7280] file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#173F35] file:text-white hover:file:bg-[#0D1B2A] cursor-pointer"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-mono text-[#5C6470] mb-1">2 · Layout Drawing (.pdf, .dxf)</label>
+                  <input
+                    type="file"
+                    accept=".pdf,.dxf,application/pdf"
+                    onChange={(e) => setLayoutPdf(e.target.files?.[0] || null)}
+                    className="w-full text-xs text-[#6B7280] file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#173F35] file:text-white hover:file:bg-[#0D1B2A] cursor-pointer"
+                  />
+                </div>
               </div>
 
               {/* Modal Actions */}
-              <div className="pt-4 border-t border-slate-800 flex items-center justify-end gap-3">
-                {formError && <p className="mr-auto text-xs text-red-300" role="alert">{formError}</p>}
+              <div className="pt-4 border-t border-[#E8E2D6] flex items-center justify-end gap-3">
+                {formError && <p className="mr-auto text-xs text-rose-600 font-medium" role="alert">{formError}</p>}
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium text-xs transition"
+                  className="lm-btn-secondary-dark text-xs px-4"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-5 py-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-medium text-xs transition disabled:opacity-50"
+                  className="lm-btn-glow text-xs px-5"
                 >
-                  {submitting ? "Saving..." : editingColony ? "Save Changes" : "Create Colony"}
+                  {submitting ? "Saving…" : editingColony ? "Save Changes" : "Create Colony"}
                 </button>
               </div>
             </form>
@@ -679,55 +836,89 @@ export default function OwnerColonies() {
       )}
 
       {/* Delete Confirmation Modal */}
-      {deletingColony && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 max-w-md w-full space-y-4 text-white shadow-2xl">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <div className="flex items-center gap-2 text-red-400">
-                <AlertCircle size={20} />
-                <h3 className="text-lg font-bold">Delete Colony</h3>
+      {deletingColony && (() => {
+        const currentUid = String(user?.id || user?._id || "");
+        const colonyOwnerId = String(deletingColony.owner_id || deletingColony.owner?.id || deletingColony.owner?._id || "");
+        const isColonyOwner = isSuper ||
+          (Boolean(colonyOwnerId) && colonyOwnerId === currentUid) ||
+          Boolean(user?.email && deletingColony.adminEmail && deletingColony.adminEmail.toLowerCase() === user.email.toLowerCase()) ||
+          Boolean(user?.name && deletingColony.adminName && deletingColony.adminName.toLowerCase() === user.name.toLowerCase());
+        const ownerDisplayName = deletingColony.adminName || deletingColony.owner?.name || deletingColony.owner?.email || "Super Admin";
+
+        return (
+          <div className="lm-modal-shade animate-fade-in">
+            <div className="lm-modal max-w-md w-full space-y-4">
+              <div className="flex items-center justify-between border-b border-[#E8E2D6] pb-3">
+                <div className="flex items-center gap-2 text-rose-600">
+                  <AlertCircle size={20} className={isColonyOwner ? "text-rose-600" : "text-amber-600"} />
+                  <h3 className="text-lg font-bold text-[#172A25]">
+                    {isColonyOwner ? "Delete Colony" : "Colony Deletion Restricted"}
+                  </h3>
+                </div>
+                <button
+                  onClick={() => { setDeletingColony(null); setDeleteError(""); }}
+                  className="lm-icon-btn"
+                >
+                  <X size={16} />
+                </button>
               </div>
-              <button
-                onClick={() => setDeletingColony(null)}
-                className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-400"
-              >
-                <X size={16} />
-              </button>
-            </div>
-            <p className="text-sm text-slate-300 leading-relaxed">
-              Are you sure you want to permanently delete <strong className="text-white">{deletingColony.name || deletingColony.colony_id}</strong>?
-            </p>
-            <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-xs text-red-400 space-y-1">
-              <p className="font-semibold">⚠️ Warning: Critical Data Removal</p>
-              <p>This action will permanently delete all associated plots, zones, registry entries, and GIS files. This operation cannot be undone.</p>
-            </div>
-            {deleteError && (
-              <p className="text-xs text-red-400 bg-red-900/30 p-2 rounded border border-red-800" role="alert">
-                {deleteError}
-              </p>
-            )}
-            <div className="pt-2 flex items-center justify-end gap-3">
-              <button
-                type="button"
-                onClick={() => setDeletingColony(null)}
-                disabled={isDeleting}
-                className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium text-xs transition"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleConfirmDelete}
-                disabled={isDeleting}
-                className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-500 text-white font-medium text-xs transition disabled:opacity-50 flex items-center gap-1.5"
-              >
-                <Trash2 size={14} />
-                {isDeleting ? "Deleting..." : "Permanently Delete"}
-              </button>
+
+              {isColonyOwner ? (
+                <>
+                  <p className="text-sm text-[#374151] leading-relaxed">
+                    Are you sure you want to permanently delete <strong className="text-[#172A25]">{deletingColony.name || deletingColony.colony_id}</strong>?
+                  </p>
+                  <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 space-y-1">
+                    <p className="font-semibold text-rose-800">⚠️ Warning: Critical Data Removal</p>
+                    <p>This action will permanently delete all associated plots, zones, registry entries, and GIS files. This operation cannot be undone.</p>
+                  </div>
+                </>
+              ) : (
+                <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl space-y-2.5">
+                  <div className="flex items-center gap-2 text-amber-900 font-bold text-sm">
+                    <Shield size={16} className="text-amber-700 shrink-0" />
+                    <span>Aap is colony ko delete nahi kar sakte</span>
+                  </div>
+                  <p className="text-xs text-amber-950 leading-relaxed font-medium">
+                    Yeh colony aapko share ki gayi hai. Ise keval iske owner <strong className="font-bold underline text-amber-900">{ownerDisplayName}</strong> hi delete kar sakte hain.
+                  </p>
+                  <p className="text-[11px] text-amber-800/80 font-mono">
+                    (You cannot delete this colony. Only the owner <strong>{ownerDisplayName}</strong> can delete it.)
+                  </p>
+                </div>
+              )}
+
+              {deleteError && (
+                <p className="text-xs text-rose-600 bg-rose-50 p-2.5 rounded-lg border border-rose-200" role="alert">
+                  {deleteError}
+                </p>
+              )}
+
+              <div className="pt-2 flex items-center justify-end gap-3 border-t border-[#E8E2D6]">
+                <button
+                  type="button"
+                  onClick={() => { setDeletingColony(null); setDeleteError(""); }}
+                  disabled={isDeleting}
+                  className="lm-btn-secondary-dark text-xs px-4"
+                >
+                  {isColonyOwner ? "Cancel" : "Close"}
+                </button>
+                {isColonyOwner && (
+                  <button
+                    type="button"
+                    onClick={handleConfirmDelete}
+                    disabled={isDeleting}
+                    className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-medium text-xs transition disabled:opacity-50 flex items-center gap-1.5 shadow-md shadow-rose-600/20"
+                  >
+                    <Trash2 size={14} />
+                    {isDeleting ? "Deleting…" : "Permanently Delete"}
+                  </button>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
     </div>
   );
 }

@@ -259,8 +259,10 @@ export default function PublicViewer() {
           to={data.owner?.slug ? `/u/${data.owner.slug}` : "/"}
           className="lm-stage-logo"
           data-testid="viewer-back-link"
+          style={{ padding: "4px" }}
+          title="Back to Portfolio"
         >
-          <span className="lm-brand-dot" />
+          <img src="/logo.png" alt="LiveMap" style={{ width: "28px", height: "28px", objectFit: "contain" }} />
         </Link>
         <div>
           <h1 data-testid="public-colony-name">{colony.name}</h1>

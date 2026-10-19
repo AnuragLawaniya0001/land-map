@@ -1,0 +1,48 @@
+# Git and system
+.git/
+.github/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Heavy AI Models & Weights (8.2 GB - Mounted via volume or auto-downloaded)
+backend/models/
+models/
+**/models/
+*.safetensors
+*.pt
+*.pth
+*.onnx
+*.bin
+*.weights
+*.tar
+
+# Storage & Uploads (Mounted via volume)
+backend/storage/
+storage/
+**/storage/
+backend/uploads/
+uploads/
+
+# Virtual Environments & Bytecode
+backend/.venv/
+.venv/
+venv/
+**/__pycache__/
+*.py[cod]
+
+# Node / Frontend
+node_modules/
+**/node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Temporary / Scratch
+.pytest_cache/
+tests/test_output/
+*.log

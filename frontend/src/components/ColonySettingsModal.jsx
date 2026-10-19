@@ -26,14 +26,16 @@ export default function ColonySettingsModal({ colony, onClose, onSaved }) {
   const save = async (e) => {
     e.preventDefault();
     if (geojsonFile) {
-      const review = await inspectGeoJsonPlotFile(geojsonFile);
-      const boundaryOnly = review.polygonCount === 0;
-      const companionIsKmlOrDwg = companionFile?.name.toLowerCase().endsWith(".kml") || companionFile?.name.toLowerCase().endsWith(".dwg") || review.isKml;
-      const hasPdfLayout = Boolean(pdfFile);
-      if (review.error || (!hasPdfLayout && boundaryOnly && (!review.boundaryCount && !companionIsKmlOrDwg))) {
-        const message = review.error || "A boundary-only update requires a KML land boundary.";
-        setGeojsonReview(message);
-        setErr(`${message} No colony data has been changed.`);
+      const ext = geojsonFile.name.toLowerCase().slice(geojsonFile.name.lastIndexOf("."));
+      if (ext !== ".kml") {
+        setErr("Only .kml files are allowed for boundary. Please select a valid KML file.");
+        return;
+      }
+    }
+    if (pdfFile) {
+      const ext = pdfFile.name.toLowerCase().slice(pdfFile.name.lastIndexOf("."));
+      if (ext !== ".pdf" && ext !== ".dxf") {
+        setErr("Only .pdf and .dxf files are allowed for layout drawing.");
         return;
       }
     }
@@ -97,13 +99,13 @@ export default function ColonySettingsModal({ colony, onClose, onSaved }) {
               <Database size={12} /> Data Used & Accuracy
             </button>
           </div>
-          <legend>Update Layout Source Files (KML + PDF)</legend>
-          <p className="lm-muted">Upload KML file (site boundary polygon) and/or PDF layout file to update the colony map.</p>
+          <legend>Update Layout Source Files (KML + PDF/DXF)</legend>
+          <p className="lm-muted">Upload KML file (site boundary polygon) and/or layout drawing (PDF or DXF) to update the colony map.</p>
           <label>1 · KML Boundary File (.kml)
-            <input type="file" accept=".kml,application/vnd.google-earth.kml+xml,.geojson,.json" onChange={(e) => setGeojsonFile(e.target.files?.[0] || null)} data-testid="settings-kml" />
+            <input type="file" accept=".kml,application/vnd.google-earth.kml+xml" onChange={(e) => setGeojsonFile(e.target.files?.[0] || null)} data-testid="settings-kml" />
           </label>
-          <label>2 · PDF Layout File (.pdf)
-            <input type="file" accept=".pdf,application/pdf" onChange={(e) => setPdfFile(e.target.files?.[0] || null)} data-testid="settings-pdf" />
+          <label>2 · Layout Drawing File (.pdf, .dxf)
+            <input type="file" accept=".pdf,.dxf,application/pdf" onChange={(e) => setPdfFile(e.target.files?.[0] || null)} data-testid="settings-pdf" />
           </label>
         </fieldset>
         <label className="lm-check-row">

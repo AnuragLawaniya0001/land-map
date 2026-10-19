@@ -23,7 +23,7 @@ In the project directory, you can run:
 
 ### `npm run dev`
 Runs the application in development mode with HMR.
-Open [http://localhost:5173](http://localhost:5173) to view it in your browser.
+Open [http://localhost:4800](http://localhost:4800) to view it in your browser.
 
 ### `npm run build`
 Builds the app for production to the `dist` folder.

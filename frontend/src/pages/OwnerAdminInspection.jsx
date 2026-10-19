@@ -71,7 +71,7 @@ export default function OwnerAdminInspection() {
       <div className="neo-card p-6 border-l-4 border-red-500 text-red-600 dark:text-red-400 space-y-2">
         <div className="font-bold text-base">Inspection Access Error</div>
         <div>{error}</div>
-        <Link to="/owner-panel/admins" className="inline-block text-xs text-violet-500 font-semibold pt-2">
+        <Link to="/superadmin/admins" className="inline-block text-xs text-violet-500 font-semibold pt-2">
           ← Return to Admin Accounts
         </Link>
       </div>
@@ -98,7 +98,7 @@ export default function OwnerAdminInspection() {
         </div>
 
         <Link
-          to="/owner-panel/admins"
+          to="/superadmin/admins"
           className="text-xs font-semibold px-3 py-1.5 rounded-lg neo-card hover:bg-violet-500/10 transition-all flex items-center gap-1 flex-shrink-0"
         >
           <ArrowLeft size={14} /> Exit Inspection
@@ -107,15 +107,15 @@ export default function OwnerAdminInspection() {
 
       {/* BREADCRUMB NAVIGATION */}
       <div className="flex items-center gap-2 text-xs font-mono opacity-70">
-        <Link to="/owner-panel/admins" className="hover:underline">Admins</Link>
+        <Link to="/superadmin/admins" className="hover:underline">Admins</Link>
         <span>/</span>
-        <Link to={`/owner-panel/admins/${adminId}/inspect`} className="hover:underline font-bold text-violet-500">
+        <Link to={`/superadmin/admins/${adminId}/inspect`} className="hover:underline font-bold text-violet-500">
           {admin.name || admin.email}
         </Link>
         {colonyDetail && (
           <>
             <span>/</span>
-            <Link to={`/owner-panel/admins/${adminId}/inspect/colonies/${colonyId}`} className="hover:underline font-bold text-violet-500">
+            <Link to={`/superadmin/admins/${adminId}/inspect/colonies/${colonyId}`} className="hover:underline font-bold text-violet-500">
               {colonyDetail.colony?.name}
             </Link>
           </>
@@ -196,7 +196,7 @@ export default function OwnerAdminInspection() {
                   </div>
 
                   <Link
-                    to={`/owner-panel/admins/${adminId}/inspect/colonies/${c.id}`}
+                    to={`/superadmin/admins/${adminId}/inspect/colonies/${c.id}`}
                     className="w-full text-xs font-semibold py-2 rounded-lg neo-btn-primary flex items-center justify-center gap-1.5"
                   >
                     <Eye size={14} /> Inspect Plots & Map
@@ -261,7 +261,7 @@ export default function OwnerAdminInspection() {
                         <td className="py-3 px-3 uppercase text-[10px]">{p.facing || "-"}</td>
                         <td className="py-3 px-3 text-right">
                           <Link
-                            to={`/owner-panel/admins/${adminId}/inspect/colonies/${colonyId}/plots/${p.id}`}
+                            to={`/superadmin/admins/${adminId}/inspect/colonies/${colonyId}/plots/${p.id}`}
                             className="text-xs font-semibold px-2.5 py-1 rounded neo-card hover:border-violet-500/40 text-violet-500 inline-flex items-center gap-1"
                           >
                             <Eye size={12} /> Inspect

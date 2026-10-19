@@ -25,6 +25,8 @@ import AdminPublicPortal from "@/pages/AdminPublicPortal";
 import PublicPortal from "@/pages/PublicPortal";
 import PublicPreviewViewer from "@/pages/PublicPreviewViewer";
 import CanonicalColonyMap from "@/pages/CanonicalColonyMap";
+import AdminColonyShares from "@/pages/AdminColonyShares";
+import SharedColonyViewer from "@/pages/SharedColonyViewer";
 import "@/App.css";
 import "@/map.css";
 
@@ -33,21 +35,46 @@ function PublicByOwner() {
   return <PublicHome ownerSlug={slug} />;
 }
 
-function OwnerPortalShell({ user, setUser }) {
+function OwnerRedirect() {
+  const location = useLocation();
+  const target = location.pathname.replace(/^\/owners?-panel/, "/superadmin") || "/superadmin";
+  return <Navigate to={target} replace />;
+}
+
+function SuperAdminShell({ user, setUser }) {
+  const base = "/superadmin";
+  const location = useLocation();
+  // Map viewport routes: /superadmin/colonies/:id or canonical 3D or GIS import
+  const isMapView = /^\/superadmin\/colonies\/[^/]+/.test(location.pathname) || /canonical/.test(location.pathname) || /import/.test(location.pathname);
+
+  if (isMapView) {
+    return (
+      <AdminLayout user={user} base={base} onLogout={() => setUser(false)}>
+        <Routes>
+          <Route path="colonies/:id" element={<AdminColonyMap user={user} />} />
+          <Route path="colonies/:id/canonical" element={<CanonicalColonyMap />} />
+          <Route path="colonies/:colonyId/import" element={<AdminGisImportPreview />} />
+          <Route path="colonies/:colonyId/import/:importId" element={<AdminGisImportPreview />} />
+          <Route path="admins/:adminId/inspect/colonies/:colonyId/canonical" element={<CanonicalColonyMap />} />
+          <Route path="*" element={<Navigate to="colonies" replace />} />
+        </Routes>
+      </AdminLayout>
+    );
+  }
+
   return (
-    <OwnerLayout user={user} onLogout={() => setUser(false)}>
+    <OwnerLayout user={user} base={base} onLogout={() => setUser(false)}>
       <Routes>
         <Route path="/" element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<OwnerDashboard user={user} />} />
+        <Route path="colonies" element={<OwnerColonies user={user} />} />
         <Route path="admins" element={<OwnerAdmins />} />
         <Route path="admins/:adminId/inspect" element={<OwnerAdminInspection />} />
         <Route path="admins/:adminId/inspect/colonies/:colonyId" element={<OwnerAdminInspection />} />
         <Route path="admins/:adminId/inspect/colonies/:colonyId/plots/:plotId" element={<OwnerAdminInspection />} />
-        <Route path="colonies" element={<OwnerColonies />} />
-        <Route path="colonies/:id/canonical" element={<CanonicalColonyMap />} />
-        <Route path="admins/:adminId/inspect/colonies/:colonyId/canonical" element={<CanonicalColonyMap />} />
-        <Route path="inventory" element={<OwnerInventory />} />
+        <Route path="inventory" element={<OwnerInventory user={user} />} />
         <Route path="inquiries" element={<OwnerInquiries />} />
+        <Route path="share-colonies" element={<AdminColonyShares user={user} />} />
         <Route path="audit" element={<OwnerAuditLog />} />
         <Route path="*" element={<Navigate to="dashboard" replace />} />
       </Routes>
@@ -55,33 +82,44 @@ function OwnerPortalShell({ user, setUser }) {
   );
 }
 
-function OwnerRoute({ user, setUser }) {
+function SuperAdminRoute({ user, setUser }) {
   const { pathname } = useLocation();
-  const base = "/owner-panel";
+  const base = "/superadmin";
   const atRoot = pathname.replace(/\/+$/, "") === base || pathname === `${base}/login`;
-  const matches = user && user.role === "super_admin";
+  const isSuper = user && user.role === "super_admin";
+
   if (atRoot) {
-    if (matches) return <Navigate to={`${base}/dashboard`} replace />;
-    return <AdminLogin portal={PORTALS.owner} onLogin={setUser} currentUser={user || null} />;
+    if (isSuper) return <Navigate to={`${base}/dashboard`} replace />;
+    return <AdminLogin portal={PORTALS.super_admin} onLogin={setUser} currentUser={user || null} />;
   }
-  if (!matches) return <Navigate to={base} replace />;
-  return <OwnerPortalShell user={user} setUser={setUser} />;
+
+  if (!user) {
+    return <Navigate to={`${base}/login`} replace />;
+  }
+
+  if (!isSuper) {
+    return <Navigate to="/admin/dashboard" replace />;
+  }
+
+  return <SuperAdminShell user={user} setUser={setUser} />;
 }
 
-function PortalShell({ portal, user, setUser }) {
+function AdminShell({ user, setUser }) {
+  const base = "/admin";
   return (
-    <AdminLayout user={user} base={portal.base} onLogout={() => setUser(false)}>
+    <AdminLayout user={user} base={base} onLogout={() => setUser(false)}>
       <Routes>
         <Route path="/" element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<AdminHome user={user} />} />
-        <Route path="colonies" element={<AdminHome user={user} />} />
+        <Route path="colonies" element={<OwnerColonies user={user} />} />
         <Route path="colonies/:id" element={<AdminColonyMap user={user} />} />
         <Route path="colonies/:id/canonical" element={<CanonicalColonyMap />} />
         <Route path="colonies/:colonyId/import" element={<AdminGisImportPreview />} />
         <Route path="colonies/:colonyId/import/:importId" element={<AdminGisImportPreview />} />
         <Route path="public-portal" element={<AdminPublicPortal />} />
+        <Route path="inventory" element={<OwnerInventory user={user} />} />
         <Route path="inquiries" element={<AdminInquiries />} />
-        {portal.role === "super_admin" && <Route path="admins" element={<AdminUsers />} />}
+        <Route path="share-colonies" element={<AdminColonyShares user={user} />} />
         <Route path="audit" element={<AdminAudit />} />
         <Route path="*" element={<Navigate to="dashboard" replace />} />
       </Routes>
@@ -89,16 +127,22 @@ function PortalShell({ portal, user, setUser }) {
   );
 }
 
-function PortalRoute({ portal, user, setUser }) {
+function AdminRoute({ user, setUser }) {
   const { pathname } = useLocation();
-  const atRoot = pathname.replace(/\/+$/, "") === portal.base || pathname === `${portal.base}/login`;
-  const matches = user && user.role === portal.role;
+  const base = "/admin";
+  const atRoot = pathname.replace(/\/+$/, "") === base || pathname === `${base}/login`;
+  const isAdmin = user && (user.role === "admin" || user.role === "super_admin");
+
   if (atRoot) {
-    if (matches) return <Navigate to={`${portal.base}/dashboard`} replace />;
-    return <AdminLogin portal={portal} onLogin={setUser} currentUser={user || null} />;
+    if (isAdmin) return <Navigate to={`${base}/dashboard`} replace />;
+    return <AdminLogin portal={PORTALS.admin} onLogin={setUser} currentUser={user || null} />;
   }
-  if (!matches) return <Navigate to={portal.base} replace />;
-  return <PortalShell portal={portal} user={user} setUser={setUser} />;
+
+  if (!user) {
+    return <Navigate to={`${base}/login`} replace />;
+  }
+
+  return <AdminShell user={user} setUser={setUser} />;
 }
 
 export default function App() {
@@ -117,12 +161,14 @@ export default function App() {
       <Route path="/u/:slug" element={<PublicByOwner />} />
       <Route path="/project/:slug" element={<PublicViewer />} />
       <Route path="/share/:token" element={<SharedPropertyViewer />} />
+      <Route path="/c/share/:token" element={<SharedColonyViewer />} />
+      <Route path="/share-colony/:token" element={<SharedColonyViewer />} />
       <Route path="/preview/:previewToken" element={<PublicPreviewViewer />} />
       <Route path="/portal/:token" element={<PublicPortal />} />
-      <Route path="/admin/*" element={<PortalRoute portal={PORTALS.admin} user={user} setUser={setUser} />} />
-      <Route path="/superadmin/*" element={<PortalRoute portal={PORTALS.super_admin} user={user} setUser={setUser} />} />
-      <Route path="/owner-panel/*" element={<OwnerRoute user={user} setUser={setUser} />} />
-      <Route path="/owners-panel/*" element={<Navigate to="/owner-panel" replace />} />
+      <Route path="/admin/*" element={<AdminRoute user={user} setUser={setUser} />} />
+      <Route path="/superadmin/*" element={<SuperAdminRoute user={user} setUser={setUser} />} />
+      <Route path="/owner-panel/*" element={<OwnerRedirect />} />
+      <Route path="/owners-panel/*" element={<OwnerRedirect />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

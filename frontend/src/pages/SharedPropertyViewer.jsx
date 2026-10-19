@@ -142,10 +142,11 @@ export default function SharedPropertyViewer() {
 
   if (loading) {
     return (
-      <div style={{ display: "flex", height: "100vh", alignItems: "center", justifyContent: "center", background: "#0f172a", color: "#f8fafc", fontFamily: "sans-serif" }}>
-        <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: "1.25rem", fontWeight: "600", marginBottom: "0.5rem" }}>Loading shared property...</div>
-          <div style={{ color: "#94a3b8" }}>Securing access & fetching map layout</div>
+      <div className="lm-page-container flex items-center justify-center min-h-screen text-slate-100 font-sans">
+        <div className="text-center p-8 lm-modern-card max-w-sm">
+          <div className="w-10 h-10 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <div className="text-lg font-bold text-white mb-1">Loading Shared Property</div>
+          <div className="text-xs text-slate-400">Verifying secure token & fetching spatial layout…</div>
         </div>
       </div>
     );
@@ -153,15 +154,17 @@ export default function SharedPropertyViewer() {
 
   if (error || !property) {
     return (
-      <div style={{ display: "flex", height: "100vh", alignItems: "center", justifyContent: "center", background: "#0f172a", color: "#f8fafc", fontFamily: "sans-serif" }}>
-        <div style={{ textAlign: "center", maxWidth: "420px", padding: "2rem", background: "#1e293b", borderRadius: "12px", border: "1px solid #334155" }}>
-          <div style={{ fontSize: "2rem", marginBottom: "1rem" }}>🔒</div>
-          <h2 style={{ fontSize: "1.25rem", fontWeight: "700", marginBottom: "0.5rem", color: "#f8fafc" }}>Property Unavailable</h2>
-          <p style={{ color: "#94a3b8", fontSize: "0.95rem", lineHeight: "1.5", marginBottom: "1.5rem" }}>
+      <div className="lm-page-container flex items-center justify-center min-h-screen text-slate-100 font-sans p-4">
+        <div className="text-center max-w-md p-8 lm-modern-card">
+          <div className="w-14 h-14 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center mx-auto mb-4 text-2xl">
+            🔒
+          </div>
+          <h2 className="text-xl font-bold text-white mb-2">Property Unavailable</h2>
+          <p className="text-slate-400 text-sm leading-relaxed mb-6">
             {error || "This property link is invalid or no longer available."}
           </p>
-          <Link to="/" style={{ display: "inline-block", padding: "0.6rem 1.2rem", background: "#3b82f6", color: "#fff", textDecoration: "none", borderRadius: "6px", fontWeight: "600", fontSize: "0.9rem" }}>
-            Return to Home
+          <Link to="/" className="lm-btn-glow inline-flex items-center justify-center">
+            Return to LiveMap
           </Link>
         </div>
       </div>
@@ -171,34 +174,40 @@ export default function SharedPropertyViewer() {
   const activeMedia = media[selectedImageIndex] || media[0];
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100vh", background: "#0f172a", color: "#f8fafc", fontFamily: "sans-serif" }}>
-      {/* Header */}
-      <header style={{ height: "64px", background: "#1e293b", borderBottom: "1px solid #334155", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 1.5rem" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-          <span style={{ fontWeight: "800", fontSize: "1.2rem", color: "#60a5fa", letterSpacing: "0.05em" }}>SPACER</span>
-          <span style={{ color: "#475569" }}>|</span>
-          <span style={{ fontSize: "0.95rem", color: "#cbd5e1", fontWeight: "500" }}>Property Showcase</span>
+    <div className="flex flex-col h-screen bg-[#F6F4EE] text-[#172A25] font-sans overflow-hidden">
+      {/* Sleek Header */}
+      <header className="h-16 bg-[#FFFFFF]/95 backdrop-blur-md border-b border-[#E8E2D6] flex items-center justify-between px-6 z-20">
+        <div className="flex items-center gap-3">
+          <div className="w-2.5 h-2.5 rounded-full bg-[#173F35] shadow-[0_0_10px_rgba(23,63,53,0.3)]" />
+          <span className="font-extrabold text-base tracking-wider text-[#172A25]">
+            LIVEMAP
+          </span>
+          <span className="text-[#9CA3AF]">/</span>
+          <span className="text-xs font-semibold text-[#6B7280] uppercase tracking-widest">
+            Property Showcase
+          </span>
         </div>
-        <div>
-          <span style={{ fontSize: "0.85rem", background: "#334155", color: "#94a3b8", padding: "0.3rem 0.75rem", borderRadius: "9999px", fontWeight: "600" }}>
-            Controlled Share
+        <div className="flex items-center gap-3">
+          <span className="px-3 py-1 rounded-full text-[11px] font-bold tracking-wide uppercase bg-[#173F35]/10 border border-[#173F35]/25 text-[#173F35]">
+            Verified Share Link
           </span>
         </div>
       </header>
 
-      {/* Content Body */}
-      <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
+      {/* Main Split Layout */}
+      <div className="flex-1 flex overflow-hidden">
         {/* Left Drawer: Property Information & Media Gallery */}
-        <div style={{ width: "420px", background: "#1e293b", borderRight: "1px solid #334155", padding: "1.5rem", overflowY: "auto", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+        <div className="w-[430px] bg-[#FFFFFF] border-r border-[#E8E2D6] p-6 overflow-y-auto flex flex-col gap-5 z-10 shrink-0">
           <div>
-            <div style={{ fontSize: "0.8rem", color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em", fontWeight: "700", marginBottom: "0.25rem" }}>
+            <div className="text-[11px] font-mono font-bold text-[#173F35] uppercase tracking-widest mb-1">
               Plot #{property.number}
             </div>
-            <h1 style={{ fontSize: "1.5rem", fontWeight: "800", color: "#f8fafc", margin: 0, lineHeight: 1.2 }}>
+            <h1 className="text-2xl font-black text-[#172A25] tracking-tight leading-tight">
               {property.title || `Plot ${property.number}`}
             </h1>
             {property.facing && (
-              <div style={{ fontSize: "0.85rem", color: "#60a5fa", marginTop: "0.25rem", fontWeight: "600" }}>
+              <div className="text-xs font-semibold text-[#0D1B2A] mt-1 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0D1B2A]" />
                 {property.facing} Facing
               </div>
             )}
@@ -206,27 +215,29 @@ export default function SharedPropertyViewer() {
 
           {/* Media Gallery */}
           {media.length > 0 && (
-            <div style={{ background: "#0f172a", borderRadius: "8px", border: "1px solid #334155", overflow: "hidden", padding: "0.75rem" }}>
-              <div style={{ height: "200px", background: "#020617", borderRadius: "6px", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: media.length > 1 ? "0.5rem" : "0" }}>
+            <div className="p-3 bg-[#F6F4EE] rounded-2xl border border-[#E8E2D6]">
+              <div className="h-52 bg-black/10 rounded-xl overflow-hidden flex items-center justify-center mb-3 border border-[#E8E2D6]">
                 <img
                   src={activeMedia.url}
                   alt={activeMedia.alt_text || property.title}
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  className="w-full h-full object-cover"
                   loading="lazy"
                 />
               </div>
               {media.length > 1 && (
-                <div style={{ display: "flex", gap: "0.5rem", overflowX: "auto", paddingBottom: "0.25rem" }}>
+                <div className="flex gap-2 overflow-x-auto pb-1">
                   {media.map((m, idx) => (
                     <button
                       key={m.id}
                       onClick={() => setSelectedImageIndex(idx)}
-                      style={{
-                        padding: 0, border: idx === selectedImageIndex ? "2px solid #3b82f6" : "1px solid #334155",
-                        borderRadius: "4px", background: "none", cursor: "pointer", width: "56px", height: "42px", overflow: "hidden", flexShrink: 0
-                      }}
+                      className={`p-0 rounded-lg overflow-hidden shrink-0 transition-all ${
+                        idx === selectedImageIndex
+                          ? "ring-2 ring-[#173F35] scale-[1.02]"
+                          : "opacity-60 hover:opacity-100 border border-[#E8E2D6]"
+                      }`}
+                      style={{ width: "64px", height: "46px" }}
                     >
-                      <img src={m.url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      <img src={m.url} alt="" className="w-full h-full object-cover" />
                     </button>
                   ))}
                 </div>
@@ -234,14 +245,14 @@ export default function SharedPropertyViewer() {
             </div>
           )}
 
-          {/* Pricing Details */}
-          <div style={{ background: "#0f172a", padding: "1rem", borderRadius: "8px", border: "1px solid #334155" }}>
-            <div style={{ fontSize: "0.75rem", color: "#94a3b8", textTransform: "uppercase", fontWeight: "700", marginBottom: "0.25rem" }}>Total Price</div>
-            <div style={{ fontSize: "1.6rem", fontWeight: "800", color: "#4ade80" }}>
+          {/* Pricing Highlight */}
+          <div className="p-4 rounded-2xl bg-[#F6F4EE] border border-[#E8E2D6]">
+            <div className="text-[10px] font-mono uppercase font-bold text-[#6B7280] tracking-wider mb-1">Total Valuation</div>
+            <div className="text-2xl font-black text-[#173F35] tracking-tight">
               {property.price != null ? `₹${Number(property.price).toLocaleString("en-IN")}` : "Price on Request"}
             </div>
             {property.price_per_sqft != null && (
-              <div style={{ fontSize: "0.85rem", color: "#94a3b8", marginTop: "0.25rem" }}>
+              <div className="text-xs text-[#6B7280] mt-1 font-mono">
                 ₹{Number(property.price_per_sqft).toLocaleString("en-IN")} / sq.ft.
               </div>
             )}
@@ -250,54 +261,56 @@ export default function SharedPropertyViewer() {
           {/* Description */}
           {property.description && (
             <div>
-              <div style={{ fontSize: "0.8rem", color: "#94a3b8", textTransform: "uppercase", fontWeight: "700", marginBottom: "0.4rem" }}>Description</div>
-              <p style={{ fontSize: "0.9rem", color: "#cbd5e1", lineHeight: 1.5, margin: 0, whiteSpace: "pre-wrap" }}>
+              <div className="text-[11px] font-mono uppercase font-bold text-[#6B7280] tracking-wider mb-1.5">Overview</div>
+              <p className="text-xs text-[#374151] leading-relaxed m-0 whitespace-pre-wrap bg-[#F6F4EE] p-3.5 rounded-xl border border-[#E8E2D6]">
                 {property.description}
               </p>
             </div>
           )}
 
-          {/* Property Specifications */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem", background: "#0f172a", padding: "1rem", borderRadius: "8px", border: "1px solid #334155" }}>
-            <div>
-              <div style={{ fontSize: "0.75rem", color: "#94a3b8" }}>Area</div>
-              <div style={{ fontSize: "0.95rem", fontWeight: "700", color: "#f1f5f9" }}>
-                {property.area_sqft != null ? `${property.area_sqft} sq.ft` : "N/A"}
+          {/* Property Specifications Grid */}
+          <div className="grid grid-cols-2 gap-2.5 bg-[#F6F4EE] p-3.5 rounded-2xl border border-[#E8E2D6]">
+            <div className="p-2.5 rounded-xl bg-[#FFFFFF] border border-[#E8E2D6]">
+              <div className="text-[10px] text-[#6B7280] uppercase font-mono">Area</div>
+              <div className="text-xs font-bold text-[#172A25] mt-0.5">
+                {property.area_sqft != null ? `${property.area_sqft} sq.ft` : "—"}
               </div>
             </div>
-            <div>
-              <div style={{ fontSize: "0.75rem", color: "#94a3b8" }}>Dimensions</div>
-              <div style={{ fontSize: "0.95rem", fontWeight: "700", color: "#f1f5f9" }}>
-                {property.dimensions || "N/A"}
+            <div className="p-2.5 rounded-xl bg-[#FFFFFF] border border-[#E8E2D6]">
+              <div className="text-[10px] text-[#6B7280] uppercase font-mono">Dimensions</div>
+              <div className="text-xs font-bold text-[#172A25] mt-0.5">
+                {property.dimensions || "—"}
               </div>
             </div>
-            <div>
-              <div style={{ fontSize: "0.75rem", color: "#94a3b8" }}>Shape</div>
-              <div style={{ fontSize: "0.95rem", fontWeight: "700", color: "#f1f5f9" }}>
-                {property.shape || "N/A"}
+            <div className="p-2.5 rounded-xl bg-[#FFFFFF] border border-[#E8E2D6]">
+              <div className="text-[10px] text-[#6B7280] uppercase font-mono">Shape</div>
+              <div className="text-xs font-bold text-[#172A25] mt-0.5">
+                {property.shape || "Rectangular"}
               </div>
             </div>
-            <div>
-              <div style={{ fontSize: "0.75rem", color: "#94a3b8" }}>Zone</div>
-              <div style={{ fontSize: "0.95rem", fontWeight: "700", color: "#f1f5f9" }}>
-                {property.zone ? (property.zone.name || property.zone.code) : "N/A"}
+            <div className="p-2.5 rounded-xl bg-[#FFFFFF] border border-[#E8E2D6]">
+              <div className="text-[10px] text-[#6B7280] uppercase font-mono">Sector / Zone</div>
+              <div className="text-xs font-bold text-[#172A25] mt-0.5">
+                {property.zone ? (property.zone.name || property.zone.code) : "Sector 1"}
               </div>
             </div>
           </div>
 
           {/* Customer Inquiry Form */}
-          <div style={{ background: "#0f172a", padding: "1rem", borderRadius: "8px", border: "1px solid #334155" }}>
-            <div style={{ fontSize: "0.85rem", fontWeight: "700", color: "#38bdf8", marginBottom: "0.75rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-              Interested in this plot?
+          <div className="p-4 rounded-2xl bg-[#FFFFFF] border border-[#E8E2D6] shadow-sm">
+            <div className="text-xs font-bold text-[#173F35] uppercase tracking-wider mb-3 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#173F35]" />
+              Express Interest In Plot #{property.number}
             </div>
+
             {inquirySuccess ? (
-              <div style={{ background: "#064e3b", border: "1px solid #047857", color: "#a7f3d0", padding: "0.75rem", borderRadius: "6px", fontSize: "0.85rem", textAlign: "center" }}>
-                ✓ Inquiry submitted! Our team will contact you shortly.
+              <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 p-3.5 rounded-xl text-xs font-medium text-center">
+                ✓ Inquiry submitted successfully! Our sales team will get in touch with you shortly.
               </div>
             ) : (
-              <form onSubmit={handleInquirySubmit} style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+              <form onSubmit={handleInquirySubmit} className="flex flex-col gap-2.5">
                 {inquiryError && (
-                  <div style={{ background: "#7f1d1d", color: "#fca5a5", padding: "0.4rem 0.6rem", borderRadius: "4px", fontSize: "0.8rem" }}>
+                  <div className="bg-rose-50 border border-rose-200 text-rose-800 p-2.5 rounded-lg text-xs">
                     {inquiryError}
                   </div>
                 )}
@@ -305,10 +318,10 @@ export default function SharedPropertyViewer() {
                   <input
                     type="text"
                     required
-                    placeholder="Your Name *"
+                    placeholder="Your Full Name *"
                     value={inquiryName}
                     onChange={(e) => setInquiryName(e.target.value)}
-                    style={{ width: "100%", background: "#1e293b", border: "1px solid #475569", color: "#fff", padding: "0.45rem 0.6rem", borderRadius: "4px", fontSize: "0.85rem" }}
+                    className="lm-modern-input w-full text-xs"
                   />
                 </div>
                 <div>
@@ -318,7 +331,7 @@ export default function SharedPropertyViewer() {
                     placeholder="Phone Number (10 digits) *"
                     value={inquiryPhone}
                     onChange={(e) => setInquiryPhone(e.target.value)}
-                    style={{ width: "100%", background: "#1e293b", border: "1px solid #475569", color: "#fff", padding: "0.45rem 0.6rem", borderRadius: "4px", fontSize: "0.85rem" }}
+                    className="lm-modern-input w-full text-xs"
                   />
                 </div>
                 <div>
@@ -327,7 +340,7 @@ export default function SharedPropertyViewer() {
                     placeholder="Email Address (Optional)"
                     value={inquiryEmail}
                     onChange={(e) => setInquiryEmail(e.target.value)}
-                    style={{ width: "100%", background: "#1e293b", border: "1px solid #475569", color: "#fff", padding: "0.45rem 0.6rem", borderRadius: "4px", fontSize: "0.85rem" }}
+                    className="lm-modern-input w-full text-xs"
                   />
                 </div>
                 <div>
@@ -337,7 +350,7 @@ export default function SharedPropertyViewer() {
                     placeholder="Your Message *"
                     value={inquiryMessage}
                     onChange={(e) => setInquiryMessage(e.target.value)}
-                    style={{ width: "100%", background: "#1e293b", border: "1px solid #475569", color: "#fff", padding: "0.45rem 0.6rem", borderRadius: "4px", fontSize: "0.85rem", resize: "none" }}
+                    className="lm-modern-input w-full text-xs resize-none"
                   />
                 </div>
                 {/* Honeypot field */}
@@ -346,22 +359,22 @@ export default function SharedPropertyViewer() {
                 <button
                   type="submit"
                   disabled={submittingInquiry}
-                  style={{ background: "#0284c7", color: "#fff", border: "none", padding: "0.6rem", borderRadius: "4px", fontWeight: "700", fontSize: "0.85rem", cursor: "pointer" }}
+                  className="lm-btn-glow w-full justify-center text-xs py-2.5 mt-1"
                 >
-                  {submittingInquiry ? "Submitting..." : "Send Inquiry"}
+                  {submittingInquiry ? "Submitting Inquiry…" : "Submit Direct Inquiry"}
                 </button>
               </form>
             )}
           </div>
 
-          <div style={{ marginTop: "auto", paddingTop: "1rem", borderTop: "1px solid #334155", fontSize: "0.8rem", color: "#64748b", textAlign: "center" }}>
-            Verified Property Showcase • Jasjot Sir Spacer Platform
+          <div className="mt-auto pt-4 border-t border-[#F0ECE1] text-[11px] text-[#6B7280] text-center">
+            Verified Colony Showcase • LiveMap Spatial Platform
           </div>
         </div>
 
         {/* Right Area: Interactive GIS Map */}
-        <div style={{ flex: 1, position: "relative" }}>
-          <div ref={mapContainerRef} style={{ width: "100%", height: "100%" }} />
+        <div className="flex-1 relative bg-[#F6F4EE]">
+          <div ref={mapContainerRef} className="w-full h-full" />
         </div>
       </div>
     </div>

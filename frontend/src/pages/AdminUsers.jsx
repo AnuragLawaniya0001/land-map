@@ -78,60 +78,120 @@ export default function AdminUsers() {
   };
 
   return (
-    <div className="lm-page">
-      <header className="lm-topbar">
-        <div>
-          <p className="lm-eyebrow">SUPER ADMIN</p>
-          <h1>Admin accounts</h1>
-          <p className="lm-muted">Create admin workspaces. Each admin signs in at <code>/admin</code>, manages only their own colonies, and shares their own public link.</p>
+    <div className="lm-page-container" data-testid="admin-users-page">
+      <header className="lm-modern-header">
+        <div className="lm-modern-header-left">
+          <span className="lm-modern-eyebrow">Tenant Governance</span>
+          <h1 className="lm-modern-title">Admin Workspaces</h1>
+          <p className="lm-modern-subtitle">
+            Create and govern admin accounts. Each administrator manages isolated colonies and their custom public showcase link.
+          </p>
         </div>
-        <button className="lm-btn-primary" onClick={() => setShowModal(true)} data-testid="new-admin-btn">
-          <Plus size={14} /> New admin
-        </button>
+        <div className="lm-modern-header-actions">
+          <button className="lm-btn-glow" onClick={() => setShowModal(true)} data-testid="new-admin-btn">
+            <Plus size={16} /> New Admin Workspace
+          </button>
+        </div>
       </header>
 
-      {err && <div className="lm-error">{err}</div>}
-
-      <div className="lm-table" data-testid="admin-user-table">
-        <div className="lm-table-head">
-          <span>Name</span>
-          <span>Public link</span>
-          <span>Role</span>
-          <span>Colonies</span>
-          <span className="lm-table-actions">Actions</span>
+      {err && (
+        <div className="lm-badge-danger p-3 rounded-xl mb-4 text-xs font-medium w-full">
+          {err}
         </div>
-        {users.map((u) => (
-          <div className={`lm-table-row ${!u.active ? "disabled" : ""}`} key={u.id} data-testid={`user-row-${u.email}`}>
-            <span>
-              <b>{u.name}</b>
-              <small>{u.email}</small>
-            </span>
-            <span>
-              {u.role === "super_admin" ? (
-                <code>/</code>
-              ) : (
-                <button className="lm-link-btn" onClick={() => copyLink(u)} data-testid={`copy-link-${u.email}`}>
-                  <LinkIcon size={12} /> {copied === u.id ? "Copied!" : `/u/${u.slug}`}
-                </button>
-              )}
-            </span>
-            <span className="lm-role-pill">{u.role.replace("_", " ")}</span>
-            <span>{u.colony_count ?? 0}<small>{u.last_login ? `last login ${new Date(u.last_login).toLocaleDateString()}` : "never logged in"}</small></span>
-            <span className="lm-table-actions">
-              <button className="lm-icon-btn" title={u.active ? "Disable" : "Enable"} onClick={() => toggleActive(u)} data-testid={`toggle-user-${u.email}`}>
-                <Power size={14} />
-              </button>
-              <button className="lm-icon-btn" title="Reset password" onClick={() => setResetForUser(u)} data-testid={`reset-user-${u.email}`}>
-                <KeyRound size={14} />
-              </button>
-              {u.role !== "super_admin" && (
-                <button className="lm-icon-btn danger" title="Delete" onClick={() => remove(u)} data-testid={`delete-user-${u.email}`}>
-                  <Trash2 size={14} />
-                </button>
-              )}
-            </span>
-          </div>
-        ))}
+      )}
+
+      <div className="lm-modern-table-container" data-testid="admin-user-table">
+        <table className="lm-modern-table">
+          <thead>
+            <tr>
+              <th style={{ width: "28%" }}>Administrator</th>
+              <th style={{ width: "24%" }}>Public Portal Link</th>
+              <th style={{ width: "16%" }}>Role</th>
+              <th style={{ width: "16%" }}>Colonies</th>
+              <th style={{ width: "16%", textAlign: "right" }}>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((u) => (
+              <tr key={u.id} className={!u.active ? "opacity-50" : ""} data-testid={`user-row-${u.email}`}>
+                <td>
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-[#E8F3EE] text-[#164E3F] border border-[#C2DFD2] font-bold flex items-center justify-center text-xs">
+                      {u.name?.[0]?.toUpperCase()}
+                    </div>
+                    <div>
+                      <div className="font-bold text-[#0F1E36] text-xs">{u.name}</div>
+                      <div className="text-[11px] text-[#64748B] font-mono">{u.email}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  {u.role === "super_admin" ? (
+                    <code className="text-xs text-[#0F1E36] font-mono bg-[#F5F1EB] border border-[#E8E2D5] px-2.5 py-0.5 rounded">/ (Platform Root)</code>
+                  ) : (
+                    <button
+                      className="inline-flex items-center gap-1.5 text-xs text-[#164E3F] hover:text-[#0D5C46] font-mono bg-[#E8F3EE] hover:bg-[#D5EAE0] border border-[#C2DFD2] px-2.5 py-1 rounded-lg transition-all"
+                      onClick={() => copyLink(u)}
+                      data-testid={`copy-link-${u.email}`}
+                      title="Click to copy public link"
+                    >
+                      <LinkIcon size={12} />
+                      <span>{copied === u.id ? "Copied!" : `/u/${u.slug}`}</span>
+                    </button>
+                  )}
+                </td>
+                <td>
+                  <span className={`lm-badge ${u.role === "super_admin" ? "lm-badge-super" : "lm-badge-info"}`}>
+                    <span className="lm-badge-dot" />
+                    {u.role.replace("_", " ")}
+                  </span>
+                </td>
+                <td>
+                  <div className="font-mono text-xs font-bold text-[#0F1E36]">
+                    {u.colony_count ?? 0} <span className="text-[10px] text-[#64748B] font-normal">colonies</span>
+                  </div>
+                  <div className="text-[10px] text-[#94A3B8] mt-0.5">
+                    {u.last_login ? `Active ${new Date(u.last_login).toLocaleDateString()}` : "Never logged in"}
+                  </div>
+                </td>
+                <td>
+                  <div className="flex items-center justify-end gap-1.5">
+                    <button
+                      className={`p-1.5 rounded-lg border text-xs transition-all ${
+                        u.active
+                          ? "bg-emerald-50 border-emerald-300 text-emerald-700 hover:bg-emerald-100"
+                          : "bg-slate-100 border-slate-300 text-slate-500 hover:bg-slate-200"
+                      }`}
+                      title={u.active ? "Account Active (Click to disable)" : "Account Disabled (Click to activate)"}
+                      onClick={() => toggleActive(u)}
+                      data-testid={`toggle-user-${u.email}`}
+                    >
+                      <Power size={13} />
+                    </button>
+                    <button
+                      className="p-1.5 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200 transition-all text-xs"
+                      title="Reset Password"
+                      onClick={() => setResetForUser(u)}
+                      data-testid={`reset-user-${u.email}`}
+                    >
+                      <KeyRound size={13} />
+                    </button>
+                    {u.role !== "super_admin" && (
+                      <button
+                        className="p-1.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 transition-all text-xs"
+                        title="Delete Admin"
+                        onClick={() => remove(u)}
+                        data-testid={`delete-user-${u.email}`}
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {showModal && (
@@ -145,12 +205,26 @@ export default function AdminUsers() {
         <div className="lm-modal-shade" onClick={() => setResetForUser(null)}>
           <div className="lm-modal" onClick={(e) => e.stopPropagation()}>
             <div className="lm-modal-head">
-              <h3>Reset password · {resetForUser.name}</h3>
+              <h3>Reset Password · {resetForUser.name}</h3>
               <button className="lm-icon-btn" onClick={() => setResetForUser(null)}><X size={14} /></button>
             </div>
-            <form onSubmit={submitReset}>
-              <label>New password<input required type="password" minLength={6} value={resetPw} onChange={(e) => setResetPw(e.target.value)} data-testid="reset-password-input" /></label>
-              <button className="lm-btn-primary full" data-testid="submit-reset">Reset password</button>
+            <form onSubmit={submitReset} className="space-y-4">
+              <div className="lm-modern-input-group">
+                <label>New Password (min 6 chars)</label>
+                <input
+                  required
+                  type="password"
+                  minLength={6}
+                  value={resetPw}
+                  onChange={(e) => setResetPw(e.target.value)}
+                  data-testid="reset-password-input"
+                  className="lm-modern-input"
+                  placeholder="Enter new password"
+                />
+              </div>
+              <button className="lm-btn-glow w-full" data-testid="submit-reset">
+                Update Password
+              </button>
             </form>
           </div>
         </div>

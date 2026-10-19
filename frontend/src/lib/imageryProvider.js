@@ -140,22 +140,31 @@ export class ImageryProvider {
       throw new Error("Colony coordinates are in projected local units without geographic WGS84 reference. Aerial satellite imagery requires georeferenced coordinates.");
     }
 
-    // Add surrounding landscape buffer
+    // Geographic and metric span estimation
     const lngSpan = Math.max(maxLng - minLng, 0.001);
     const latSpan = Math.max(maxLat - minLat, 0.001);
-    const bufferedMinLng = minLng - lngSpan * bufferRatio;
-    const bufferedMaxLng = maxLng + lngSpan * bufferRatio;
-    const bufferedMinLat = minLat - latSpan * bufferRatio;
-    const bufferedMaxLat = maxLat + latSpan * bufferRatio;
-
-    // Metric span estimation
     const metricSpanX = lngSpan * 111320 * Math.cos((cy * Math.PI) / 180);
     const metricSpanY = latSpan * 110574;
     const maxMetricSpan = Math.max(metricSpanX, metricSpanY);
 
+    // Guaranteed expansive landscape radius (at least 950m in every direction or 2.5x colony span).
+    // This expands the satellite terrain to 2.5km+ so the user never sees a nearby square edge when tilting.
+    const effectiveRadiusMeters = Math.max(
+      maxMetricSpan * Math.max(bufferRatio, 2.5),
+      950
+    );
+    const dLng = effectiveRadiusMeters / (111320 * Math.cos((cy * Math.PI) / 180));
+    const dLat = effectiveRadiusMeters / 110574;
+
+    const bufferedMinLng = minLng - dLng;
+    const bufferedMaxLng = maxLng + dLng;
+    const bufferedMinLat = minLat - dLat;
+    const bufferedMaxLat = maxLat + dLat;
+
+    // Zoom level calibrated for expansive high-res landscape
     let zoom = Math.min(
-      selectImageryZoomLevel(maxMetricSpan),
-      this.provider.maxZoom
+      selectImageryZoomLevel(effectiveRadiusMeters * 2),
+      17
     );
 
     // Compute tile bounding box
@@ -171,9 +180,9 @@ export class ImageryProvider {
     let rows = maxTileY - minTileY + 1;
     let totalTiles = cols * rows;
 
-    // Dynamically scale down zoom level if extent exceeds 36 tiles so every colony renders reliably
+    // Dynamically scale down zoom level if extent exceeds 49 tiles so every colony renders reliably and responsively
     const minAllowedZoom = this.provider.minZoom || 13;
-    while (totalTiles > 36 && zoom > minAllowedZoom) {
+    while (totalTiles > 49 && zoom > minAllowedZoom) {
       zoom--;
       nwTile = latLngToTileXY(bufferedMaxLat, bufferedMinLng, zoom);
       seTile = latLngToTileXY(bufferedMinLat, bufferedMaxLng, zoom);
@@ -230,8 +239,60 @@ export class ImageryProvider {
       throw new Error("Aerial imagery request was cancelled.");
     }
 
-    // Convert stitched canvas to Three.js Texture
+    // Soft perimeter feathering at the distant outer edges (the "end") of the 2.7km terrain
+    // Gently dissolves the outer boundary into the horizon haze without any hard cut-off
+    try {
+      const featherW = Math.max(24, Math.round(canvas.width * 0.08));
+      const featherH = Math.max(24, Math.round(canvas.height * 0.08));
+      const maskCanvas = document.createElement("canvas");
+      maskCanvas.width = canvas.width;
+      maskCanvas.height = canvas.height;
+      const mctx = maskCanvas.getContext("2d");
+      if (mctx) {
+        mctx.fillStyle = "#ffffff";
+        mctx.fillRect(0, 0, canvas.width, canvas.height);
+        mctx.globalCompositeOperation = "destination-out";
+
+        // Left boundary fade
+        const gradL = mctx.createLinearGradient(0, 0, featherW, 0);
+        gradL.addColorStop(0, "rgba(0,0,0,1)");
+        gradL.addColorStop(1, "rgba(0,0,0,0)");
+        mctx.fillStyle = gradL;
+        mctx.fillRect(0, 0, featherW, canvas.height);
+
+        // Right boundary fade
+        const gradR = mctx.createLinearGradient(canvas.width, 0, canvas.width - featherW, 0);
+        gradR.addColorStop(0, "rgba(0,0,0,1)");
+        gradR.addColorStop(1, "rgba(0,0,0,0)");
+        mctx.fillStyle = gradR;
+        mctx.fillRect(canvas.width - featherW, 0, featherW, canvas.height);
+
+        // Top boundary fade
+        const gradT = mctx.createLinearGradient(0, 0, 0, featherH);
+        gradT.addColorStop(0, "rgba(0,0,0,1)");
+        gradT.addColorStop(1, "rgba(0,0,0,0)");
+        mctx.fillStyle = gradT;
+        mctx.fillRect(0, 0, canvas.width, featherH);
+
+        // Bottom boundary fade
+        const gradB = mctx.createLinearGradient(0, canvas.height, 0, canvas.height - featherH);
+        gradB.addColorStop(0, "rgba(0,0,0,1)");
+        gradB.addColorStop(1, "rgba(0,0,0,0)");
+        mctx.fillStyle = gradB;
+        mctx.fillRect(0, canvas.height - featherH, canvas.width, featherH);
+
+        // Apply feather mask onto the stitched satellite imagery canvas
+        ctx.globalCompositeOperation = "destination-in";
+        ctx.drawImage(maskCanvas, 0, 0);
+        ctx.globalCompositeOperation = "source-over";
+      }
+    } catch (featherErr) {
+      console.warn("Feather edge mask warning:", featherErr);
+    }
+
+    // Convert stitched canvas to Three.js Texture with true sRGB color space
     const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
     texture.wrapS = THREE.ClampToEdgeWrapping;
     texture.wrapT = THREE.ClampToEdgeWrapping;
     texture.generateMipmaps = true;
@@ -250,10 +311,15 @@ export class ImageryProvider {
     const geometry = new THREE.PlaneGeometry(planeWidth, planeDepth, 1, 1);
     geometry.rotateX(-Math.PI / 2);
 
-    const material = new THREE.MeshStandardMaterial({
+    // Natural diffuse material with transparency for seamless feathered edge blending and polygonOffset to prevent z-fighting
+    const material = new THREE.MeshLambertMaterial({
       map: texture,
-      roughness: 0.95,
-      metalness: 0.05,
+      transparent: true,
+      opacity: 1.0,
+      depthWrite: false,
+      polygonOffset: true,
+      polygonOffsetFactor: -1,
+      polygonOffsetUnits: -1,
     });
 
     const mesh = new THREE.Mesh(geometry, material);

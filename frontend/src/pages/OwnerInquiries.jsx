@@ -33,95 +33,111 @@ export default function OwnerInquiries() {
   if (error) return <div className="neo-card p-6 border-l-4 border-red-500 text-red-600 dark:text-red-400">{error}</div>;
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold font-serif tracking-tight">Platform Inquiries</h1>
-        <p className="text-sm opacity-70">Customer inquiry metrics &amp; platform-wide inquiry history</p>
+    <div className="lm-page-container" data-testid="owner-inquiries-page">
+      <header className="lm-modern-header">
+        <div className="lm-modern-header-left">
+          <span className="lm-modern-eyebrow">Customer Acquisition</span>
+          <h1 className="lm-modern-title">Platform Inquiries</h1>
+          <p className="lm-modern-subtitle">
+            Customer inquiry metrics &amp; platform-wide inquiry history across all active developer portals.
+          </p>
+        </div>
+      </header>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="lm-stat colonies">
+          <div className="lm-stat-top">
+            <span className="lm-stat-label">Total Inquiries</span>
+            <div className="lm-stat-icon-wrap">
+              <MessageSquare size={16} />
+            </div>
+          </div>
+          <div className="lm-stat-val">{metrics?.totalInquiries || 0}</div>
+          <div className="lm-stat-sub">Platform-wide leads</div>
+        </div>
+
+        <div className="lm-stat available">
+          <div className="lm-stat-top">
+            <span className="lm-stat-label">New Inquiries</span>
+            <div className="lm-stat-icon-wrap">
+              <Mail size={16} />
+            </div>
+          </div>
+          <div className="lm-stat-val">{metrics?.newInquiries || 0}</div>
+          <div className="lm-stat-sub">Action required</div>
+        </div>
+
+        <div className="lm-modern-card flex items-center justify-between">
+          <div>
+            <div className="text-xs uppercase font-mono font-bold text-[#6B7280]">Contacted</div>
+            <div className="text-3xl font-extrabold font-mono text-[#172A25] mt-1">{metrics?.contactedInquiries || 0}</div>
+          </div>
+          <div className="p-3 rounded-xl bg-[#F4EFE6] border border-[#E8E2D6] text-[#173F35]">
+            <Clock size={20} />
+          </div>
+        </div>
+
+        <div className="lm-modern-card flex items-center justify-between">
+          <div>
+            <div className="text-xs uppercase font-mono font-bold text-[#6B7280]">Closed</div>
+            <div className="text-3xl font-extrabold font-mono text-[#047857] mt-1">{metrics?.closedInquiries || 0}</div>
+          </div>
+          <div className="p-3 rounded-xl bg-[#F4EFE6] border border-[#E8E2D6] text-[#047857]">
+            <CheckCircle size={20} />
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="neo-card p-6 flex items-center justify-between">
-          <div>
-            <div className="text-xs uppercase font-semibold opacity-70">Total Inquiries</div>
-            <div className="text-3xl font-bold font-mono text-violet-500 mt-1">{metrics?.totalInquiries || 0}</div>
-          </div>
-          <MessageSquare className="text-violet-500/40" size={32} />
+      <div className="lm-modern-table-container">
+        <div className="p-5 border-b border-[#F0ECE1]">
+          <h2 className="text-base font-bold font-serif text-[#172A25]">Platform-Wide Inquiry Stream</h2>
         </div>
-
-        <div className="neo-card p-6 flex items-center justify-between">
-          <div>
-            <div className="text-xs uppercase font-semibold opacity-70">New Inquiries</div>
-            <div className="text-3xl font-bold font-mono text-amber-500 mt-1">{metrics?.newInquiries || 0}</div>
-          </div>
-          <Mail className="text-amber-500/40" size={32} />
-        </div>
-
-        <div className="neo-card p-6 flex items-center justify-between">
-          <div>
-            <div className="text-xs uppercase font-semibold opacity-70">Contacted</div>
-            <div className="text-3xl font-bold font-mono text-blue-500 mt-1">{metrics?.contactedInquiries || 0}</div>
-          </div>
-          <Clock className="text-blue-500/40" size={32} />
-        </div>
-
-        <div className="neo-card p-6 flex items-center justify-between">
-          <div>
-            <div className="text-xs uppercase font-semibold opacity-70">Closed</div>
-            <div className="text-3xl font-bold font-mono text-emerald-500 mt-1">{metrics?.closedInquiries || 0}</div>
-          </div>
-          <CheckCircle className="text-emerald-500/40" size={32} />
-        </div>
-      </div>
-
-      <div className="neo-card p-6 space-y-4">
-        <h2 className="text-lg font-bold font-serif">Platform-Wide Inquiry Stream</h2>
         {inquiries.length === 0 ? (
-          <div className="text-center py-8 opacity-60 text-sm">
+          <div className="text-center py-12 text-[#6B7280] text-xs">
             No customer inquiries recorded yet.
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-sm">
-              <thead>
-                <tr className="border-b border-gray-200 dark:border-gray-800 opacity-60 uppercase text-xs tracking-wider">
-                  <th className="py-3 px-4">Name / Customer</th>
-                  <th className="py-3 px-4">Phone</th>
-                  <th className="py-3 px-4">Plot ID</th>
-                  <th className="py-3 px-4">Message</th>
-                  <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-4">Received</th>
+          <table className="lm-modern-table">
+            <thead>
+              <tr>
+                <th style={{ width: "20%" }}>Name / Customer</th>
+                <th style={{ width: "16%" }}>Phone</th>
+                <th style={{ width: "12%" }}>Plot ID</th>
+                <th style={{ width: "28%" }}>Message</th>
+                <th style={{ width: "12%" }}>Status</th>
+                <th style={{ width: "12%" }}>Received</th>
+              </tr>
+            </thead>
+            <tbody>
+              {inquiries.map((inq) => (
+                <tr key={inq._id || inq.id}>
+                  <td className="font-bold text-[#172A25] text-xs">{inq.name || "Interested Buyer"}</td>
+                  <td>
+                    <a href={`tel:${inq.phone}`} className="hover:underline flex items-center gap-1.5 font-mono text-xs text-[#0D1B2A] font-semibold">
+                      <Phone size={12} /> {inq.phone}
+                    </a>
+                  </td>
+                  <td className="font-mono text-xs text-[#173F35] font-semibold">#{inq.plot_id}</td>
+                  <td className="text-xs text-[#374151] max-w-xs truncate" title={inq.message}>{inq.message}</td>
+                  <td>
+                    <span className={`lm-badge ${
+                      inq.status === "NEW"
+                        ? "lm-badge-warning"
+                        : inq.status === "CONTACTED"
+                        ? "lm-badge-info"
+                        : "lm-badge-success"
+                    }`}>
+                      <span className="lm-badge-dot" />
+                      {inq.status}
+                    </span>
+                  </td>
+                  <td className="text-xs text-[#6B7280] font-mono">
+                    {inq.created_at ? new Date(inq.created_at).toLocaleString() : "N/A"}
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
-                {inquiries.map((inq) => (
-                  <tr key={inq._id || inq.id} className="hover:bg-violet-500/5 transition-colors">
-                    <td className="py-3 px-4 font-semibold">{inq.name || "Interested Buyer"}</td>
-                    <td className="py-3 px-4 font-mono text-xs text-blue-500">
-                      <a href={`tel:${inq.phone}`} className="hover:underline flex items-center gap-1">
-                        <Phone size={12} /> {inq.phone}
-                      </a>
-                    </td>
-                    <td className="py-3 px-4 font-mono text-xs">{inq.plot_id}</td>
-                    <td className="py-3 px-4 max-w-xs truncate opacity-80" title={inq.message}>{inq.message}</td>
-                    <td className="py-3 px-4">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                        inq.status === "NEW"
-                          ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20"
-                          : inq.status === "CONTACTED"
-                          ? "bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20"
-                          : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
-                      }`}>
-                        {inq.status}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 text-xs opacity-60 font-mono">
-                      {inq.created_at ? new Date(inq.created_at).toLocaleString() : "N/A"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         )}
       </div>
     </div>

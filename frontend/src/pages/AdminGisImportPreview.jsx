@@ -161,16 +161,16 @@ export default function AdminGisImportPreview() {
   } : null;
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto p-4 sm:p-6">
+    <div className="space-y-6 max-w-6xl mx-auto p-4 sm:p-6 text-[#172A25]">
       {/* HEADER */}
-      <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 pb-4">
+      <div className="flex items-center justify-between border-b border-[#E8E2D6] pb-4">
         <div>
-          <div className="text-xs uppercase font-mono tracking-wider opacity-60">GIS LAYOUT IMPORT WORKFLOW</div>
-          <h1 className="text-2xl font-bold font-serif">{colony?.name || "Colony Layout Import"}</h1>
+          <div className="text-xs uppercase font-mono tracking-wider text-[#6B7280]">GIS LAYOUT IMPORT WORKFLOW</div>
+          <h1 className="text-2xl font-bold font-serif text-[#172A25]">{colony?.name || "Colony Layout Import"}</h1>
         </div>
         <button
           onClick={handleCancel}
-          className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-red-500/30 text-red-500 hover:bg-red-500/10 transition-all flex items-center gap-1"
+          className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-red-500/30 text-red-600 hover:bg-red-500/10 transition-all flex items-center gap-1"
         >
           Cancel Import
         </button>
@@ -178,25 +178,25 @@ export default function AdminGisImportPreview() {
 
       {/* STEP PROGRESS INDICATOR */}
       <div className="grid grid-cols-5 gap-2 text-center text-xs font-mono font-semibold">
-        <div className={`p-2.5 rounded-lg border ${step >= 1 ? "bg-violet-500/10 border-violet-500 text-violet-500" : "opacity-40 border-gray-300 dark:border-gray-700"}`}>
+        <div className={`p-2.5 rounded-lg border ${step >= 1 ? "bg-[#173F35]/10 border-[#173F35] text-[#173F35] font-bold" : "opacity-40 border-[#E8E2D6]"}`}>
           ① Upload
         </div>
-        <div className={`p-2.5 rounded-lg border ${step >= 2 ? "bg-violet-500/10 border-violet-500 text-violet-500" : "opacity-40 border-gray-300 dark:border-gray-700"}`}>
+        <div className={`p-2.5 rounded-lg border ${step >= 2 ? "bg-[#173F35]/10 border-[#173F35] text-[#173F35] font-bold" : "opacity-40 border-[#E8E2D6]"}`}>
           ② Parse
         </div>
-        <div className={`p-2.5 rounded-lg border ${step >= 3 ? "bg-violet-500/10 border-violet-500 text-violet-500" : "opacity-40 border-gray-300 dark:border-gray-700"}`}>
+        <div className={`p-2.5 rounded-lg border ${step >= 3 ? "bg-[#173F35]/10 border-[#173F35] text-[#173F35] font-bold" : "opacity-40 border-[#E8E2D6]"}`}>
           ③ Preview
         </div>
-        <div className={`p-2.5 rounded-lg border ${step >= 4 ? "bg-violet-500/10 border-violet-500 text-violet-500" : "opacity-40 border-gray-300 dark:border-gray-700"}`}>
+        <div className={`p-2.5 rounded-lg border ${step >= 4 ? "bg-[#173F35]/10 border-[#173F35] text-[#173F35] font-bold" : "opacity-40 border-[#E8E2D6]"}`}>
           ④ Validate
         </div>
-        <div className={`p-2.5 rounded-lg border ${step >= 5 ? "bg-emerald-500/10 border-emerald-500 text-emerald-500 font-bold" : "opacity-40 border-gray-300 dark:border-gray-700"}`}>
+        <div className={`p-2.5 rounded-lg border ${step >= 5 ? "bg-[#047857]/15 border-[#047857] text-[#047857] font-bold" : "opacity-40 border-[#E8E2D6]"}`}>
           ⑤ Commit
         </div>
       </div>
 
       {err && (
-        <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/30 text-red-600 dark:text-red-400 text-xs font-mono">
+        <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/30 text-red-600 text-xs font-mono">
           {err}
         </div>
       )}

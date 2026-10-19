@@ -5,14 +5,14 @@ import { BACKEND } from "@/lib/api";
 
 const EARTH_CIRCUMFERENCE = 2 * Math.PI * 6378137;
 
-export default function CanvasImageOverlay({ overlay, transform, boundary }) {
+export default function CanvasImageOverlay({ overlay, transform, boundary, opacity = 0.85 }) {
   const map = useMap();
 
   useEffect(() => {
     if (!overlay?.base_url || !overlay?.bounds) return undefined;
 
     const canvas = document.createElement("canvas");
-    canvas.style.cssText = "position:absolute;left:0;top:0;z-index:450;opacity:.96;pointer-events:none";
+    canvas.style.cssText = `position:absolute;left:0;top:0;z-index:450;opacity:${opacity};pointer-events:none`;
     map.getContainer().appendChild(canvas);
     const context = canvas.getContext("2d");
     const image = new Image();
@@ -108,6 +108,7 @@ export default function CanvasImageOverlay({ overlay, transform, boundary }) {
     transform?.translation_x_m,
     transform?.translation_y_m,
     boundary,
+    opacity,
   ]);
 
   return null;
