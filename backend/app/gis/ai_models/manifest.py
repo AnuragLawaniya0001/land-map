@@ -92,8 +92,8 @@ MODEL_MANIFEST: Dict[str, Dict[str, Any]] = {
     "mask2former": {
         "model_name": "Mask2Former",
         "role": "Instance and panoptic segmentation proposals for parcel separation and disagreement QA",
-        "official_repo": "https://huggingface.co/facebook/mask2former-swin-tiny-ade-panoptic",
-        "recommended_variant": "facebook/mask2former-swin-tiny-ade-panoptic",
+        "official_repo": "https://huggingface.co/facebook/mask2former-swin-tiny-cityscapes-panoptic",
+        "recommended_variant": "facebook/mask2former-swin-tiny-cityscapes-panoptic",
         "local_subdir": "mask2former_tiny",
         "required_files": [
             "config.json",
@@ -102,9 +102,9 @@ MODEL_MANIFEST: Dict[str, Dict[str, Any]] = {
         ],
         "hardware_requirements": "CPU or CUDA GPU (>=4 GB VRAM)",
         "download_instructions": {
-            "huggingface_repo": "facebook/mask2former-swin-tiny-ade-panoptic",
-            "command": "huggingface-cli download facebook/mask2former-swin-tiny-ade-panoptic --local-dir models/mask2former_tiny",
-            "notes": "ADE20K panoptic variant; 150 semantic categories better suited to 2D cadastral layout plans than Cityscapes.",
+            "huggingface_repo": "facebook/mask2former-swin-tiny-cityscapes-panoptic",
+            "command": "huggingface-cli download facebook/mask2former-swin-tiny-cityscapes-panoptic --local-dir models/mask2former_tiny",
+            "notes": "Cityscapes panoptic variant provides robust parcel separation masks.",
         },
         "python_dependencies": ["transformers>=4.36.0", "torch>=2.0.0"],
     },

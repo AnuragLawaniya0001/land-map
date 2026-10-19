@@ -50,7 +50,8 @@ COPY --from=frontend-builder /app/frontend/dist /app/frontend/dist
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
+COPY entrypoint.py /app/entrypoint.py
+RUN sed -i 's/\r$//' /app/entrypoint.sh && chmod +x /app/entrypoint.sh
 
 # Ensure persistent directories exist
 RUN mkdir -p /app/backend/storage /app/backend/models
@@ -62,4 +63,4 @@ WORKDIR /app/backend
 EXPOSE 4800 4801
 
 # Start via entrypoint
-ENTRYPOINT ["/bin/bash", "/app/entrypoint.sh"]
+ENTRYPOINT ["python", "/app/entrypoint.py"]
