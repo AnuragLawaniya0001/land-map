@@ -96,6 +96,7 @@ scratch/
 **/scratch/
 scratch_*.py
 debug_*.py
+!backend/app/gis/debug_artifacts.py
 test_debug_*.py
 
 # =============================================================================
