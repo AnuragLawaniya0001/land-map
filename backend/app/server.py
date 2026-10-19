@@ -2068,8 +2068,6 @@ async def admin_create_colony(
     cid = str(res.inserted_id)
 
     # Save files to disk for background processing
-    import os
-    from pathlib import Path
     storage_dir = Path(__file__).resolve().parent.parent / "storage"
     storage_dir.mkdir(parents=True, exist_ok=True)
 
